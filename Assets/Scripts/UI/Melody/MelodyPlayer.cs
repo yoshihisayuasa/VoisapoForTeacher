@@ -90,7 +90,6 @@ namespace Scripts.UI.Melody
             }
             else
             {
-                StopMelody(false);
                 _currentMelody = melody;
                 _currentRootKey = pressedKey;
                 StartCoroutine(PlayMelodyLoopCoroutine(piano, melody));
@@ -284,7 +283,7 @@ namespace Scripts.UI.Melody
         /// <param name="oldMelody"></param>
         /// <param name="oldPressedKey"></param>
         /// <param name="setPlayedColor"></param>
-        void StopPlay(PianoController piano, DomainMelody oldMelody, DomainPianoNote oldPressedKey, bool setPlayedColor)
+        private void StopPlay(PianoController piano, DomainMelody oldMelody, DomainPianoNote oldPressedKey, bool setPlayedColor)
         {
 
             for (int i = 0; i < oldMelody.CordLength; i++)

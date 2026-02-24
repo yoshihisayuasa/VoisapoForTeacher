@@ -77,6 +77,7 @@ namespace Scripts.UI.Piano
                     }
 
                     MelodyPlayer.Instance.StopMelody(false);
+                    MelodyPlayer.Instance.HighlightMinMaxKeys(melody, key);
                     MelodyPlayer.Instance.PlayMelody(melody, key);
                     EnsureRangeVisible(melody, key);
                 })
