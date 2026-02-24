@@ -1,0 +1,47 @@
+fileFormatVersion: 2
+guid: b3be7a1bb9754d745ae4f45d098b9e66
+PluginImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  iconMap: {}
+  executionOrder: {}
+  defineConstraints: []
+  isPreloaded: 0
+  isOverridable: 0
+  isExplicitlyReferenced: 0
+  validateReferences: 1
+  platformData:
+  - first:
+      '': Any
+    second:
+      enabled: 1
+      settings: {}
+  - first:
+      '': WP8
+    second:
+      enabled: 1
+      settings:
+        CPU: AnyCPU
+        DontProcess: False
+        PlaceholderPath: Assets/Photon/PhotonLibs/Photon3Unity3D.dll
+        SDK: AnySDK
+        ScriptingBackend: DotNet
+  - first:
+      Editor: Editor
+    second:
+      enabled: 0
+      settings:
+        DefaultValueInitialized: true
+  - first:
+      Windows Store Apps: WindowsStoreApps
+    second:
+      enabled: 1
+      settings:
+        CPU: AnyCPU
+        DontProcess: false
+        PlaceholderPath: Assets/Photon/PhotonLibs/Photon3Unity3D.dll
+        SDK: AnySDK
+        ScriptingBackend: DotNet
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
