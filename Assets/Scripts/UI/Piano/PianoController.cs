@@ -192,8 +192,8 @@ namespace Scripts.UI.Piano
             float visualScrollable = visualContentWidth - visualViewportWidth;
 
 
-            GetKeyEdgesVisual(minRT, content, contentScaleX, out float minLeft, out float _minRight);
-            GetKeyEdgesVisual(maxRT, content, contentScaleX, out float _maxLeft, out float maxRight);
+            GetKeyEdgesVisual(minRT, content, contentScaleX, out float minLeft, out float _);
+            GetKeyEdgesVisual(maxRT, content, contentScaleX, out float _, out float maxRight);
 
             float currentLeft = _scrollRect.horizontalNormalizedPosition * visualScrollable;
             float currentRight = currentLeft + visualViewportWidth;
@@ -276,7 +276,7 @@ namespace Scripts.UI.Piano
             }
             if (pianoNote[0].Index > pianoNote[1].Index)
             {
-                var tmp = pianoNote[0];
+                PianoNote tmp = pianoNote[0];
                 pianoNote[0] = pianoNote[1];
                 pianoNote[1] = tmp;
             }

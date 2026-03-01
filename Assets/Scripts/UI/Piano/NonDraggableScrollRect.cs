@@ -1,13 +1,16 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
+
 
 public class NonDraggableScrollRect : ScrollRect
 {
     public override void OnBeginDrag(PointerEventData eventData) { }
     public override void OnDrag(PointerEventData eventData) { }
     public override void OnEndDrag(PointerEventData eventData) { }
-    private const float _wheelSensitivity = 0.01f;
+    private const float _wheelSensitivity = 0.03f;
+
 
     /// <summary>
     /// UI外でもスクロールホイールで動かせるようにする
@@ -15,23 +18,34 @@ public class NonDraggableScrollRect : ScrollRect
     /// </summary>
     void Update()
     {
-        // マウスホイールの入力を取得
-        float scroll = Input.GetAxis("Mouse ScrollWheel");
-        bool ctrl =
-         Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl) ||
-         Input.GetKey(KeyCode.LeftCommand) || Input.GetKey(KeyCode.RightCommand);
+        float scroll = 0f;
 
-        if (Mathf.Abs(scroll) > _wheelSensitivity && !ctrl)
+        if (Mouse.current != null)
+        {
+            scroll = Mouse.current.scroll.ReadValue().y;
+        }
+        // マウスホイールの入力を取得
+        var kb = Keyboard.current;
+        bool ctrl =
+             kb != null &&
+            (kb.leftCtrlKey.isPressed ||
+            kb.rightCtrlKey.isPressed ||
+            kb.leftCommandKey.isPressed ||
+            kb.rightCommandKey.isPressed);
+
+        var delta = scroll * _wheelSensitivity;
+
+        if (Mathf.Abs(delta) > 0f && !ctrl)
         {
             // スクロール方向に応じてScrollRectを動かす
             if (vertical)
             {
-                verticalNormalizedPosition += scroll;
+                verticalNormalizedPosition += delta;
                 verticalNormalizedPosition = Mathf.Clamp01(verticalNormalizedPosition);
             }
             else if (horizontal)
             {
-                horizontalNormalizedPosition += scroll;
+                horizontalNormalizedPosition += delta;
                 horizontalNormalizedPosition = Mathf.Clamp01(horizontalNormalizedPosition);
             }
         }
@@ -39,6 +53,5 @@ public class NonDraggableScrollRect : ScrollRect
 
     public override void OnScroll(PointerEventData data)
     {
-        base.OnScroll(data);
     }
 }

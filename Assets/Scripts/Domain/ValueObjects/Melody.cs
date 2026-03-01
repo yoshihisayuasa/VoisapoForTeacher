@@ -1,5 +1,6 @@
 using Assets.Scripts.Domain.ValueObjects;
 using System.Collections.Generic;
+using UnityEngine.UIElements;
 
 namespace Scripts.Domain
 {
@@ -25,16 +26,18 @@ namespace Scripts.Domain
     {
         public readonly int  CordLength = 3; 
         public string Name { get; }
+        public int Position { get; }
         public IReadOnlyList<Note> Notes { get; }
         public readonly int Length;
         public readonly Interval MinInterval;
         public readonly Interval MaxInterval;
 
 
-        public Melody(string name, List<Note> notes)
+        public Melody(string name, List<Note> notes, int position)
         {
             Name = name;
             Notes = notes;
+            Position = position;
             Length = CalculateNoteLength(notes);
             TryGetIntervalRange(out MinInterval, out MaxInterval);
         }

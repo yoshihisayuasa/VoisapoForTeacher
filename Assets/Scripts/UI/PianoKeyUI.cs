@@ -18,7 +18,6 @@ namespace Scripts.UI.Piano
         private readonly Subject<PianoNote> _onReleaseKeySubject = new();
         private readonly Subject<PianoNote> _onPointerEnterSubject = new();
         private readonly Subject<PianoNote> _onPointerExitEnterSubject = new();
-        private readonly Subject<bool> _onTeacherFlagAsObservable = new();
 
         [SerializeField]
         [Tooltip("鍵盤の種別")]
@@ -52,7 +51,6 @@ namespace Scripts.UI.Piano
         public Observable<PianoNote> OnReleaseKeyAsObservable => _onReleaseKeySubject;
         public Observable<PianoNote> OnPointerEnterAsObservable => _onPointerEnterSubject;
         public Observable<PianoNote> OnPointerExitAsObservable => _onPointerExitEnterSubject;
-        public Observable<bool> OnTeacherFlagAsObservable => _onTeacherFlagAsObservable;
 
         private void Awake()
         {
@@ -68,12 +66,6 @@ namespace Scripts.UI.Piano
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            bool isCtrlOrCmd =
-                Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl) ||
-                Input.GetKey(KeyCode.LeftCommand) || Input.GetKey(KeyCode.RightCommand);
-
-            _onTeacherFlagAsObservable.OnNext(isCtrlOrCmd);
-
             if (!_domain.IsPressed)
             {
                 _onClickKeySubject.OnNext(_domain.Key);

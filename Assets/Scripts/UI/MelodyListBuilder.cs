@@ -1,4 +1,5 @@
 ﻿using Scripts.UI.Melody;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,8 +12,8 @@ namespace Assets.Scripts.UI
     /// </summary>
     public sealed class MelodyListBuilder : MonoBehaviour
     {
-        [SerializeField] private Transform _content;    // ScrollView/Viewport/Content
         [SerializeField] private Button _buttonPrefab;  // メロディー選択用ボタンのプレハブ
+        [SerializeField] private List<Transform> _positionSlots; // 透明スロット(0〜26)の並び
 
         private void Start()
         {
@@ -45,15 +46,7 @@ namespace Assets.Scripts.UI
         public void Build()
         {
             var manager = MelodyManager.Instance;
-            if (manager == null || _content == null || _buttonPrefab == null)
-            {
-                return;
-            }
-
-            for (int i = _content.childCount - 1; i >= 0; i--)
-            {
-                Destroy(_content.GetChild(i).gameObject);
-            }
+            ClearSlots();
 
             var melodies = manager.GetAllMelodies();
             for (int i = 0; i < melodies.Count; i++)
@@ -61,7 +54,15 @@ namespace Assets.Scripts.UI
                 int idx = i;
                 DomainMelody melody = melodies[idx];
 
-                var btn = Instantiate(_buttonPrefab, _content);
+                Transform parent = GetSlotByPosition(melody.Position);
+                var btn = Instantiate(_buttonPrefab, parent);
+
+                if(btn.transform is RectTransform rt)
+                {
+                    rt.anchoredPosition = Vector2.zero; // スロットの中心に配置
+                    rt.localRotation = Quaternion.identity;
+                    rt.localScale = Vector3.one;
+                }
                 var text = btn.GetComponentInChildren<TMP_Text>();
                 if (text != null)
                 {
@@ -74,5 +75,29 @@ namespace Assets.Scripts.UI
                 });
             }
         }
+        private Transform GetSlotByPosition(int position)
+        {
+            if (position < 0 || position >= _positionSlots.Count)
+            {
+                return null;
+            }
+            return _positionSlots[position];
+        }
+
+        private void ClearSlots()
+        {
+            for (int i = 0; i < _positionSlots.Count; i++)
+            {
+                var slot = _positionSlots[i];
+                if (slot == null) continue;
+
+                for (int j = slot.childCount - 1; j >= 0; j--)
+                {
+                    Destroy(slot.GetChild(j).gameObject);
+                }
+            }
+        }
+
     }
+
 }

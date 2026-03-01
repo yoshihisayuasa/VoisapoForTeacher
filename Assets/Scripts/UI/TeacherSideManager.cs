@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Assets.Scripts.UI
 {
@@ -35,23 +36,37 @@ namespace Assets.Scripts.UI
         }
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl)
+            var kb = Keyboard.current;
+            if (kb == null) return;
+
+            // 押された瞬間（GetKeyDown 相当）
+            bool down =
+                kb.leftCtrlKey.wasPressedThisFrame ||
+                kb.rightCtrlKey.wasPressedThisFrame ||
 #if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
-                || Input.GetKeyDown(KeyCode.LeftCommand) || Input.GetKeyDown(KeyCode.RightCommand)
+                kb.leftCommandKey.wasPressedThisFrame ||
+                kb.rightCommandKey.wasPressedThisFrame ||
 #endif
-                           )
+                false;
+
+            if (down)
             {
                 TeacherSideButtonState = true;
             }
 
-            if (Input.GetKeyUp(KeyCode.LeftControl) || Input.GetKeyUp(KeyCode.RightControl)
+            // 離された瞬間（GetKeyUp 相当）
+            bool up =
+                kb.leftCtrlKey.wasReleasedThisFrame ||
+                kb.rightCtrlKey.wasReleasedThisFrame ||
 #if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
-                || Input.GetKeyUp(KeyCode.LeftCommand) || Input.GetKeyUp(KeyCode.RightCommand)
+                kb.leftCommandKey.wasReleasedThisFrame ||
+                kb.rightCommandKey.wasReleasedThisFrame ||
 #endif
-                    )
+                false;
+
+            if (up)
             {
                 TeacherSideButtonState = false;
-
             }
 
         }

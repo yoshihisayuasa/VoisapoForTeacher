@@ -1,3 +1,5 @@
+#pragma warning disable CS0649
+
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,25 +14,25 @@ namespace Scripts.Infrastructure
     public static class MelodyJsonLoader
     {
 
-        private const int _noteNum = 28;
 
         public static List<DomainMelody> LoadFromJsonResource(string fileName)
         {
+            const int _noteNum = 28;
+
             var textAsset = Resources.Load<TextAsset>(fileName);
             if (textAsset == null)
             {
-                Debug.LogError($"JSON�t�@�C���̃��[�h�Ɏ��s: {fileName}");
+                Debug.LogError($"JSONファイルのロードに失敗: {fileName}");
                 return new List<DomainMelody>();
             }
 
             try
             {
-                // JSON���p�[�X
                 var json = JsonUtility.FromJson<ScaleDataWrapper>(textAsset.text);
 
                 if (json == null || json.ScaleName == null || json.ScaleNum <= 0)
                 {
-                    Debug.LogError("JSON�f�[�^���s���ł�");
+                    Debug.LogError("JSONデータが不正です");
                     return new List<DomainMelody>();
                 }
 
@@ -40,25 +42,31 @@ namespace Scripts.Infrastructure
                 for (int i = 0; i < json.ScaleName.Count; i++)
                 {
                     string name = json.ScaleName[i];
-                    if (string.IsNullOrEmpty(name)) continue;
-
+                    if (string.IsNullOrEmpty(name))
+                    {
+                        continue;
+                    }
+                    int position = 0;
+                    if (json.ScalePos != null && i >= 0 && i < json.ScalePos.Count)
+                    {
+                        position = json.ScalePos[i];
+                    }
                     var notes = new List<DomainNote>();
                     for (int j = 0; j < _noteNum; j++)
                     {
-                        // "ScaleNote{j}"��"ScaleBeat{j}"�̔z�񂩂�l���擾
                         int interval = GetValueFromArray(json, $"ScaleNote{i}", j);
                         int beat = GetValueFromArray(json, $"ScaleBeat{i}", j);
 
                         notes.Add(new DomainNote(interval, beat));
                     }
-                    melodies.Add(new DomainMelody(name, notes));
+                    melodies.Add(new DomainMelody(name, notes, position));
                 }
 
                 return melodies;
             }
             catch (Exception ex)
             {
-                Debug.LogError($"JSON�p�[�X�G���[: {ex.Message}");
+                Debug.LogError($"JSONパースエラー: {ex.Message}");
                 return new List<DomainMelody>();
             }
         }
@@ -73,7 +81,6 @@ namespace Scripts.Infrastructure
             return arr[index];
         }
 
-        [Serializable]
         private class ScaleDataWrapper
         {
             public List<string> ScaleName;
@@ -134,7 +141,6 @@ namespace Scripts.Infrastructure
             public int[] ScaleNote25;
             public int[] ScaleNote26;
         }
-
         private class MelodyJsonData
         {
             public string ScaleName;
@@ -146,5 +152,7 @@ namespace Scripts.Infrastructure
             public int ScaleNum;
             public int ScaleBeat;
         }
+#pragma warning restore CS0649
+
     }
 }
