@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 48c1290cdea81274eab4b9a1defd3035
+timeCreated: 1436089481
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 40981
+  packageName: UI Modal Dialog
+  packageVersion: 1.04
+  assetPath: Assets/UIModalDialog/Resources/Prefabs/SocialDialog.prefab
+  uploadId: 74082

@@ -13,6 +13,9 @@ namespace Scripts.UI.Melody
 
         public event Action<DomainMelody> MelodyChanged;
 
+        private readonly string _jsonFileName = "savedata2";
+
+
         private List<DomainMelody> _melodies = new();
         private void Awake()
         {
@@ -28,7 +31,7 @@ namespace Scripts.UI.Melody
 
         private void Start()
         {
-            var loadedMelodies = MelodyJsonLoader.LoadFromJsonResource("savedata2");
+            var loadedMelodies = MelodyJsonLoader.LoadFromJsonResource(_jsonFileName);
             if (loadedMelodies.Count > 0)
             {
                 _melodies.AddRange(loadedMelodies);
@@ -49,38 +52,25 @@ namespace Scripts.UI.Melody
             MelodyChanged?.Invoke(melody);
         }
 
-   
-        public void SetCurrentMelodyByIndex(int index)
+        public void RemoveMelody(DomainMelody melody)
         {
-            if (0 <= index && index < _melodies.Count)
+            _melodies.Remove(melody);
+            if (CurrentMelody == melody)
             {
-                SetCurrentMelody(_melodies[index]);
+                CurrentMelody = null;
+                MelodyChanged?.Invoke(null);
             }
+            SaveAllMelodies();
+
         }
-        public bool TryGetMelody(int index, out DomainMelody melody)
+        public void SavePositions()
         {
-            if (0 <= index && index < _melodies.Count)
-            {
-                melody = _melodies[index];
-                return true;
-            }
-            melody = null;
-            return false;
+            MelodyJsonLoader.SavePositions(_jsonFileName, _melodies);
         }
-    }
 
-    [System.Serializable]
-    public class MelodyDataWrapper
-    {
-        public List<MelodyJson> Melodies;
-    }
-
-    [System.Serializable]
-    public class MelodyJson
-    {
-        public string ScaleName;
-        public int ScaleNum;
-        public List<int> ScaleNoteX;
-        public List<float> ScaleBeatX;
+        public void SaveAllMelodies()
+        { 
+            MelodyJsonLoader.SaveAllMelodies(_jsonFileName, _melodies);
+        }
     }
 }

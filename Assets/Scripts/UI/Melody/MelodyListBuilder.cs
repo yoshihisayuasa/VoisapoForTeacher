@@ -14,6 +14,7 @@ namespace Assets.Scripts.UI
     {
         [SerializeField] private Button _buttonPrefab;  // メロディー選択用ボタンのプレハブ
         [SerializeField] private List<Transform> _positionSlots; // 透明スロット(0〜26)の並び
+        [SerializeField] private MelodyTrashDropZone _trashDropZone;
 
         private void Start()
         {
@@ -32,14 +33,7 @@ namespace Assets.Scripts.UI
             // Startが走るまで1フレーム待機（JSONロード完了待ち）
             yield return null;
 
-            var manager = MelodyManager.Instance;
-            var melodies = manager.GetAllMelodies();
-            if (melodies == null || melodies.Count == 0)
-            {
-                Debug.LogWarning("MelodyListBuilder: メロディーが見つかりません。JSONを確認してください。");
-                yield break;
-            }
-
+            EnsureSlotComponents();
             Build();
         }
 
@@ -55,24 +49,100 @@ namespace Assets.Scripts.UI
                 DomainMelody melody = melodies[idx];
 
                 Transform parent = GetSlotByPosition(melody.Position);
+
                 var btn = Instantiate(_buttonPrefab, parent);
 
-                if(btn.transform is RectTransform rt)
+                if (btn.transform is RectTransform rt)
                 {
                     rt.anchoredPosition = Vector2.zero; // スロットの中心に配置
                     rt.localRotation = Quaternion.identity;
                     rt.localScale = Vector3.one;
                 }
+
+                var reorderItem = btn.GetComponent<MelodyReorderItem>();
+                reorderItem.Initialize(melody, this, parent);
+
                 var text = btn.GetComponentInChildren<TMP_Text>();
                 if (text != null)
                 {
-                    text.text = string.IsNullOrEmpty(melody.Name) ? $"Melody {idx + 1}" :melody.Name;
+                    text.text = string.IsNullOrEmpty(melody.Name) ? $"Melody {idx + 1}" : melody.Name;
                 }
 
                 btn.onClick.AddListener(() =>
                 {
                     manager.SetCurrentMelody(melody);
                 });
+            }
+        }
+
+        private void EnsureSlotComponents()
+        {
+            for (int i = 0; i < _positionSlots.Count; i++)
+            {
+                var slot = _positionSlots[i];
+                var drop = slot.GetComponent<MelodyDropSlot>();
+                drop.Initialize(this, i);
+            }
+
+            _trashDropZone.Initialize(this);
+        }
+
+        public int GetSlotIndex(Transform slot)
+        {
+            return _positionSlots.IndexOf(slot);
+        }
+
+        public void HandleDrop(MelodyReorderItem item, int targetIndex)
+        {
+            int sourceIndex = GetSlotIndex(item.CurrentSlot);
+
+            if (targetIndex == sourceIndex)
+            {
+                item.ResetToDragStart();
+                return;
+            }
+            int emptyIndex = -1;
+            for (int i = targetIndex; i < _positionSlots.Count; i++)
+            {
+
+                if (GetItemInSlot(i) == null)
+                {
+                    emptyIndex = i;
+                    break;
+                }
+            }
+
+            if (emptyIndex < 0)
+            {
+                item.ResetToDragStart();
+                return;
+            }
+
+            for (int i = emptyIndex; i > targetIndex; i--)
+            {
+                var shiftItem = GetItemInSlot(i - 1);
+                if (shiftItem != null)
+                {
+                    shiftItem.SetSlot(_positionSlots[i], i);
+                }
+            }
+
+            item.SetSlot(_positionSlots[targetIndex], targetIndex);
+            MelodyManager.Instance.SavePositions();
+
+        }
+
+        private MelodyReorderItem GetItemInSlot(int slotIndex)
+        {
+            var slot = _positionSlots[slotIndex];
+
+            if (slot.childCount > 0)
+            {
+                return slot.GetComponentInChildren<MelodyReorderItem>();
+            }
+            else
+            {
+                return null;
             }
         }
         private Transform GetSlotByPosition(int position)
@@ -97,7 +167,12 @@ namespace Assets.Scripts.UI
                 }
             }
         }
-
+        public void HandleTrashDrop(MelodyReorderItem item)
+        {
+            var melody = item.Melody;
+            Destroy(item.gameObject);
+            MelodyManager.Instance.RemoveMelody(melody);
+            Build();
+        }
     }
-
 }

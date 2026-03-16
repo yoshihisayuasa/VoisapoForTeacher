@@ -1,6 +1,6 @@
 using Assets.Scripts.Domain.ValueObjects;
 using System.Collections.Generic;
-using UnityEngine.UIElements;
+using System.Linq;
 
 namespace Scripts.Domain
 {
@@ -26,7 +26,7 @@ namespace Scripts.Domain
     {
         public readonly int  CordLength = 3; 
         public string Name { get; }
-        public int Position { get; }
+        public int Position { get; private set; }
         public IReadOnlyList<Note> Notes { get; }
         public readonly int Length;
         public readonly Interval MinInterval;
@@ -38,41 +38,19 @@ namespace Scripts.Domain
             Name = name;
             Notes = notes;
             Position = position;
-            Length = CalculateNoteLength(notes);
-            TryGetIntervalRange(out MinInterval, out MaxInterval);
+            (MinInterval, MaxInterval) = CalculateIntervalRange();
         }
 
-        // 拍数の総数を算出（Beats==0で終端）
-        private int CalculateNoteLength(List<Note> notes)
+        public void SetPosition(int position)
         {
-            if (notes == null || notes.Count == 0) return 0;
-
-            int total = 0;
-            foreach (var note in notes)
-            {
-                if (note.Beats == 0) break;
-                total++;
-            }
-            return total;
+            Position = position;
         }
-
-        /// <summary>
-        /// 有効ノート（Beats==0で終端）の相対インターバル最小/最大を算出。
-        /// </summary>
-        private void TryGetIntervalRange(out Interval minInterval, out Interval maxInterval)
+        private (Interval min, Interval max) CalculateIntervalRange()
         {
-            int minIntervalInt = int.MaxValue;
-            int maxIntervalInt = int.MinValue;
-
-            foreach (var note in Notes)
-            {
-                if (note.Beats == 0) break;
-                if (note.Interval.Value < minIntervalInt) minIntervalInt = note.Interval.Value;
-                if (note.Interval.Value > maxIntervalInt) maxIntervalInt = note.Interval.Value;
-            }
-
-            minInterval = new Interval(minIntervalInt);
-            maxInterval = new Interval(maxIntervalInt);
+            int min = Notes.Min(n => n.Interval.Value);
+            int max = Notes.Max(n => n.Interval.Value);
+         
+            return (new Interval(min), new Interval(max));
         }
     }
 }

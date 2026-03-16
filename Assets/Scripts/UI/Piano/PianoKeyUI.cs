@@ -151,11 +151,6 @@ namespace Scripts.UI.Piano
 
         public void ResetHighlightedColor()
         {
-            if (_keyLabelBg == null)
-            {
-                return;
-            }
-
             switch (_colorState)
             {
                 case KeyColorState.Playing:

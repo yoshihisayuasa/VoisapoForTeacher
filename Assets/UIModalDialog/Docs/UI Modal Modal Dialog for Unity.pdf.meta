@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b90d012ceb4d16842a233edff36c56c0
+timeCreated: 1437779354
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 40981
+  packageName: UI Modal Dialog
+  packageVersion: 1.04
+  assetPath: Assets/UIModalDialog/Docs/UI Modal Modal Dialog for Unity.pdf
+  uploadId: 74082

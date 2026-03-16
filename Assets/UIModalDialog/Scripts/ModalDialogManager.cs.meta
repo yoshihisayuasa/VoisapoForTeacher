@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: f840f06b99708ca46aa928827cb0d821
+timeCreated: 1435910142
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 40981
+  packageName: UI Modal Dialog
+  packageVersion: 1.04
+  assetPath: Assets/UIModalDialog/Scripts/ModalDialogManager.cs
+  uploadId: 74082

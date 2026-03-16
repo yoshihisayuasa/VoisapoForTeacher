@@ -83,26 +83,9 @@ namespace Scripts.UI.Piano
                 })
                 .AddTo(this);
 
-            keyReleaseStream
-                .Subscribe(key =>
-                {
-                    var melody = MelodyManager.Instance.CurrentMelody;
-                    if (melody == null)
-                    {
-                        MelodyPlayer.Instance.StopMelody(true);
-                    }
-
-                    Debug.Log($"[Catch In Controller] Released Key is : {key}");
-                })
-                .AddTo(this);
-
             keyOnEnterStream
                 .Subscribe(key =>
                 {
-                    if (key == null)
-                    {
-                        return;
-                    }
                     var melody = MelodyManager.Instance.CurrentMelody;
                     MelodyPlayer.Instance.HighlightMinMaxKeys(melody, key);
                     Debug.Log($"[Catch In Controller] Released Key is : {key}");

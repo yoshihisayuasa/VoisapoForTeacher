@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: c3143a1a1e432064bb594144866400f1
+timeCreated: 1435956166
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 40981
+  packageName: UI Modal Dialog
+  packageVersion: 1.04
+  assetPath: Assets/UIModalDialog/Scripts/DialogEventParams.cs
+  uploadId: 74082

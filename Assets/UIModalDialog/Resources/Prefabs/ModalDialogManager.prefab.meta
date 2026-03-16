@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e14dbdb5b377d804cbcfc86451321dd1
+timeCreated: 1435913924
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 40981
+  packageName: UI Modal Dialog
+  packageVersion: 1.04
+  assetPath: Assets/UIModalDialog/Resources/Prefabs/ModalDialogManager.prefab
+  uploadId: 74082

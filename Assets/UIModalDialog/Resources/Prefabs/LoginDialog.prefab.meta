@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6713bb124f0e38f448faf408bf016efb
+timeCreated: 1436046298
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 40981
+  packageName: UI Modal Dialog
+  packageVersion: 1.04
+  assetPath: Assets/UIModalDialog/Resources/Prefabs/LoginDialog.prefab
+  uploadId: 74082

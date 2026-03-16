@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Domain.ValueObjects;
 using Assets.Scripts.UI;
+using Scripts.Domain;
 using Scripts.UI.Piano;
 using System.Collections;
 using System.Collections.Generic;
@@ -102,11 +103,6 @@ namespace Scripts.UI.Melody
         {
             var piano = PianoController.Instance;
             
-            if (_currentMelody == null)
-            {
-                piano.Stop(_currentRootKey, setPlayedColor);
-                return;
-            }
             StopPlay(piano, _currentMelody, _currentRootKey, setPlayedColor);
             StopAllCoroutines();
             _isPlayingChord = false;
@@ -137,10 +133,6 @@ namespace Scripts.UI.Melody
             for (int i = 0; i < melody.CordLength; i++)
             {
                 var note = melody.Notes[i];
-                if (note.Beats == 0)
-                {
-                    break;
-                }
                 var key = pressedKey + note.Interval;
                 if (0 <= key.Index && key.Index < piano.KeyCount)
                 {
@@ -176,7 +168,7 @@ namespace Scripts.UI.Melody
             }
             _isPlayingChord = false;
 
-            for (int i = melody.CordLength; i < melody.Length; i++)
+            for (int i = melody.CordLength; i < melody.Notes.Count; i++)
             {
                 var note = melody.Notes[i];
                 var key = pressedKey + note.Interval;
@@ -253,14 +245,6 @@ namespace Scripts.UI.Melody
                 return;
             }
             var piano = PianoController.Instance;
-            if (piano == null)
-            {
-                return;
-            }
-            if (melody == null || melody.Notes == null || melody.Notes.Count == 0)
-            {
-                return;
-            }
 
             piano.ResetHighlight(_highlightedKeys);
             _highlightedKeys.Clear();
@@ -285,11 +269,14 @@ namespace Scripts.UI.Melody
         /// <param name="setPlayedColor"></param>
         private void StopPlay(PianoController piano, DomainMelody oldMelody, DomainPianoNote oldPressedKey, bool setPlayedColor)
         {
+            if(oldMelody == null)
+            {
+                return;
+            }
 
             for (int i = 0; i < oldMelody.CordLength; i++)
             {
-                var note = oldMelody.Notes[i];
-                var key = oldPressedKey + note.Interval;
+                var key = oldPressedKey + oldMelody.Notes[i].Interval;
                 if (0 <= key.Index && key.Index < piano.KeyCount)
                 {
                     piano.Stop(key, setPlayedColor);
@@ -298,12 +285,7 @@ namespace Scripts.UI.Melody
 
             for (int i = oldMelody.CordLength; i < oldMelody.Notes.Count; i++)
             {
-                var note = oldMelody.Notes[i];
-                if (note.Beats == 0)
-                {
-                    break;
-                }
-                var key = oldPressedKey + note.Interval;
+                var key = oldPressedKey + oldMelody.Notes[i].Interval;
                 if (0 <= key.Index && key.Index < piano.KeyCount)
                 {
                     piano.Stop(key, setPlayedColor);
