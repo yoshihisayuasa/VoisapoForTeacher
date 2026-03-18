@@ -81,22 +81,10 @@ namespace Scripts.UI.Melody
         public void PlayMelody(DomainMelody melody, DomainPianoNote pressedKey)
         {
             var piano = PianoController.Instance;
-            bool isTeacherSide = TeacherSideManager.Instance.TeacherSideButtonState;
 
-            if (melody == null)
-            {
-                var settings = PlayModeSettings.FromFlags(isTeacherSide, EarphoneModeManager.Instance.EarphoneMode);
-                _lastPlayPiano = settings.PlayPiano;
-                piano.Play(pressedKey, settings.PlayPiano, VolumeManager.Instance.Volume);
-            }
-            else
-            {
-                _currentMelody = melody;
-                _currentRootKey = pressedKey;
-                StartCoroutine(PlayMelodyLoopCoroutine(piano, melody));
-
-            }
-
+            _currentMelody = melody;
+            _currentRootKey = pressedKey;
+            StartCoroutine(PlayMelodyLoopCoroutine(piano, melody));
         }
 
         public void StopMelody(bool setPlayedColor)
@@ -116,67 +104,121 @@ namespace Scripts.UI.Melody
 
         }
 
-        /// <summary>
-        /// メロディーを再生するコルーチン
-        /// </summary>
-        /// <param name="melody"></param>
-        /// <param name="pressedKey"></param>
-        /// <returns></returns>
-        private IEnumerator PlayMelodyAtKeyOnce(PianoController piano, DomainMelody melody, DomainPianoNote pressedKey, PlayModeSettings settings)
+        private interface IMelodyPlayStrategy
+        {
+            IEnumerator Execute(PianoController piano, DomainMelody melody,
+                                DomainPianoNote pressedKey, PlayModeSettings settings);
+        }
+
+        private sealed class SinglePlayStrategy : IMelodyPlayStrategy
+        {
+            public IEnumerator Execute(PianoController piano, DomainMelody melody,
+                                       DomainPianoNote pressedKey, PlayModeSettings settings)
+            {
+                piano.Play(pressedKey, settings.PlayPiano, VolumeManager.Instance.Volume);
+                yield break;
+            }
+        }
+
+        private sealed class MajorWithMetronomePlayStrategy : IMelodyPlayStrategy
+        {
+            private readonly MelodyPlayer _player;
+            public MajorWithMetronomePlayStrategy(MelodyPlayer player) => _player = player;
+
+            public IEnumerator Execute(PianoController piano, DomainMelody melody,
+                                       DomainPianoNote pressedKey, PlayModeSettings settings)
+            {
+                for (int i = 0; i < melody.CordLength; i++)
+                {
+                    var key = pressedKey + melody.Notes[i].Interval;
+                    if (0 <= key.Index && key.Index < piano.KeyCount)
+
+                        piano.Play(key, settings.PlayCode, VolumeManager.Instance.Volume);
+                }
+
+                _player._isPlayingChord = true;
+                while (true)
+                {
+                    if (settings.PlayMetronome)
+                    { 
+                        _player.PlayMetronomeSound();
+                    }
+                    yield return new WaitForSeconds(BPMManager.Instance.SecondPerBeat);
+                }
+            }
+        }
+
+        private sealed class DefaultPlayStrategy : IMelodyPlayStrategy
+        {
+            private readonly MelodyPlayer _player;
+            public DefaultPlayStrategy(MelodyPlayer player) => _player = player;
+
+            public IEnumerator Execute(PianoController piano, DomainMelody melody,
+                                       DomainPianoNote pressedKey, PlayModeSettings settings)
+            {
+                var chordKeys = new List<DomainPianoNote>();
+                for (int i = 0; i < melody.CordLength; i++)
+                {
+                    var key = pressedKey + melody.Notes[i].Interval;
+                    if (0 <= key.Index && key.Index < piano.KeyCount)
+                    { 
+                        chordKeys.Add(key);
+                    }
+                }
+
+                foreach (var key in chordKeys)
+                { 
+                    piano.Play(key, settings.PlayCode, VolumeManager.Instance.Volume);
+                }
+                _player._isPlayingChord = true;
+
+                float beatSec = BPMManager.Instance.SecondPerBeat;
+                if (settings.PlayMetronome)
+                {
+                    for (int b = 0; b < melody.CordLength; b++)
+                    {
+                        _player.PlayMetronomeSound();
+                        yield return new WaitForSeconds(beatSec);
+                    }
+                }
+                else
+                {
+                    yield return new WaitForSeconds(beatSec * melody.CordLength);
+                }
+
+                foreach (var key in chordKeys)
+                {                     
+                    piano.Stop(key, false);
+                }
+                _player._isPlayingChord = false;
+
+                for (int i = melody.CordLength; i < melody.Notes.Count; i++)
+                {
+                    var note = melody.Notes[i];
+                    var key = pressedKey + note.Interval;
+                    piano.Play(key, settings.PlayPiano, VolumeManager.Instance.Volume);
+                    yield return new WaitForSeconds(BPMManager.Instance.SecondPerBeat * note.Beats);
+                    piano.Stop(key, true);
+                }
+            }
+        }
+
+        private IMelodyPlayStrategy GetStrategy(DomainMelody melody) =>
+            melody.Name switch
+            {
+                "Single"             => new SinglePlayStrategy(),
+                "MajorWithMetronome" => new MajorWithMetronomePlayStrategy(this),
+                _                    => new DefaultPlayStrategy(this),
+            };
+
+        private IEnumerator PlayMelodyAtKeyOnce(PianoController piano, DomainMelody melody,
+                                                DomainPianoNote pressedKey, PlayModeSettings settings)
         {
             if (!IsMelodyPlayableWithinRange(melody, pressedKey))
             {
                 yield break;
             }
-
-            var chordKeys = new List<DomainPianoNote>();
-            for (int i = 0; i < melody.CordLength; i++)
-            {
-                var note = melody.Notes[i];
-                var key = pressedKey + note.Interval;
-                if (0 <= key.Index && key.Index < piano.KeyCount)
-                {
-                    chordKeys.Add(key);
-                }
-            }
-
-            foreach (var key in chordKeys)
-            {
-                piano.Play(key, settings.PlayCode, VolumeManager.Instance.Volume);
-            }
-
-            _isPlayingChord = true;
-
-            float beatSec = BPMManager.Instance.SecondPerBeat;
-            int beats = melody.CordLength;
-            if (settings.PlayMetronome)
-            {
-                for (int b = 0; b < beats; b++)
-                {
-                    PlayMetronomeSound();
-                    yield return new WaitForSeconds(beatSec);
-                }
-            }
-            else
-            {
-                yield return new WaitForSeconds(beatSec * beats);
-            }
-
-            foreach (var key in chordKeys)
-            {
-                piano.Stop(key, false);
-            }
-            _isPlayingChord = false;
-
-            for (int i = melody.CordLength; i < melody.Notes.Count; i++)
-            {
-                var note = melody.Notes[i];
-                var key = pressedKey + note.Interval;
-                piano.Play(key, settings.PlayPiano, VolumeManager.Instance.Volume);
-                yield return new WaitForSeconds(BPMManager.Instance.SecondPerBeat * note.Beats);
-                piano.Stop(key, true);
-            }
-
+            yield return StartCoroutine(GetStrategy(melody).Execute(piano, melody, pressedKey, settings));
         }
 
         private IEnumerator PlayMelodyLoopCoroutine(PianoController piano, DomainMelody melody)
@@ -240,10 +282,10 @@ namespace Scripts.UI.Melody
 
         public void HighlightMinMaxKeys(DomainMelody melody, DomainPianoNote pressedKey)
         {
-            if (!IsMelodyPlayableWithinRange(melody, pressedKey))
-            {
-                return;
-            }
+            //if (!IsMelodyPlayableWithinRange(melody, pressedKey))
+            //{
+            //    return;
+            //}
             var piano = PianoController.Instance;
 
             piano.ResetHighlight(_highlightedKeys);

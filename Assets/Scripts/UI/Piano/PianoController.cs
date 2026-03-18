@@ -71,10 +71,10 @@ namespace Scripts.UI.Piano
                     Debug.Log($"[Catch In Controller] Pressed Key is : {key}");
                     var melody = MelodyManager.Instance.CurrentMelody;
 
-                    if (!IsMelodyPlayableInRange(melody, key))
-                    {
-                        return;
-                    }
+                    //if (!IsMelodyPlayableInRange(melody, key))
+                    //{
+                    //    return;
+                    //}
 
                     MelodyPlayer.Instance.StopMelody(false);
                     MelodyPlayer.Instance.HighlightMinMaxKeys(melody, key);
@@ -275,7 +275,7 @@ namespace Scripts.UI.Piano
             GetKeyUI(maxKey).SetMaxHighlightColor();
 
         }
-        private bool IsMelodyPlayableInRange(DomainMelody melody, PianoNote rootKey)
+        private bool IsMelodyPlayableInRangeIsMelodyPlayableInRange(DomainMelody melody, PianoNote rootKey)
         {
             if (melody == null || melody.Notes == null || melody.Notes.Count == 0)
             {
