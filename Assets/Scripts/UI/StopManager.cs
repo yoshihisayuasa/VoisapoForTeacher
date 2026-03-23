@@ -41,12 +41,6 @@ namespace Assets.Scripts.UI
             {
                 return;
             }
-
-            if (player.MetronomeAudioSource.isPlaying)
-            {
-                player.MetronomeAudioSource.Stop();
-            }
-       
             player.StopMelody(false);
         }
     }
