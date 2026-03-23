@@ -47,7 +47,7 @@ namespace Assets.Scripts.UI
                 player.MetronomeAudioSource.Stop();
             }
        
-            player.StopMelody(true);
+            player.StopMelody(false);
         }
     }
 }

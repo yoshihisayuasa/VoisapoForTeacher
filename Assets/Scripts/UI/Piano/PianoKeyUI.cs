@@ -47,6 +47,8 @@ namespace Scripts.UI.Piano
         }
 
 
+        public PianoNoteEnum NoteEnum => _keyEnum;
+
         public Observable<PianoNote> OnClickKeyAsObservable => _onClickKeySubject;
         public Observable<PianoNote> OnReleaseKeyAsObservable => _onReleaseKeySubject;
         public Observable<PianoNote> OnPointerEnterAsObservable => _onPointerEnterSubject;
@@ -106,7 +108,7 @@ namespace Scripts.UI.Piano
             _colorState = KeyColorState.Playing;
         }
 
-        public void SetStoppedVisual(bool setPlayedColor)
+        public void SetKeyVisual(bool setPlayedColor)
         {
             if (_keyLabelBg == null)
             {

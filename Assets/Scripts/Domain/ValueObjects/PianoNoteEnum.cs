@@ -3,21 +3,6 @@ namespace Scripts.Domain
     public enum PianoNoteEnum
     {
         None = -1,
-        A0,
-        A0Sharp,
-        B0,
-        C1,
-        C1Sharp,
-        D1,
-        D1Sharp,
-        E1,
-        F1,
-        F1Sharp,
-        G1,
-        G1Sharp,
-        A1,
-        A1Sharp,
-        B1,
         C2,
         C2Sharp,
         D2,
@@ -77,19 +62,6 @@ namespace Scripts.Domain
         G6Sharp,
         A6,
         A6Sharp,
-        B6,
-        C7,
-        C7Sharp,
-        D7,
-        D7Sharp,
-        E7,
-        F7,
-        F7Sharp,
-        G7,
-        G7Sharp,
-        A7,
-        A7Sharp,
-        B7,
-        C8
+        B6
     }
 }

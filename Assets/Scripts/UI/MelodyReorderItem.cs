@@ -1,9 +1,13 @@
-﻿using UnityEngine;
+﻿using Scripts.UI.Melody;
+using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using DomainMelody = Scripts.Domain.Melody;
 
 namespace Assets.Scripts.UI
 {
+    [RequireComponent(typeof(CanvasGroup))]
+    [RequireComponent(typeof(Button))]
     public sealed class MelodyReorderItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         private MelodyListBuilder _builder;
@@ -12,6 +16,7 @@ namespace Assets.Scripts.UI
         private RectTransform _dragRoot;
         private Transform _dragStartSlot;
         private int _dragStartIndex;
+        private Button _button;
 
         public DomainMelody Melody { get; private set; }
         public Transform CurrentSlot { get; private set; }
@@ -24,11 +29,33 @@ namespace Assets.Scripts.UI
 
             _rectTransform = transform as RectTransform;
             _canvasGroup = GetComponent<CanvasGroup>();
+            _button = GetComponent<Button>();
 
             var canvas = GetComponentInParent<Canvas>();
-            _dragRoot =  canvas.transform as RectTransform;
+            _dragRoot = canvas.transform as RectTransform;
+
+            MelodyManager.Instance.MelodyChanged += OnMelodyChanged;
+            UpdateColor(MelodyManager.Instance.CurrentMelody);
 
             SetSlot(slot, builder.GetSlotIndex(slot));
+        }
+
+        private void OnDestroy()
+        {
+            if (MelodyManager.Instance != null)
+                MelodyManager.Instance.MelodyChanged -= OnMelodyChanged;
+        }
+        private void OnMelodyChanged(DomainMelody selected) => UpdateColor(selected);
+        private void UpdateColor(DomainMelody selected)
+        {
+            if (selected == Melody)
+            {
+                _button.image.color = new Color(0.961f, 0.651f, 0.137f);
+            }
+            else
+            {
+                _button.image.color = Color.white;
+            }
         }
 
         public void OnBeginDrag(PointerEventData eventData)

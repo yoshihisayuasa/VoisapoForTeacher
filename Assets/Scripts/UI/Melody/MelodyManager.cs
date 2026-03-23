@@ -13,7 +13,8 @@ namespace Scripts.UI.Melody
 
         public event Action<DomainMelody> MelodyChanged;
 
-        private readonly string _jsonFileName = "savedata2";
+        private const string _jsonFileName = "savedata2";
+        private const string defaultMelodyName = "Single";
 
 
         private List<DomainMelody> _melodies = new();
@@ -22,6 +23,7 @@ namespace Scripts.UI.Melody
             if (Instance == null)
             {
                 Instance = this;
+                DontDestroyOnLoad(gameObject);
             }
             else
             {
@@ -35,19 +37,19 @@ namespace Scripts.UI.Melody
             if (loadedMelodies.Count > 0)
             {
                 _melodies.AddRange(loadedMelodies);
-                CurrentMelody = _melodies[2];
+                CurrentMelody = _melodies.Find(m => m.Name == defaultMelodyName);
             }
         }
 
         public IReadOnlyList<DomainMelody> GetAllMelodies() => _melodies;
-        public void AddMelody(DomainMelody melody) => _melodies.Add(melody);
+        public void AddMelody(DomainMelody melody)
+        {
+            _melodies.Add(melody);
+            SaveAllMelodies();
+        }
 
         public void SetCurrentMelody(DomainMelody melody)
         {
-            if (melody == null)
-            {
-                return;
-            }
             CurrentMelody = melody;
             MelodyChanged?.Invoke(melody);
         }
@@ -57,11 +59,10 @@ namespace Scripts.UI.Melody
             _melodies.Remove(melody);
             if (CurrentMelody == melody)
             {
-                CurrentMelody = null;
-                MelodyChanged?.Invoke(null);
+                CurrentMelody = _melodies.Find(m => m.Name == defaultMelodyName);
+                MelodyChanged?.Invoke(CurrentMelody);
             }
             SaveAllMelodies();
-
         }
         public void SavePositions()
         {

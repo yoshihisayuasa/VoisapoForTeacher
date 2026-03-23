@@ -78,7 +78,7 @@ public class ModalDialogManager : MonoBehaviour
         }
 
         // Find Canvas
-        Canvas[] canvasObjects = GameObject.FindObjectsOfType<Canvas>();
+        Canvas[] canvasObjects = FindObjectsOfType<Canvas>();
 
         ModalDialog modalDlg = null;
 

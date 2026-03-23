@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -15,12 +15,76 @@ namespace Assets.Scripts.UI
             get => _teacherSideButtonState;
             set
             {
+                if (!value && IsCtrlHeld())
+                { 
+                    return;
+                }
                 if (_teacherSideButtonState != value)
                 {
                     _teacherSideButtonState = value;
                     TeacherSideButtonStateChanged?.Invoke(_teacherSideButtonState);
                 }
             }
+        }
+
+        private static bool IsCtrlHeld()
+        {
+            var kb = Keyboard.current;
+            if (kb == null)
+            {
+                return false;
+            }
+            if (kb.leftCtrlKey.isPressed || kb.rightCtrlKey.isPressed)
+            {
+                return true;
+            }
+#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
+      if (kb.leftCommandKey.isPressed || kb.rightCommandKey.isPressed) 
+      {
+        return true;
+      }
+#endif
+            return false;
+        }
+
+        private static bool IsCtrlPressedThisFrame()
+        {
+            var kb = Keyboard.current;
+            if (kb == null)
+            {
+                return false;
+            }
+            if (kb.leftCtrlKey.wasPressedThisFrame || kb.rightCtrlKey.wasPressedThisFrame)
+            {
+                return true;
+            }
+#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
+            if(kb.leftCommandKey.wasPressedThisFrame || kb.rightCommandKey.wasPressedThisFrame)
+            {
+                return true;
+            }
+#endif
+            return false;
+        }
+
+        private static bool IsCtrlReleasedThisFrame()
+        {
+            var kb = Keyboard.current;
+            if (kb == null)
+            {
+                return false;
+            }
+            if(kb.leftCtrlKey.wasReleasedThisFrame || kb.rightCtrlKey.wasReleasedThisFrame)
+            {
+                return true;
+            }
+#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
+            if(kb.leftCommandKey.wasReleasedThisFrame || kb.rightCommandKey.wasReleasedThisFrame)
+            {
+                return true;
+            }
+#endif
+            return false;
         }
 
         private void Awake()
@@ -34,41 +98,17 @@ namespace Assets.Scripts.UI
             DontDestroyOnLoad(gameObject);
 
         }
+
         private void Update()
         {
-            var kb = Keyboard.current;
-            if (kb == null) return;
-
-            // 押された瞬間（GetKeyDown 相当）
-            bool down =
-                kb.leftCtrlKey.wasPressedThisFrame ||
-                kb.rightCtrlKey.wasPressedThisFrame ||
-#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
-                kb.leftCommandKey.wasPressedThisFrame ||
-                kb.rightCommandKey.wasPressedThisFrame ||
-#endif
-                false;
-
-            if (down)
+            if (IsCtrlPressedThisFrame())
             {
                 TeacherSideButtonState = true;
             }
-
-            // 離された瞬間（GetKeyUp 相当）
-            bool up =
-                kb.leftCtrlKey.wasReleasedThisFrame ||
-                kb.rightCtrlKey.wasReleasedThisFrame ||
-#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
-                kb.leftCommandKey.wasReleasedThisFrame ||
-                kb.rightCommandKey.wasReleasedThisFrame ||
-#endif
-                false;
-
-            if (up)
+            else if (IsCtrlReleasedThisFrame())
             {
                 TeacherSideButtonState = false;
             }
-
         }
     }
 }

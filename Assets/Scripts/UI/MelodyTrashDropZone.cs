@@ -1,4 +1,5 @@
 
+using Scripts.UI.Melody;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -12,11 +13,21 @@ namespace Assets.Scripts.UI
         {
             _builder = builder;
         }
-        public void OnDrop(PointerEventData eventData) 
+        public void OnDrop(PointerEventData eventData)
         {
-            var item = eventData.pointerDrag.GetComponent<MelodyReorderItem>();
-            if (item == null)
+            if (!eventData.pointerDrag.TryGetComponent<MelodyReorderItem>(out var item))
             {
+                return;
+            }
+
+            if (!MelodyPlayer.Instance.CanDeleteMelody(item.Melody))
+            {
+                item.ResetToDragStart();
+                SimpleModalWindow.Create(ignorable: false)
+                    .SetHeader("通知")
+                    .SetBody("このメロディーは削除できません。")
+                    .AddButton("OK", () => { }, ModalButtonType.Success)
+                    .Show();
                 return;
             }
 
@@ -27,7 +38,7 @@ namespace Assets.Scripts.UI
                    _builder.HandleTrashDrop(item); // はいを押したときだけ実行
                }, ModalButtonType.Danger)
                .AddButton("キャンセル", () => {
-                   // 何もしない
+                   item.ResetToDragStart();
                }, ModalButtonType.Success)
                .Show();
         }

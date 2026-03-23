@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.UI
 {
+    [RequireComponent(typeof(Toggle))]
+    [RequireComponent(typeof(Selectable))]
     public class TeacherPlayUI : MonoBehaviour
     {
         [Header("UI")]

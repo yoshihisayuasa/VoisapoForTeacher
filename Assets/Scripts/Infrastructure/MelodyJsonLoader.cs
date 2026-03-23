@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using DomainChord = Scripts.Domain.Chord;
 using DomainMelody = Scripts.Domain.Melody;
 using DomainNote = Scripts.Domain.Note;
 
@@ -134,10 +135,21 @@ namespace Scripts.Infrastructure
             var wrapper = new MelodyListWrapper { Melodies = new List<MelodyData>() };
             foreach (var melody in melodies)
             {
+                var chordData = new ChordData
+                {
+                    Intervals = new List<int>(),
+                    Beats = melody.Chord.Beats
+                };
+                foreach (var interval in melody.Chord.Intervals)
+                {
+                    chordData.Intervals.Add(interval.Value);
+                }
+
                 var data = new MelodyData
                 {
                     Name = melody.Name,
                     Position = melody.Position,
+                    Chord = chordData,
                     Notes = new List<NoteData>()
                 };
                 foreach (var note in melody.Notes)
@@ -149,6 +161,16 @@ namespace Scripts.Infrastructure
             return JsonUtility.ToJson(wrapper, true);
         }
 
+        private static DomainChord ParseChordData(ChordData chordData)
+        {
+            var intervals = new List<Assets.Scripts.Domain.ValueObjects.Interval>();
+            foreach (var v in chordData.Intervals)
+            {
+                intervals.Add(new Assets.Scripts.Domain.ValueObjects.Interval(v));
+            }
+            return new DomainChord(intervals, chordData.Beats);
+        }
+
         private static List<DomainMelody> ParseNew(MelodyListWrapper wrapper)
         {
             var melodies = new List<DomainMelody>();
@@ -158,6 +180,9 @@ namespace Scripts.Infrastructure
                 {
                     continue;
                 }
+
+                var chord = ParseChordData(data.Chord);
+
                 var notes = new List<DomainNote>();
                 if (data.Notes != null)
                 {
@@ -166,7 +191,7 @@ namespace Scripts.Infrastructure
                         notes.Add(new DomainNote(n.Interval, n.Beats));
                     }
                 }
-                melodies.Add(new DomainMelody(data.Name, notes, data.Position));
+                melodies.Add(new DomainMelody(data.Name, chord, notes, data.Position));
             }
             return melodies;
         }
@@ -178,33 +203,49 @@ namespace Scripts.Infrastructure
 
             for (int i = 0; i < legacy.ScaleName.Count; i++)
             {
-                string name = legacy.ScaleName[i];
+                string name = legacy.ScaleName[i].Replace("～", "~").Replace("*", "");
                 if (string.IsNullOrEmpty(name))
                 {
                     continue;
                 }
-                int position = (legacy.ScalePos != null && i < legacy.ScalePos.Count)
-                    ? legacy.ScalePos[i] : 0;
+                int position = legacy.ScalePos[i] ;
 
-                // 実際の配列長をそのまま使う（上限なし）
                 var noteArr = type.GetField($"ScaleNote{i}")?.GetValue(legacy) as int[];
                 var beatArr = type.GetField($"ScaleBeat{i}")?.GetValue(legacy) as int[];
-                int len = Math.Max(noteArr?.Length ?? 0, beatArr?.Length ?? 0);
+                int len = noteArr.Length;
 
+                // 旧フォーマット: 先頭3音 = 和音、残り = メロディ
+                int legacyCordLength = DomainChord.Length;
+                var chordIntervals = new List<Assets.Scripts.Domain.ValueObjects.Interval>();
                 var notes = new List<DomainNote>();
 
-                int legacyCordLength = 3;
                 for (int j = 0; j < len; j++)
                 {
-                    int beat = (beatArr != null && j < beatArr.Length) ? beatArr[j] : 0;
-                    if (j > legacyCordLength - 1 && beat == 0)
-                    {
-                        break; 
-                    } 
                     int interval = (noteArr != null && j < noteArr.Length) ? noteArr[j] : 0;
-                    notes.Add(new DomainNote(interval, beat));
+                    int beat = (beatArr != null && j < beatArr.Length) ? beatArr[j] : 0;
+
+                    if (j < legacyCordLength)
+                    {
+                        chordIntervals.Add(new Assets.Scripts.Domain.ValueObjects.Interval(interval));
+                    }
+                    else
+                    {
+                        if (beat == 0)
+                        {
+                            break;
+                        }
+                        notes.Add(new DomainNote(interval, beat));
+                    }
                 }
-                melodies.Add(new DomainMelody(name, notes, position));
+
+                // 和音が3音未満の場合はルート(0)で埋める
+                while (chordIntervals.Count < legacyCordLength)
+                {
+                    chordIntervals.Add(new Assets.Scripts.Domain.ValueObjects.Interval(0));
+                }
+
+                var chord = new DomainChord(chordIntervals, legacyCordLength);
+                melodies.Add(new DomainMelody(name, chord, notes, position));
             }
             return melodies;
         }
@@ -222,7 +263,15 @@ namespace Scripts.Infrastructure
         {
             public string Name;
             public int Position;
+            public ChordData Chord;
             public List<NoteData> Notes;
+        }
+
+        [Serializable]
+        private class ChordData
+        {
+            public List<int> Intervals;
+            public int Beats;
         }
 
         [Serializable]

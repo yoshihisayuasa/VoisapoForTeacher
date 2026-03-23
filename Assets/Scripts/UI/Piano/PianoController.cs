@@ -1,29 +1,35 @@
-using Assets.Scripts.UI;
 using R3;
 using Scripts.Domain;
 using Scripts.UI.Melody;
+using Scripts.UI.Piano;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq; // Added for event stream bundling
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI; // ScrollRect
 using DomainMelody = Scripts.Domain.Melody;
 
 
 
-namespace Scripts.UI.Piano
+namespace Assets.Scripts.UI.Piano
 {
     /// <summary>
     /// 役割：鍵盤の入力管理・イベント伝達
     /// </summary>
-    public class PianoController : MonoBehaviour
+    public sealed class PianoController : MonoBehaviour
     {
         /// <summary>
         /// 鍵盤押下時のイベント
         /// </summary>
 
         [SerializeField]
-        [Tooltip("鍵盤一覧")] private List<PianoKeyUI> _pianoKeys;
+        [Tooltip("鍵盤一覧")] private List<PianoKeyUI>
+            _pianoKeys;
+
+        private readonly List<PianoNote> _highlightedKeys = new();
+        private readonly HashSet<PianoNote> _playingKeys = new();
+        private readonly HashSet<PianoNote> _coloredKeys = new();
+        private Dictionary<PianoNoteEnum, PianoKeyUI> _keyDict;
         [SerializeField]
         [Tooltip("ピアノ鍵盤を含む ScrollRect (水平スクロール)")] private ScrollRect _scrollRect;
         public IReadOnlyList<PianoKeyUI> PianoKeys => _pianoKeys;
@@ -38,6 +44,12 @@ namespace Scripts.UI.Piano
                 return;
             }
             Instance = this;
+
+            _keyDict = new Dictionary<PianoNoteEnum, PianoKeyUI>(_pianoKeys.Count);
+            foreach (var key in _pianoKeys)
+            {
+                _keyDict[key.NoteEnum] = key;
+            }
         }
 
         private void Start()
@@ -71,12 +83,8 @@ namespace Scripts.UI.Piano
                     Debug.Log($"[Catch In Controller] Pressed Key is : {key}");
                     var melody = MelodyManager.Instance.CurrentMelody;
 
-                    //if (!IsMelodyPlayableInRange(melody, key))
-                    //{
-                    //    return;
-                    //}
-
-                    MelodyPlayer.Instance.StopMelody(false);
+                    MelodyPlayer.Instance.StopMelody(true);
+                    TeacherSideManager.Instance.TeacherSideButtonState = false;
                     MelodyPlayer.Instance.HighlightMinMaxKeys(melody, key);
                     MelodyPlayer.Instance.PlayMelody(melody, key);
                     EnsureRangeVisible(melody, key);
@@ -88,7 +96,7 @@ namespace Scripts.UI.Piano
                 {
                     var melody = MelodyManager.Instance.CurrentMelody;
                     MelodyPlayer.Instance.HighlightMinMaxKeys(melody, key);
-                    Debug.Log($"[Catch In Controller] Released Key is : {key}");
+                    Debug.Log($"[Catch In Controller] Entered Key is : {key}");
                 })
                 .AddTo(this);
         }
@@ -98,14 +106,10 @@ namespace Scripts.UI.Piano
         /// <summary>
         /// 視覚は常に更新し、音再生は isPlaySound で制御する。
         /// </summary>
-        public void Play(PianoNote pessedkey, bool isPlaySound, float volume)
+        public void Play(PianoNote pressedKey, bool isPlaySound, float volume)
         {
-            if (!IsValidIndex(pessedkey))
-            {
-                return;
-            }
-
-            var key = GetKeyUI(pessedkey);
+            _playingKeys.Add(pressedKey);
+            var key = GetKeyUI(pressedKey);
             key.SetPlayingVisual();
             if (isPlaySound)
             {
@@ -115,13 +119,46 @@ namespace Scripts.UI.Piano
 
         public void Stop(PianoNote key, bool setPlayedColor)
         {
-            if (!IsValidIndex(key))
+            _playingKeys.Remove(key);
+            if (setPlayedColor)
             {
-                return;
+                _coloredKeys.Add(key);
+            }
+            else
+            {
+                _coloredKeys.Remove(key);
             }
             var keyUI = GetKeyUI(key);
-            keyUI.StopSound();                 // フェードアウトして停止
-            keyUI.SetStoppedVisual(setPlayedColor); // 色を既定/Playedへ
+            keyUI.StopSound();
+            keyUI.SetKeyVisual(setPlayedColor);
+        }
+
+        public void StopMelody(bool setKeyVisual)
+        {
+            foreach (var key in _playingKeys)
+            {
+                var keyUI = GetKeyUI(key);
+                keyUI.StopSound();
+                if(setKeyVisual)
+                {
+                    keyUI.SetKeyVisual(false);
+                }
+                else
+                {
+                    _coloredKeys.Add(key);
+                }
+            }
+            _playingKeys.Clear();
+
+            if (setKeyVisual)
+            {
+                foreach (var key in _coloredKeys)
+                {
+                    var keyUI = GetKeyUI(key);
+                    keyUI.SetKeyVisual(false);
+                }
+                _coloredKeys.Clear();
+            }
         }
 
         /// <summary>
@@ -130,16 +167,12 @@ namespace Scripts.UI.Piano
         /// </summary>
         public void EnsureRangeVisible(DomainMelody melody, PianoNote pressedKey)
         {
-            if (melody == null || melody.Notes == null || melody.Notes.Count == 0)
-            {
-                return;
-            }
-
             PianoNote minKey = pressedKey + melody.MinInterval;
             PianoNote maxKey = pressedKey + melody.MaxInterval;
-            if (!IsValidIndex(minKey) || !IsValidIndex(maxKey))
+            
+            if (minKey.Index < 0 || maxKey.Index >= KeyCount)
             {
-                return;
+                return ;
             }
 
             var content = _scrollRect.content;
@@ -173,7 +206,6 @@ namespace Scripts.UI.Piano
             }
 
             float visualScrollable = visualContentWidth - visualViewportWidth;
-
 
             GetKeyEdgesVisual(minRT, content, contentScaleX, out float minLeft, out float _);
             GetKeyEdgesVisual(maxRT, content, contentScaleX, out float _, out float maxRight);
@@ -221,70 +253,28 @@ namespace Scripts.UI.Piano
         /// <summary>
         /// インデックスが鍵盤配列の範囲内か判定します。
         /// </summary>
-        private bool IsValidIndex(PianoNote key)
-        {
-            if (_pianoKeys == null || key == null)
-            {
-                return false;
-            }
-            int idx = key.Index;
-            return idx >= 0 && idx < _pianoKeys.Count;
-        }
 
         public PianoKeyUI GetKeyUI(PianoNote pressedKey)
         {
-            if (!IsValidIndex(pressedKey))
-            {
-                return null;
-            }
-            return _pianoKeys[pressedKey.Index];
+            return _keyDict[pressedKey.Note];
         }
 
-        public void ResetHighlight(List<PianoNote> pianoNotes)
+        public void SetHighlight(PianoNote key1, PianoNote key2)
         {
-            foreach (var key in pianoNotes)
-            {
-                if (IsValidIndex(key))
-                {
-                    GetKeyUI(key).ResetHighlightedColor();
-                }
-            }
-        }
+            var minKey = key1.Index <= key2.Index ? key1 : key2;
+            var maxKey = key1.Index <= key2.Index ? key2 : key1;
 
-        public void SetHighlight(List<PianoNote> pianoNote)
-        {
-            if (pianoNote == null || pianoNote.Count < 2)
+            foreach (var key in _highlightedKeys)
             {
-                return;
+                GetKeyUI(key).ResetHighlightedColor();
             }
-            if (pianoNote[0].Index > pianoNote[1].Index)
-            {
-                PianoNote tmp = pianoNote[0];
-                pianoNote[0] = pianoNote[1];
-                pianoNote[1] = tmp;
-            }
-            var minKey = pianoNote[0];
-            var maxKey = pianoNote[1];
+            _highlightedKeys.Clear();
 
-            if (!IsValidIndex(minKey) || !IsValidIndex(maxKey))
-            {
-                return;
-            }
+            _highlightedKeys.Add(minKey);
+            _highlightedKeys.Add(maxKey);
 
             GetKeyUI(minKey).SetMinHighlightColor();
             GetKeyUI(maxKey).SetMaxHighlightColor();
-
-        }
-        private bool IsMelodyPlayableInRangeIsMelodyPlayableInRange(DomainMelody melody, PianoNote rootKey)
-        {
-            if (melody == null || melody.Notes == null || melody.Notes.Count == 0)
-            {
-                return false;
-            }
-
-            PianoNote minKey = rootKey + melody.MinInterval;
-            PianoNote maxKey = rootKey + melody.MaxInterval;
-            return IsValidIndex(minKey) && IsValidIndex(maxKey);
         }
 
     }
