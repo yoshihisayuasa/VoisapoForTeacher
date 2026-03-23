@@ -1,7 +1,7 @@
-﻿using Scripts.UI.Melody;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using Scripts.UI.Piano;
+using Assets.Scripts.UI.Melody;
 
 namespace Assets.Scripts.UI
 {

@@ -15,9 +15,7 @@ namespace Scripts.UI.Piano
     public class PianoKeyUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler
     {
         private readonly Subject<PianoNote> _onClickKeySubject = new();
-        private readonly Subject<PianoNote> _onReleaseKeySubject = new();
         private readonly Subject<PianoNote> _onPointerEnterSubject = new();
-        private readonly Subject<PianoNote> _onPointerExitEnterSubject = new();
 
         [SerializeField]
         [Tooltip("鍵盤の種別")]
@@ -32,6 +30,7 @@ namespace Scripts.UI.Piano
         private AudioSource _audioSource;
 
         private KeyColorState _colorState = KeyColorState.Default;
+        private KeyColorState _preHighlightState = KeyColorState.Default;
 
         private Image _keyLabelBg;
         private Color _defaultColor;
@@ -44,15 +43,15 @@ namespace Scripts.UI.Piano
             Default,
             Playing,
             Played,
+            MinHighlighted,
+            MaxHighlighted,
         }
 
 
         public PianoNoteEnum NoteEnum => _keyEnum;
 
         public Observable<PianoNote> OnClickKeyAsObservable => _onClickKeySubject;
-        public Observable<PianoNote> OnReleaseKeyAsObservable => _onReleaseKeySubject;
         public Observable<PianoNote> OnPointerEnterAsObservable => _onPointerEnterSubject;
-        public Observable<PianoNote> OnPointerExitAsObservable => _onPointerExitEnterSubject;
 
         private void Awake()
         {
@@ -89,7 +88,6 @@ namespace Scripts.UI.Piano
             if (_domain.IsPressed)
             {
                 _domain.Release();
-                _onReleaseKeySubject.OnNext(_domain.Key);
             }
         }
 
@@ -138,22 +136,26 @@ namespace Scripts.UI.Piano
             _infra.StopSound(fadeOutDuration);
         }
 
-        // 統合版
         public void SetMaxHighlightColor()
         {
             if (_keyLabelBg == null) return;
+            _preHighlightState = _colorState;
             _keyLabelBg.color = SetMaxColor(_domain.Key.IsSharp);
+            _colorState = KeyColorState.MaxHighlighted;
         }
 
         public void SetMinHighlightColor()
         {
             if (_keyLabelBg == null) return;
+            _preHighlightState = _colorState;
             _keyLabelBg.color = SetMinColor(_domain.Key.IsSharp);
+            _colorState = KeyColorState.MinHighlighted;
         }
 
         public void ResetHighlightedColor()
         {
-            switch (_colorState)
+            _colorState = _preHighlightState;
+            switch (_preHighlightState)
             {
                 case KeyColorState.Playing:
                     _keyLabelBg.color = Playing;

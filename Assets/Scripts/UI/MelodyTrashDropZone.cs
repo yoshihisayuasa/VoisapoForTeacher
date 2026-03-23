@@ -1,5 +1,5 @@
 
-using Scripts.UI.Melody;
+using Assets.Scripts.UI.Melody;
 using UnityEngine;
 using UnityEngine.EventSystems;
 

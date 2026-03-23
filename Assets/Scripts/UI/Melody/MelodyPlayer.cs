@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Domain.ValueObjects;
 using Assets.Scripts.UI;
 using Assets.Scripts.UI.Piano;
+using Scripts.UI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,7 @@ using static Assets.Scripts.UI.AutoKeyChangeManager;
 using DomainMelody = Scripts.Domain.Melody;
 using DomainPianoNote = Scripts.Domain.PianoNote;
 
-namespace Scripts.UI.Melody
+namespace Assets.Scripts.UI.Melody
 {
     public sealed class MelodyPlayer : MonoBehaviour
     {
@@ -53,7 +54,7 @@ namespace Scripts.UI.Melody
         private AudioClip _metronomeClip;
 
         [SerializeField, Tooltip("メトロノーム用AudioSource")]
-        public AudioSource MetronomeAudioSource;
+        private AudioSource _metronomeAudioSource;
         private AutoKeyChangeState _autoKeyChangeState = AutoKeyChangeState.None;
         private AutoKeyChangeState _prevAutoKeyChangeState = AutoKeyChangeState.None;
         private bool _isPlayingChord = false;
@@ -69,17 +70,19 @@ namespace Scripts.UI.Melody
             Instance = this;
             DontDestroyOnLoad(gameObject);
 
-            if (MetronomeAudioSource == null)
+            if (_metronomeAudioSource == null)
             {
-                MetronomeAudioSource = gameObject.AddComponent<AudioSource>();
-                MetronomeAudioSource.playOnAwake = false;
+                _metronomeAudioSource = gameObject.AddComponent<AudioSource>();
+                _metronomeAudioSource.playOnAwake = false;
             }
         }
 
         public void PlayMelody(DomainMelody melody, DomainPianoNote pressedKey)
         {
-            var piano = PianoController.Instance;
+            // 前回のコルーチン・状態を確実に停止してから開始（競合防止）
+            StopMelody(true);
 
+            var piano = PianoController.Instance;
             _currentMelody = melody;
             _currentRootKey = pressedKey;
             StartCoroutine(PlayMelodyLoopCoroutine(piano, melody));
@@ -93,9 +96,9 @@ namespace Scripts.UI.Melody
             StopAllCoroutines();
             _isPlayingChord = false;
 
-            if (this.MetronomeAudioSource.isPlaying)
+            if (_metronomeAudioSource.isPlaying)
             {
-                this.MetronomeAudioSource.Stop();
+                _metronomeAudioSource.Stop();
             }
         }
         private interface IMelodyPlayStrategy
@@ -137,6 +140,7 @@ namespace Scripts.UI.Melody
                 }
 
                 _player._isPlayingChord = true;
+                // 意図的な無限ループ: StopMelody → StopAllCoroutines() で外部から停止する
                 while (true)
                 {
                     if (settings.PlayMetronome)
@@ -231,7 +235,7 @@ namespace Scripts.UI.Melody
             {
                 "Single"           => new SinglePlayStrategy(),
                 "Major& Metronome" => new MajorWithMetronomePlayStrategy(this),
-                "Major Code"             => new MajorPlayStrategy(this),
+                "Major Code"       => new MajorPlayStrategy(this),
                 _                  => new DefaultPlayStrategy(this),
             };
 
@@ -240,10 +244,6 @@ namespace Scripts.UI.Melody
         private IEnumerator PlayMelodyAtKeyOnce(PianoController piano, DomainMelody melody,
                                                 DomainPianoNote pressedKey, PlayModeSettings settings)
         {
-            if (!IsMelodyPlayableWithinRange(melody, pressedKey))
-            {
-                yield break;
-            }
             yield return StartCoroutine(GetStrategy(melody).Execute(piano, melody, pressedKey, settings));
         }
 
@@ -310,12 +310,23 @@ namespace Scripts.UI.Melody
             piano.SetHighlight( minKey, maxKey);
         }
 
+        public void EnsureKeyRangeVisible(DomainMelody melody, DomainPianoNote pressedKey)
+        {
+            if (!IsMelodyPlayableWithinRange(melody, pressedKey))
+            {
+                return;
+            }
+            var minKey = pressedKey + melody.MinInterval;
+            var maxKey = pressedKey + melody.MaxInterval;
+            PianoController.Instance.EnsureRangeVisible(minKey, maxKey);
+        }
+
         /// <summary>
         /// メトロノーム音をPlayOneShotで再生（制御不要なワンショット再生）
         /// </summary>
         private void PlayMetronomeSound()
         {
-            MetronomeAudioSource.PlayOneShot(_metronomeClip, VolumeManager.Instance.Volume);
+            _metronomeAudioSource.PlayOneShot(_metronomeClip, VolumeManager.Instance.Volume);
         }
 
         private bool IsMelodyPlayableWithinRange(DomainMelody melody, DomainPianoNote rootKey)
