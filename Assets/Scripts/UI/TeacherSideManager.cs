@@ -1,31 +1,97 @@
-using System;
 using Assets.Scripts.UI.Piano;
+using R3;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using R3;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.UI
 {
+    [RequireComponent(typeof(Toggle))]
+    [RequireComponent(typeof(Selectable))]
     public class TeacherSideManager : MonoBehaviour
     {
         public static TeacherSideManager Instance { get; private set; }
+
+        [Header("UI")]
+        [SerializeField] private Toggle _toggle;
+        [SerializeField] private Image _image;
+
+        private readonly Color _onColor = AppColors.Accent;
+        private readonly Color _offColor = Color.white;
+
         private bool _teacherSideButtonState;
-        public event Action<bool> TeacherSideButtonStateChanged;
 
         public bool TeacherSideButtonState
         {
             get => _teacherSideButtonState;
-            set
+            private set
             {
                 if (!value && IsCtrlHeld())
-                { 
+                {
                     return;
                 }
-                if (_teacherSideButtonState != value)
+                if (_teacherSideButtonState == value)
                 {
-                    _teacherSideButtonState = value;
-                    TeacherSideButtonStateChanged?.Invoke(_teacherSideButtonState);
+                    return;
                 }
+
+                _teacherSideButtonState = value;
+                SyncToggle(value);
+            }
+        }
+
+        private void Awake()
+        {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            Instance = this;
+
+            if (_toggle == null)
+            {
+                _toggle = GetComponent<Toggle>();
+            }
+            if (_image == null)
+            {
+                if (GetComponent<Selectable>().targetGraphic is Image img)
+                {
+                    _image = img;
+                }
+            }
+        }
+
+        private void Start()
+        {
+            _toggle.onValueChanged.AddListener(isOn => TeacherSideButtonState = isOn);
+
+            PianoController.Instance.OnAnyKeyUpAsObservable
+                .Subscribe(_ => TeacherSideButtonState = false)
+                .AddTo(PianoController.Instance);
+        }
+
+        private void SyncToggle(bool isOn)
+        {
+            if (_toggle != null && _toggle.isOn != isOn)
+            {
+                _toggle.isOn = isOn;
+            }
+            if (_image != null)
+            {
+                _image.color = isOn ? _onColor : _offColor;
+            }
+        }
+
+        private void Update()
+        {
+            if (IsCtrlPressedThisFrame())
+            {
+                TeacherSideButtonState = true;
+            }
+            else if (IsCtrlReleasedThisFrame())
+            {
+                TeacherSideButtonState = false;
             }
         }
 
@@ -41,10 +107,10 @@ namespace Assets.Scripts.UI
                 return true;
             }
 #if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
-      if (kb.leftCommandKey.isPressed || kb.rightCommandKey.isPressed) 
-      {
-        return true;
-      }
+            if (kb.leftCommandKey.isPressed || kb.rightCommandKey.isPressed)
+            {
+                return true;
+            }
 #endif
             return false;
         }
@@ -61,7 +127,7 @@ namespace Assets.Scripts.UI
                 return true;
             }
 #if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
-            if(kb.leftCommandKey.wasPressedThisFrame || kb.rightCommandKey.wasPressedThisFrame)
+            if (kb.leftCommandKey.wasPressedThisFrame || kb.rightCommandKey.wasPressedThisFrame)
             {
                 return true;
             }
@@ -76,48 +142,17 @@ namespace Assets.Scripts.UI
             {
                 return false;
             }
-            if(kb.leftCtrlKey.wasReleasedThisFrame || kb.rightCtrlKey.wasReleasedThisFrame)
+            if (kb.leftCtrlKey.wasReleasedThisFrame || kb.rightCtrlKey.wasReleasedThisFrame)
             {
                 return true;
             }
 #if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
-            if(kb.leftCommandKey.wasReleasedThisFrame || kb.rightCommandKey.wasReleasedThisFrame)
+            if (kb.leftCommandKey.wasReleasedThisFrame || kb.rightCommandKey.wasReleasedThisFrame)
             {
                 return true;
             }
 #endif
             return false;
-        }
-
-        private void Awake()
-        {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-
-        }
-
-        private void Start()
-        {
-            PianoController.Instance.OnAnyKeyUpAsObservable
-                .Subscribe(_ => TeacherSideButtonState = false)
-                .AddTo(PianoController.Instance);
-        }
-
-        private void Update()
-        {
-            if (IsCtrlPressedThisFrame())
-            {
-                TeacherSideButtonState = true;
-            }
-            else if (IsCtrlReleasedThisFrame())
-            {
-                TeacherSideButtonState = false;
-            }
         }
     }
 }

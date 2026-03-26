@@ -50,7 +50,7 @@ namespace Assets.Scripts.UI
         {
             if (selected == Melody)
             {
-                _button.image.color = new Color(0.961f, 0.651f, 0.137f);
+                _button.image.color = AppColors.Accent;
             }
             else
             {

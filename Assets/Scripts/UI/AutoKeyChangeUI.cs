@@ -1,8 +1,7 @@
-﻿using Assets.Scripts.UI;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace AsseScripts.UI
+namespace Assets.Scripts.UI
 {
     /// <summary>
     /// 自動キー変更 UI（上/下ボタン）

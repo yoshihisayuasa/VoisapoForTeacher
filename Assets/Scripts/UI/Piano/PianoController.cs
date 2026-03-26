@@ -1,4 +1,3 @@
-using Assets.Scripts.UI.Melody;
 using R3;
 using AsseScripts.Domain;
 using AsseScripts.UI.Piano;
@@ -47,56 +46,14 @@ namespace Assets.Scripts.UI.Piano
                 _keyDict[key.NoteEnum] = key;
             }
 
-            OnAnyKeyUpAsObservable = _pianoKeys.Select(k => k.OnPointerUpAsObservable).Merge();
+            OnAnyKeyUpAsObservable    = _pianoKeys.Select(k => k.OnPointerUpAsObservable).Merge();
+            OnAnyKeyClickAsObservable = _pianoKeys.Select(k => k.OnClickKeyAsObservable).Merge();
+            OnAnyKeyEnterAsObservable = _pianoKeys.Select(k => k.OnPointerEnterAsObservable).Merge();
         }
 
         public Observable<PianoNote> OnAnyKeyUpAsObservable { get; private set; }
-
-        private void Start()
-        {
-            SetEvent();
-        }
-
-        /// <summary>
-        /// イベント初期化（LINQで束ねて簡潔化）
-        /// </summary>
-        private void SetEvent()
-        {
-            if (_pianoKeys == null)
-            {
-                Debug.LogError("PianoController: _pianoKeys is null.");
-                return;
-            }
-            if (_pianoKeys.Count == 0)
-            {
-                Debug.LogWarning("PianoController: _pianoKeys is empty.");
-                return;
-            }
-
-            var keyClickStream = _pianoKeys.Select(k => k.OnClickKeyAsObservable).Merge();
-            var keyOnEnterStream = _pianoKeys.Select(k => k.OnPointerEnterAsObservable).Merge();
-
-            keyClickStream
-                .Subscribe(key =>
-                {
-                    Debug.Log($"[Catch In Controller] Pressed Key is : {key}");
-                    var melody = MelodyManager.Instance.CurrentMelody;
-
-                    MelodyPlayer.Instance.HighlightMinMaxKeys(melody, key);
-                    MelodyPlayer.Instance.PlayMelody(melody, key);
-                    MelodyPlayer.Instance.EnsureKeyRangeVisible(melody, key);
-                })
-                .AddTo(this);
-
-            keyOnEnterStream
-                .Subscribe(key =>
-                {
-                    var melody = MelodyManager.Instance.CurrentMelody;
-                    MelodyPlayer.Instance.HighlightMinMaxKeys(melody, key);
-                    Debug.Log($"[Catch In Controller] Entered Key is : {key}");
-                })
-                .AddTo(this);
-        }
+        public Observable<PianoNote> OnAnyKeyClickAsObservable { get; private set; }
+        public Observable<PianoNote> OnAnyKeyEnterAsObservable { get; private set; }
 
         public int KeyCount => _pianoKeys.Count;
 
@@ -163,11 +120,17 @@ namespace Assets.Scripts.UI.Piano
         /// </summary>
         public void EnsureRangeVisible(PianoNote minKey, PianoNote maxKey)
         {
-            if (minKey.Index < 0 || maxKey.Index >= KeyCount) return;
+            if (minKey.Index < 0 || maxKey.Index >= KeyCount)
+            {
+                return;
+            }
 
             var minRT = GetKeyUI(minKey).transform as RectTransform;
             var maxRT = GetKeyUI(maxKey).transform as RectTransform;
-            if (minRT == null || maxRT == null) return;
+            if (minRT == null || maxRT == null)
+            {
+                return;
+            }
 
             _scrollRect.horizontalNormalizedPosition =
                 ScrollRectRangeVisualizer.CalcNormalizedPosition(

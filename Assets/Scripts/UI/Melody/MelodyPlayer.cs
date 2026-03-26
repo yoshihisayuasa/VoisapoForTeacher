@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Domain.ValueObjects;
 using Assets.Scripts.UI.Piano;
+using R3;
 using AsseScripts.UI;
 using System.Collections;
 using System.Collections.Generic;
@@ -404,6 +405,29 @@ namespace Assets.Scripts.UI.Melody
             _currentRootKey = transposed;
             var piano = PianoController.Instance;
             StartCoroutine(PlayMelodyLoopCoroutine(piano, _currentMelody));
+        }
+
+        private void Start()
+        {
+            var piano = PianoController.Instance;
+
+            piano.OnAnyKeyClickAsObservable
+                .Subscribe(key =>
+                {
+                    var melody = MelodyManager.Instance.CurrentMelody;
+                    HighlightMinMaxKeys(melody, key);
+                    PlayMelody(melody, key);
+                    EnsureKeyRangeVisible(melody, key);
+                })
+                .AddTo(this);
+
+            piano.OnAnyKeyEnterAsObservable
+                .Subscribe(key =>
+                {
+                    var melody = MelodyManager.Instance.CurrentMelody;
+                    HighlightMinMaxKeys(melody, key);
+                })
+                .AddTo(this);
         }
 
         private void OnEnable()

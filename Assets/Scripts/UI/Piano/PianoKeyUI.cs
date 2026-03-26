@@ -131,15 +131,15 @@ namespace Assets.Scripts.UI.Piano
 
         private void UpdateVisual()
         {
-            _keyLabelBg.color = _highlightState switch
+            _keyLabelBg.color = _logicalState switch
             {
-                KeyHighlightState.Min => SetMinColor(_domain.Key.IsSharp),
-                KeyHighlightState.Max => SetMaxColor(_domain.Key.IsSharp),
-                _ => _logicalState switch
+                KeyLogicalState.Playing => Playing,
+                KeyLogicalState.Played  => SetPlayedColor(_domain.Key.IsSharp),
+                _ => _highlightState switch
                 {
-                    KeyLogicalState.Playing => Playing,
-                    KeyLogicalState.Played  => SetPlayedColor(_domain.Key.IsSharp),
-                    _                       => _defaultColor,
+                    KeyHighlightState.Min => SetMinColor(_domain.Key.IsSharp),
+                    KeyHighlightState.Max => SetMaxColor(_domain.Key.IsSharp),
+                    _                     => _defaultColor,
                 }
             };
         }
