@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Scripts.UI
+namespace Assets.Scripts.UI
 {
     /// <summary>
     /// イヤホンモード管理クラス（シングルトン）

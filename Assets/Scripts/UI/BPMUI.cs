@@ -1,4 +1,4 @@
-﻿using Scripts.UI;
+﻿using AsseScripts.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

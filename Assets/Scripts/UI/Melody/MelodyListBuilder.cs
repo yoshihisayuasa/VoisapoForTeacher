@@ -1,9 +1,9 @@
-﻿using Scripts.UI.Melody;
+﻿using Assets.Scripts.UI.Melody;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using DomainMelody = Scripts.Domain.Melody;
+using DomainMelody = AsseScripts.Domain.Melody;
 
 namespace Assets.Scripts.UI
 {
@@ -24,12 +24,6 @@ namespace Assets.Scripts.UI
 
         private System.Collections.IEnumerator BuildWhenReady()
         {
-            // インスタンス生成待ち
-            while (MelodyManager.Instance == null)
-            {
-                yield return null;
-            }
-
             // Startが走るまで1フレーム待機（JSONロード完了待ち）
             yield return null;
 

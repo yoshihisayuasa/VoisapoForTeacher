@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using Scripts.Domain;
-using Scripts.Infrastructure;
+using AsseScripts.Domain;
+using AsseScripts.Infrastructure;
 using R3;
-using static Scripts.UI.Piano.PianoKeyColors;
+using static AsseScripts.UI.Piano.PianoKeyColors;
 
-namespace Scripts.UI.Piano
+namespace Assets.Scripts.UI.Piano
 {
     /// <summary>
     /// UI操作（UI層）
@@ -15,6 +15,7 @@ namespace Scripts.UI.Piano
     public class PianoKeyUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler
     {
         private readonly Subject<PianoNote> _onClickKeySubject = new();
+        private readonly Subject<PianoNote> _onPointerUpSubject = new();
         private readonly Subject<PianoNote> _onPointerEnterSubject = new();
 
         [SerializeField]
@@ -22,15 +23,11 @@ namespace Scripts.UI.Piano
         private PianoNoteEnum _keyEnum;
 
         [SerializeField]
-        [Tooltip("鍵盤の音源")]
-        private AudioClip _audioClip;
-
-        [SerializeField]
         [Tooltip("鍵盤用AudioSource")]
         private AudioSource _audioSource;
 
-        private KeyColorState _colorState = KeyColorState.Default;
-        private KeyColorState _preHighlightState = KeyColorState.Default;
+        private KeyLogicalState _logicalState = KeyLogicalState.Default;
+        private KeyHighlightState _highlightState = KeyHighlightState.None;
 
         private Image _keyLabelBg;
         private Color _defaultColor;
@@ -38,19 +35,14 @@ namespace Scripts.UI.Piano
         private PianoKeyDomain _domain;
         private PianoKeyInfrastructure _infra;
 
-        private enum KeyColorState
-        {
-            Default,
-            Playing,
-            Played,
-            MinHighlighted,
-            MaxHighlighted,
-        }
+        private enum KeyLogicalState  { Default, Playing, Played }
+        private enum KeyHighlightState { None, Min, Max }
 
 
         public PianoNoteEnum NoteEnum => _keyEnum;
 
         public Observable<PianoNote> OnClickKeyAsObservable => _onClickKeySubject;
+        public Observable<PianoNote> OnPointerUpAsObservable => _onPointerUpSubject;
         public Observable<PianoNote> OnPointerEnterAsObservable => _onPointerEnterSubject;
 
         private void Awake()
@@ -62,33 +54,25 @@ namespace Scripts.UI.Piano
             }
 
             _domain = new PianoKeyDomain(_keyEnum);
-            _infra = new PianoKeyInfrastructure(_audioSource, _audioClip, GetComponent<Photon.Pun.PhotonView>());
+            _infra = new PianoKeyInfrastructure(_audioSource, null, GetComponent<Photon.Pun.PhotonView>());
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            if (!_domain.IsPressed)
+            _onClickKeySubject.OnNext(_domain.Key);
+            try
             {
-                _onClickKeySubject.OnNext(_domain.Key);
-                _domain.Press();
-
-                try
-                {
-                    _infra.SendPlayKey(_domain.Key);
-                }
-                catch (System.Exception ex)
-                {
-                    Debug.LogWarning($"Photon RPC failed: {ex.Message}");
-                }
+                _infra.SendPlayKey(_domain.Key);
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogWarning($"Photon RPC failed: {ex.Message}");
             }
         }
-
+   
         public void OnPointerUp(PointerEventData eventData)
         {
-            if (_domain.IsPressed)
-            {
-                _domain.Release();
-            }
+            _onPointerUpSubject.OnNext(_domain.Key);
         }
 
         public void OnPointerEnter(PointerEventData eventData)
@@ -98,30 +82,21 @@ namespace Scripts.UI.Piano
 
         public void SetPlayingVisual()
         {
-            if (_keyLabelBg == null)
-            {
-                return;
-            }
-            _keyLabelBg.color = Playing;
-            _colorState = KeyColorState.Playing;
+            if (_keyLabelBg == null) return;
+            _logicalState = KeyLogicalState.Playing;
+            UpdateVisual();
         }
 
         public void SetKeyVisual(bool setPlayedColor)
         {
-            if (_keyLabelBg == null)
-            {
-                return;
-            }
-            if (setPlayedColor)
-            {
-                _keyLabelBg.color = SetPlayedColor(_domain.Key.IsSharp);
-                _colorState = KeyColorState.Played;
-            }
-            else
-            {
-                _keyLabelBg.color = _defaultColor;
-                _colorState = KeyColorState.Default;
-            }
+            if (_keyLabelBg == null) return;
+            _logicalState = setPlayedColor ? KeyLogicalState.Played : KeyLogicalState.Default;
+            UpdateVisual();
+        }
+
+        public void SwapAudioClip(AudioClip newClip)
+        {
+            _infra.SwapClip(newClip);
         }
 
         // 音のみ再生
@@ -138,36 +113,35 @@ namespace Scripts.UI.Piano
 
         public void SetMaxHighlightColor()
         {
-            if (_keyLabelBg == null) return;
-            _preHighlightState = _colorState;
-            _keyLabelBg.color = SetMaxColor(_domain.Key.IsSharp);
-            _colorState = KeyColorState.MaxHighlighted;
+            _highlightState = KeyHighlightState.Max;
+            UpdateVisual();
         }
 
         public void SetMinHighlightColor()
         {
-            if (_keyLabelBg == null) return;
-            _preHighlightState = _colorState;
-            _keyLabelBg.color = SetMinColor(_domain.Key.IsSharp);
-            _colorState = KeyColorState.MinHighlighted;
+            _highlightState = KeyHighlightState.Min;
+            UpdateVisual();
         }
 
         public void ResetHighlightedColor()
         {
-            _colorState = _preHighlightState;
-            switch (_preHighlightState)
+            _highlightState = KeyHighlightState.None;
+            UpdateVisual();
+        }
+
+        private void UpdateVisual()
+        {
+            _keyLabelBg.color = _highlightState switch
             {
-                case KeyColorState.Playing:
-                    _keyLabelBg.color = Playing;
-                    break;
-                case KeyColorState.Played:
-                    _keyLabelBg.color = SetPlayedColor(_domain.Key.IsSharp);
-                    break;
-                case KeyColorState.Default:
-                default:
-                    _keyLabelBg.color = _defaultColor;
-                    break;
-            }
+                KeyHighlightState.Min => SetMinColor(_domain.Key.IsSharp),
+                KeyHighlightState.Max => SetMaxColor(_domain.Key.IsSharp),
+                _ => _logicalState switch
+                {
+                    KeyLogicalState.Playing => Playing,
+                    KeyLogicalState.Played  => SetPlayedColor(_domain.Key.IsSharp),
+                    _                       => _defaultColor,
+                }
+            };
         }
     }
 }

@@ -1,8 +1,8 @@
-﻿using Scripts.UI.Melody;
+﻿using Assets.Scripts.UI.Melody;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using DomainMelody = Scripts.Domain.Melody;
+using DomainMelody = AsseScripts.Domain.Melody;
 
 namespace Assets.Scripts.UI
 {

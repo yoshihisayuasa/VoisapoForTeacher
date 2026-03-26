@@ -1,5 +1,5 @@
 ﻿
-namespace Scripts.Domain
+namespace AsseScripts.Domain
 {
     /// <summary>
     /// 鍵盤の状態・イベント管理（ドメイン層）
@@ -7,21 +7,9 @@ namespace Scripts.Domain
     public class PianoKeyDomain
     {
         public PianoNote Key { get; }
-        public bool IsPressed { get; private set; }
-
         public PianoKeyDomain(PianoNoteEnum keyEnum)
         {
             Key = new PianoNote(keyEnum);
-        }
-
-        public void Press()
-        {
-            IsPressed = true;
-        }
-
-        public void Release()
-        {
-            IsPressed = false;
         }
     }
 }

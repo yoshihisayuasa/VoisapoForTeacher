@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using Scripts.UI.Piano;
+using AsseScripts.UI.Piano;
 using Assets.Scripts.UI.Melody;
 
 namespace Assets.Scripts.UI
@@ -11,13 +11,6 @@ namespace Assets.Scripts.UI
     public sealed class StopManager : MonoBehaviour
     {
         [SerializeField] private Button _stopButton;
-        private void Awake()
-        {
-            if (_stopButton != null)
-            {
-                _stopButton = GetComponent<Button>();
-            }
-        }
         private void OnEnable()
         {
             if (_stopButton != null)

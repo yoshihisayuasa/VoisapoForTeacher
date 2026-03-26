@@ -1,4 +1,4 @@
-﻿namespace Scripts.Domain
+﻿namespace AsseScripts.Domain
 {
     using Assets.Scripts.Domain.ValueObjects;
     using System;

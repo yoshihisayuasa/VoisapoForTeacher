@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using DomainChord = Scripts.Domain.Chord;
-using DomainMelody = Scripts.Domain.Melody;
-using DomainNote = Scripts.Domain.Note;
+using DomainChord = AsseScripts.Domain.Chord;
+using DomainMelody = AsseScripts.Domain.Melody;
+using DomainNote = AsseScripts.Domain.Note;
 
-namespace Scripts.Infrastructure
+namespace AsseScripts.Infrastructure
 {
     /// <summary>
     /// メロディJSON ローダー／セーバー（純粋I/O・曲数制限なし）

@@ -1,7 +1,7 @@
-using Scripts.Domain;
+using AsseScripts.Domain;
 using System;
 
-namespace Scripts.UI
+namespace AsseScripts.UI
 {
     public class BPMManager
     {

@@ -1,10 +1,10 @@
-using Scripts.Infrastructure;
+using AsseScripts.Infrastructure;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using DomainMelody = Scripts.Domain.Melody;
+using DomainMelody = AsseScripts.Domain.Melody;
 
-namespace Scripts.UI.Melody
+namespace Assets.Scripts.UI.Melody
 {
     public class MelodyManager : MonoBehaviour
     {
@@ -17,7 +17,7 @@ namespace Scripts.UI.Melody
         private const string defaultMelodyName = "Single";
 
 
-        private List<DomainMelody> _melodies = new();
+        private readonly List<DomainMelody> _melodies = new();
         private void Awake()
         {
             if (Instance == null)

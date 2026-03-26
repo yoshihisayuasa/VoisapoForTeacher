@@ -1,13 +1,12 @@
 ﻿using Assets.Scripts.Domain.ValueObjects;
-using Assets.Scripts.UI;
 using Assets.Scripts.UI.Piano;
-using Scripts.UI;
+using AsseScripts.UI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static Assets.Scripts.UI.AutoKeyChangeManager;
-using DomainMelody = Scripts.Domain.Melody;
-using DomainPianoNote = Scripts.Domain.PianoNote;
+using DomainMelody = AsseScripts.Domain.Melody;
+using DomainPianoNote = AsseScripts.Domain.PianoNote;
 
 namespace Assets.Scripts.UI.Melody
 {
@@ -140,7 +139,6 @@ namespace Assets.Scripts.UI.Melody
                 }
 
                 _player._isPlayingChord = true;
-                // 意図的な無限ループ: StopMelody → StopAllCoroutines() で外部から停止する
                 while (true)
                 {
                     if (settings.PlayMetronome)
@@ -161,13 +159,43 @@ namespace Assets.Scripts.UI.Melody
             public IEnumerator Execute(PianoController piano, DomainMelody melody,
                                        DomainPianoNote pressedKey, PlayModeSettings settings)
             {
+                _player._isPlayingChord = false;
+
+                var chordKeys = new List<DomainPianoNote>();
                 foreach (var interval in melody.Chord.Intervals)
                 {
                     var key = pressedKey + interval;
+                    if (0 <= key.Index && key.Index < piano.KeyCount)
+                    {
+                        chordKeys.Add(key);
+                    }
+                }
+
+                foreach (var key in chordKeys)
+                {
                     piano.Play(key, settings.PlayCode, VolumeManager.Instance.Volume);
                 }
-                _player._isPlayingChord = true;
-                yield break;
+
+                float beatSec = BPMManager.Instance.SecondPerBeat;
+                if (settings.PlayMetronome)
+                {
+                    for (int b = 0; b < melody.Chord.Beats; b++)
+                    {
+                        _player.PlayMetronomeSound();
+                        yield return new WaitForSeconds(beatSec);
+                    }
+                }
+                else
+                {
+                    yield return new WaitForSeconds(beatSec * melody.Chord.Beats);
+                }
+
+                foreach (var key in chordKeys)
+                {
+                    piano.Stop(key, false);
+                }
+
+
             }
         }
 
@@ -395,7 +423,5 @@ namespace Assets.Scripts.UI.Melody
         }
 
     }
-
-
 
 }

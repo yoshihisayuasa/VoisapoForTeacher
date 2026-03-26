@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Scripts.UI
+namespace AsseScripts.UI
 {
     /// <summary>
     /// 音量管理クラス（シングルトン）

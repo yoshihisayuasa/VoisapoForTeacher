@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Scripts.Domain
+namespace AsseScripts.Domain
 {
     public sealed class BPM : ValueObject<BPM>
     {

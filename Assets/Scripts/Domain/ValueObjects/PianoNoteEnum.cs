@@ -1,4 +1,4 @@
-namespace Scripts.Domain
+namespace AsseScripts.Domain
 {
     public enum PianoNoteEnum
     {

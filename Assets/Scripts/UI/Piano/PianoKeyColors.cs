@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Scripts.UI.Piano
+namespace AsseScripts.UI.Piano
 {
     public static class PianoKeyColors
     {

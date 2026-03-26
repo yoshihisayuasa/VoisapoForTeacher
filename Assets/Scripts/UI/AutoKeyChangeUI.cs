@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Scripts.UI
+namespace AsseScripts.UI
 {
     /// <summary>
     /// 自動キー変更 UI（上/下ボタン）

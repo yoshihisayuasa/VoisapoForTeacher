@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Scripts.UI.Piano
+namespace AsseScripts.UI.Piano
 {
     /// <summary>
     /// ScrollRect 上の任意のキー範囲を最小スクロールで可視化する計算を担う静的クラス。

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Scripts.Domain
+namespace AsseScripts.Domain
 {
     /// <summary>
     /// 単音（相対インターバルと拍数）

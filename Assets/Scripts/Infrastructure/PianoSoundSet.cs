@@ -1,0 +1,56 @@
+using System.Collections.Generic;
+using AsseScripts.Domain;
+using UnityEngine;
+
+namespace AsseScripts.Infrastructure
+{
+    [System.Serializable]
+    public class PianoSoundEntry
+    {
+        public PianoNoteEnum Note;
+        public AudioClip Clip;
+    }
+
+    /// <summary>
+    /// ピアノ音源セット。鍵盤ノートとAudioClipのマッピングを保持する。
+    /// </summary>
+    [CreateAssetMenu(fileName = "PianoSoundSet", menuName = "Voisapo/PianoSoundSet")]
+    public class PianoSoundSet : ScriptableObject
+    {
+        [SerializeField]
+        [Tooltip("音源セット名（UI表示用）")]
+        private string _setName;
+
+        [SerializeField]
+        [Tooltip("鍵盤ノートとAudioClipの対応一覧")]
+        private List<PianoSoundEntry> _entries = new();
+
+        private Dictionary<PianoNoteEnum, AudioClip> _clipDict;
+
+        public string SetName => _setName;
+
+        private void OnEnable()
+        {
+            RebuildDict();
+        }
+
+        private void RebuildDict()
+        {
+            _clipDict = new Dictionary<PianoNoteEnum, AudioClip>(_entries.Count);
+            foreach (var entry in _entries)
+            {
+                _clipDict[entry.Note] = entry.Clip;
+            }
+        }
+
+        /// <summary>
+        /// 指定ノートのAudioClipを返す。未登録の場合はnull。
+        /// </summary>
+        public AudioClip GetClip(PianoNoteEnum note)
+        {
+            if (_clipDict == null) RebuildDict();
+            _clipDict.TryGetValue(note, out var clip);
+            return clip;
+        }
+    }
+}

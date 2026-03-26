@@ -1,9 +1,9 @@
 ﻿using Photon.Pun;
 using UnityEngine;
-using Scripts.Domain;
+using AsseScripts.Domain;
 using Cysharp.Threading.Tasks;
 
-namespace Scripts.Infrastructure
+namespace AsseScripts.Infrastructure
 {
     /// <summary>
     /// 音源再生・Photon通信（インフラ層）
@@ -11,7 +11,6 @@ namespace Scripts.Infrastructure
     public class PianoKeyInfrastructure
     {
         private readonly AudioSource _audioSource;
-        private readonly AudioClip _audioClip;
         private readonly PhotonView _photonView;
         private System.Threading.CancellationTokenSource _fadeOutCts;
         
@@ -22,9 +21,13 @@ namespace Scripts.Infrastructure
         public PianoKeyInfrastructure(AudioSource audioSource, AudioClip audioClip, PhotonView photonView)
         {
             _audioSource = audioSource;
-            _audioClip = audioClip;
+            _audioSource.clip = audioClip;
             _photonView = photonView;
-            _audioSource.clip = _audioClip;
+        }
+
+        public void SwapClip(AudioClip newClip)
+        {
+            _audioSource.clip = newClip;
         }
 
         public void PlaySound(float volume)

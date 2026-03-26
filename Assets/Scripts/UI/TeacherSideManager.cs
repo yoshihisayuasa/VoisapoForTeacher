@@ -1,6 +1,8 @@
 using System;
+using Assets.Scripts.UI.Piano;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using R3;
 
 namespace Assets.Scripts.UI
 {
@@ -97,6 +99,13 @@ namespace Assets.Scripts.UI
             Instance = this;
             DontDestroyOnLoad(gameObject);
 
+        }
+
+        private void Start()
+        {
+            PianoController.Instance.OnAnyKeyUpAsObservable
+                .Subscribe(_ => TeacherSideButtonState = false)
+                .AddTo(PianoController.Instance);
         }
 
         private void Update()

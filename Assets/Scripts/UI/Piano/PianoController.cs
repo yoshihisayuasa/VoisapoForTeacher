@@ -1,8 +1,7 @@
 using Assets.Scripts.UI.Melody;
 using R3;
-using Scripts.Domain;
-using Scripts.UI.Melody;
-using Scripts.UI.Piano;
+using AsseScripts.Domain;
+using AsseScripts.UI.Piano;
 using System.Collections.Generic;
 using System.Linq; // Added for event stream bundling
 using UnityEngine;
@@ -47,7 +46,11 @@ namespace Assets.Scripts.UI.Piano
             {
                 _keyDict[key.NoteEnum] = key;
             }
+
+            OnAnyKeyUpAsObservable = _pianoKeys.Select(k => k.OnPointerUpAsObservable).Merge();
         }
+
+        public Observable<PianoNote> OnAnyKeyUpAsObservable { get; private set; }
 
         private void Start()
         {
@@ -79,7 +82,6 @@ namespace Assets.Scripts.UI.Piano
                     Debug.Log($"[Catch In Controller] Pressed Key is : {key}");
                     var melody = MelodyManager.Instance.CurrentMelody;
 
-                    TeacherSideManager.Instance.TeacherSideButtonState = false;
                     MelodyPlayer.Instance.HighlightMinMaxKeys(melody, key);
                     MelodyPlayer.Instance.PlayMelody(melody, key);
                     MelodyPlayer.Instance.EnsureKeyRangeVisible(melody, key);
