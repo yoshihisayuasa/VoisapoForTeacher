@@ -13,7 +13,7 @@ namespace AsseScripts.EarphoneModeControll
         [SerializeField] private Button _earphoneModeButton;
         [SerializeField] private Image _targetImage;                // 色を変える対象（必ず割り当てる）
         private Color _normalColor = Color.white;  // 2回目で戻す色
-        private Color _activeColor = Color.red;
+        private Color _activeColor = AppColors.Accent;
 
         private bool _isEarphoneModeOn = false;
 

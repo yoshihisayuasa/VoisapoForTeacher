@@ -13,8 +13,8 @@ namespace Assets.Scripts.UI
         [SerializeField] private Image _upImage;
         [SerializeField] private Image _downImage;
 
-        [SerializeField] private Color _normalColor = Color.white;
-        [SerializeField] private Color _activeColor = Color.red;
+        private Color _normalColor = Color.white;
+        private Color _activeColor = AppColors.Accent;
 
         void Awake()
         {
