@@ -1,8 +1,7 @@
-﻿using Assets.Scripts.UI;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace AsseScripts.EarphoneModeControll
+namespace Assets.Scripts.UI
 {
     /// <summary>
     /// イヤホンモードボタンUI制御
