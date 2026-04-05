@@ -13,6 +13,14 @@ namespace Assets.Scripts.UI.Melody
 {
     public sealed class MelodyPlayer : MonoBehaviour
     {
+        private readonly Subject<bool> _onPlayBegan = new();
+        private readonly Subject<Unit> _onPlayEnded = new();
+
+        public Observable<bool> OnPlayBegan => _onPlayBegan;
+        public Observable<Unit> OnPlayEnded => _onPlayEnded;
+
+        private bool _suppressPlayEnded = false;
+
         private readonly struct PlayModeSettings
         {
             public bool PlayCode { get; }
@@ -80,7 +88,11 @@ namespace Assets.Scripts.UI.Melody
         public void PlayMelody(DomainMelody melody, DomainPianoNote pressedKey)
         {
             // 前回のコルーチン・状態を確実に停止してから開始（競合防止）
+            _suppressPlayEnded = true;
             StopMelody(true);
+            _suppressPlayEnded = false;
+
+            _onPlayBegan.OnNext(TeacherSideManager.Instance.TeacherSideButtonState);
 
             var piano = PianoController.Instance;
             _currentMelody = melody;
@@ -99,6 +111,11 @@ namespace Assets.Scripts.UI.Melody
             if (_metronomeAudioSource.isPlaying)
             {
                 _metronomeAudioSource.Stop();
+            }
+
+            if (!_suppressPlayEnded)
+            {
+                _onPlayEnded.OnNext(Unit.Default);
             }
         }
         private interface IMelodyPlayStrategy
@@ -313,6 +330,8 @@ namespace Assets.Scripts.UI.Melody
 
                 yield return StartCoroutine(PlayMelodyAtKeyOnce(piano, melody, _currentRootKey, settingsLoop));
             }
+
+            _onPlayEnded.OnNext(Unit.Default);
         }
 
         private DomainPianoNote GetNextRoot(DomainPianoNote current, AutoKeyChangeState direction)

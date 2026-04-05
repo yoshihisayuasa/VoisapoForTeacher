@@ -1,10 +1,10 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.UI;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using AsseScripts.Domain;
 using AsseScripts.Infrastructure;
 using R3;
-using static AsseScripts.UI.Piano.PianoKeyColors;
 
 namespace Assets.Scripts.UI.Piano
 {
@@ -14,6 +14,7 @@ namespace Assets.Scripts.UI.Piano
     [RequireComponent(typeof(Image))]
     public class PianoKeyUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler
     {
+
         private readonly Subject<PianoNote> _onClickKeySubject = new();
         private readonly Subject<PianoNote> _onPointerUpSubject = new();
         private readonly Subject<PianoNote> _onPointerEnterSubject = new();
@@ -131,17 +132,27 @@ namespace Assets.Scripts.UI.Piano
 
         private void UpdateVisual()
         {
-            _keyLabelBg.color = _logicalState switch
+            if (_logicalState == KeyLogicalState.Playing)
             {
-                KeyLogicalState.Playing => Playing,
-                KeyLogicalState.Played  => SetPlayedColor(_domain.Key.IsSharp),
-                _ => _highlightState switch
-                {
-                    KeyHighlightState.Min => SetMinColor(_domain.Key.IsSharp),
-                    KeyHighlightState.Max => SetMaxColor(_domain.Key.IsSharp),
-                    _                     => _defaultColor,
-                }
-            };
+                _keyLabelBg.color = AppColors.PianoKeyPlaying;
+                return;
+            }
+
+            if (_highlightState == KeyHighlightState.Min)
+            {
+                _keyLabelBg.color = AppColors.PianoKeyMin;
+                return;
+            }
+
+            if (_highlightState == KeyHighlightState.Max)
+            {
+                _keyLabelBg.color = AppColors.PianoKeyMax;
+                return;
+            }
+
+            _keyLabelBg.color = _logicalState == KeyLogicalState.Played
+                ? AppColors.PianoKeyPlayed
+                : _defaultColor;
         }
     }
 }

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VoisapoForTeacher — Button Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ivory:      #F4F0E8;
+    --ivory-dim:  #E8E2D4;
+    --ebony:      #1A1410;
+    --ebony-mid:  #2C2420;
+    --ebony-soft: #3D352E;
+    --gold:       #C8A96E;
+    --gold-light: #E2C990;
+    --felt:       #1E3A2F;
+    --shadow:     rgba(0,0,0,0.6);
+    --glow:       rgba(200,169,110,0.15);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0D0B09;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'DM Mono', monospace;
+    overflow: hidden;
+  }
+
+  /* ---- subtle grain overlay ---- */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-size: 200px;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  /* ---- ambient glow ---- */
+  .stage {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .stage::before {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(ellipse, rgba(200,169,110,0.08) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  /* ---- panel label ---- */
+  .panel-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  /* ==================== MAIN PANEL ==================== */
+  .panel {
+    position: relative;
+    width: 480px;
+    background: linear-gradient(160deg, var(--ebony-mid) 0%, var(--ebony) 60%, #120E0B 100%);
+    border-radius: 20px;
+    padding: 32px 28px;
+    border: 1px solid rgba(200,169,110,0.2);
+    box-shadow:
+      0 2px 0 rgba(255,255,255,0.04) inset,
+      0 -1px 0 rgba(0,0,0,0.8) inset,
+      0 30px 80px rgba(0,0,0,0.8),
+      0 0 0 1px rgba(0,0,0,0.5);
+    animation: panelIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes panelIn {
+    from { opacity: 0; transform: translateY(24px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* top decorative line */
+  .panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 40px; right: 40px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.5;
+    border-radius: 0 0 50% 50%;
+  }
+
+  /* ---- panel header ---- */
+  .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid rgba(200,169,110,0.1);
+  }
+
+  .panel-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--ivory);
+    letter-spacing: 0.05em;
+  }
+
+  .panel-title span {
+    color: var(--gold);
+    font-weight: 300;
+  }
+
+  .panel-badge {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    background: rgba(200,169,110,0.1);
+    border: 1px solid rgba(200,169,110,0.25);
+    border-radius: 4px;
+    padding: 3px 8px;
+    text-transform: uppercase;
+  }
+
+  /* ---- staff decoration ---- */
+  .staff {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px 0;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .staff-line {
+    height: 1px;
+    background: rgba(200,169,110,0.12);
+    width: 100%;
+  }
+
+  .staff::after {
+    content: '𝄞';
+    position: absolute;
+    left: -2px;
+    top: 50%;
+    transform: translateY(-52%);
+    font-size: 52px;
+    color: var(--gold);
+    opacity: 0.2;
+    line-height: 1;
+  }
+
+  /* ==================== BUTTON GRID ==================== */
+  .btn-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .btn-grid-wide {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  /* ---- base button ---- */
+  .btn {
+    position: relative;
+    border: none;
+    border-radius: 10px;
+    padding: 14px 10px;
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: all 0.15s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0);
+    transition: background 0.15s;
+    border-radius: inherit;
+  }
+
+  .btn:hover::after { background: rgba(255,255,255,0.04); }
+  .btn:active { transform: scale(0.97); }
+
+  .btn-icon {
+    font-size: 20px;
+    line-height: 1;
+    display: block;
+  }
+
+  /* ---- ivory (primary) ---- */
+  .btn-ivory {
+    background: linear-gradient(175deg, var(--ivory) 0%, var(--ivory-dim) 100%);
+    color: var(--ebony);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.8) inset,
+      0 -2px 0 rgba(0,0,0,0.15) inset,
+      0 4px 12px rgba(0,0,0,0.4),
+      0 1px 3px rgba(0,0,0,0.3);
+  }
+
+  .btn-ivory:hover {
+    background: linear-gradient(175deg, #FDFBF5 0%, var(--ivory) 100%);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.9) inset,
+      0 -2px 0 rgba(0,0,0,0.12) inset,
+      0 6px 20px rgba(0,0,0,0.5),
+      0 0 20px rgba(200,169,110,0.15);
+  }
+
+  /* ---- ebony (secondary) ---- */
+  .btn-ebony {
+    background: linear-gradient(175deg, #2E2520 0%, #1A120F 100%);
+    color: var(--ivory-dim);
+    border: 1px solid rgba(200,169,110,0.15);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.06) inset,
+      0 -1px 0 rgba(0,0,0,0.5) inset,
+      0 4px 12px rgba(0,0,0,0.5);
+  }
+
+  .btn-ebony:hover {
+    border-color: rgba(200,169,110,0.35);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.08) inset,
+      0 -1px 0 rgba(0,0,0,0.5) inset,
+      0 4px 16px rgba(0,0,0,0.6),
+      0 0 16px rgba(200,169,110,0.1);
+  }
+
+  /* ---- gold (accent) ---- */
+  .btn-gold {
+    background: linear-gradient(175deg, var(--gold-light) 0%, var(--gold) 100%);
+    color: var(--ebony);
+    font-weight: 500;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.4) inset,
+      0 -2px 0 rgba(0,0,0,0.2) inset,
+      0 4px 16px rgba(200,169,110,0.3),
+      0 2px 6px rgba(0,0,0,0.4);
+  }
+
+  .btn-gold:hover {
+    background: linear-gradient(175deg, #EDD9A8 0%, var(--gold-light) 100%);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.5) inset,
+      0 -2px 0 rgba(0,0,0,0.15) inset,
+      0 6px 24px rgba(200,169,110,0.45),
+      0 2px 8px rgba(0,0,0,0.4);
+  }
+
+  /* ---- felt (muted) ---- */
+  .btn-felt {
+    background: linear-gradient(175deg, #244638 0%, var(--felt) 100%);
+    color: #8FC4A8;
+    border: 1px solid rgba(143,196,168,0.15);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.05) inset,
+      0 4px 12px rgba(0,0,0,0.5);
+  }
+
+  .btn-felt:hover {
+    border-color: rgba(143,196,168,0.3);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.07) inset,
+      0 4px 16px rgba(0,0,0,0.5),
+      0 0 16px rgba(143,196,168,0.08);
+  }
+
+  /* wide btn override */
+  .btn-wide {
+    padding: 16px 20px;
+    flex-direction: row;
+    justify-content: center;
+    font-size: 11px;
+  }
+
+  /* ---- footer ---- */
+  .panel-footer {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(200,169,110,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(200,169,110,0.3);
+  }
+
+  .dot.active { background: var(--gold); box-shadow: 0 0 6px var(--gold); }
+
+  .footer-text {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: rgba(200,169,110,0.35);
+    text-transform: uppercase;
+  }
+
+  /* ==================== ANNOTATIONS ==================== */
+  .annotations {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  /* ---- stagger in buttons ---- */
+  .btn:nth-child(1) { animation: btnIn 0.5s 0.3s cubic-bezier(0.22,1,0.36,1) both; }
+  .btn:nth-child(2) { animation: btnIn 0.5s 0.38s cubic-bezier(0.22,1,0.36,1) both; }
+  .btn:nth-child(3) { animation: btnIn 0.5s 0.46s cubic-bezier(0.22,1,0.36,1) both; }
+  .btn:nth-child(4) { animation: btnIn 0.5s 0.54s cubic-bezier(0.22,1,0.36,1) both; }
+  .btn:nth-child(5) { animation: btnIn 0.5s 0.62s cubic-bezier(0.22,1,0.36,1) both; }
+  .btn:nth-child(6) { animation: btnIn 0.5s 0.70s cubic-bezier(0.22,1,0.36,1) both; }
+
+  @keyframes btnIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="panel-label">VoisapoForTeacher — Control Panel</div>
+
+  <div class="panel">
+
+    <!-- header -->
+    <div class="panel-header">
+      <div class="panel-title">Piano <span>Controls</span></div>
+      <div class="panel-badge">Teacher</div>
+    </div>
+
+    <!-- decorative staff lines -->
+    <div class="staff">
+      <div class="staff-line"></div>
+      <div class="staff-line"></div>
+      <div class="staff-line"></div>
+      <div class="staff-line"></div>
+      <div class="staff-line"></div>
+    </div>
+
+    <!-- 3-col grid -->
+    <div class="btn-grid">
+      <button class="btn btn-ivory">
+        <span class="btn-icon">▶</span>
+        再生
+      </button>
+      <button class="btn btn-ivory">
+        <span class="btn-icon">⏸</span>
+        一時停止
+      </button>
+      <button class="btn btn-ivory">
+        <span class="btn-icon">⏹</span>
+        停止
+      </button>
+
+      <button class="btn btn-ebony">
+        <span class="btn-icon">🎵</span>
+        録音
+      </button>
+      <button class="btn btn-ebony">
+        <span class="btn-icon">🎹</span>
+        鍵盤
+      </button>
+      <button class="btn btn-ebony">
+        <span class="btn-icon">📋</span>
+        採点
+      </button>
+    </div>
+
+    <!-- 2-col wide grid -->
+    <div class="btn-grid-wide">
+      <button class="btn btn-felt btn-wide">
+        <span class="btn-icon" style="font-size:16px; margin-right:8px;">🎼</span>
+        楽譜表示
+      </button>
+      <button class="btn btn-felt btn-wide">
+        <span class="btn-icon" style="font-size:16px; margin-right:8px;">🎧</span>
+        音声確認
+      </button>
+    </div>
+
+    <!-- accent button -->
+    <button class="btn btn-gold btn-wide" style="width:100%;">
+      <span class="btn-icon" style="font-size:16px; margin-right:8px;">✓</span>
+      レッスン開始
+    </button>
+
+    <!-- footer -->
+    <div class="panel-footer">
+      <div class="footer-dots">
+        <div class="dot active"></div>
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <div class="footer-text">Session Active</div>
+    </div>
+
+  </div><!-- /panel -->
+</div><!-- /stage -->
+</body>
+</html>
