@@ -21,7 +21,7 @@ namespace Photon.Pun.Demo.Cockpit
 
         private YieldInstruction fadeInstruction = new YieldInstruction();
 
-        float Duration = 1f;
+        private readonly float Duration = 0.5f;
         public void OnValueChanged()
         {
             StartCoroutine(FadeOut(UpdateIndicator));

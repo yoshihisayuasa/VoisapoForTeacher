@@ -25,9 +25,16 @@ namespace AsseScripts.Infrastructure
         [Tooltip("鍵盤ノートとAudioClipの対応一覧")]
         private List<PianoSoundEntry> _entries = new();
 
+        [SerializeField]
+        [Range(0f, 1f)]
+        [Tooltip("音量係数（1.0=変更なし）")]
+        private float _volumeMultiplier = 1f;
+
         private Dictionary<PianoNoteEnum, AudioClip> _clipDict;
 
         public string SetName => _setName;
+
+        public float VolumeMultiplier => _volumeMultiplier;
 
         private void OnEnable()
         {

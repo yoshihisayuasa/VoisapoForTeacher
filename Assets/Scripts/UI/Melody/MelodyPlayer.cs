@@ -63,6 +63,9 @@ namespace Assets.Scripts.UI.Melody
 
         [SerializeField, Tooltip("メトロノーム用AudioSource")]
         private AudioSource _metronomeAudioSource;
+
+        private MetronomePlayer _metronomePlayer;
+
         private AutoKeyChangeState _autoKeyChangeState = AutoKeyChangeState.None;
         private AutoKeyChangeState _prevAutoKeyChangeState = AutoKeyChangeState.None;
         private bool _isPlayingChord = false;
@@ -83,6 +86,7 @@ namespace Assets.Scripts.UI.Melody
                 _metronomeAudioSource = gameObject.AddComponent<AudioSource>();
                 _metronomeAudioSource.playOnAwake = false;
             }
+            _metronomePlayer = new MetronomePlayer(_metronomeAudioSource, _metronomeClip);
         }
 
         public void PlayMelody(DomainMelody melody, DomainPianoNote pressedKey)
@@ -108,10 +112,7 @@ namespace Assets.Scripts.UI.Melody
             StopAllCoroutines();
             _isPlayingChord = false;
 
-            if (_metronomeAudioSource.isPlaying)
-            {
-                _metronomeAudioSource.Stop();
-            }
+            _metronomePlayer.Stop();
 
             if (!_suppressPlayEnded)
             {
@@ -161,7 +162,7 @@ namespace Assets.Scripts.UI.Melody
                 {
                     if (settings.PlayMetronome)
                     {
-                        _player.PlayMetronomeSound();
+                        _player._metronomePlayer.PlayOneShot(VolumeManager.Instance.Volume);
                     }
                     yield return new WaitForSeconds(BPMManager.Instance.SecondPerBeat);
                 }
@@ -195,25 +196,19 @@ namespace Assets.Scripts.UI.Melody
                 }
 
                 float beatSec = BPMManager.Instance.SecondPerBeat;
-                if (settings.PlayMetronome)
+                for (int b = 0; b < melody.Chord.Beats; b++)
                 {
-                    for (int b = 0; b < melody.Chord.Beats; b++)
+                    if (settings.PlayMetronome)
                     {
-                        _player.PlayMetronomeSound();
-                        yield return new WaitForSeconds(beatSec);
+                        _player._metronomePlayer.PlayOneShot(VolumeManager.Instance.Volume);
                     }
-                }
-                else
-                {
-                    yield return new WaitForSeconds(beatSec * melody.Chord.Beats);
+                    yield return new WaitForSeconds(beatSec);
                 }
 
                 foreach (var key in chordKeys)
                 {
                     piano.Stop(key, false);
                 }
-
-
             }
         }
 
@@ -246,17 +241,13 @@ namespace Assets.Scripts.UI.Melody
                 _player._isPlayingChord = true;
 
                 float beatSec = BPMManager.Instance.SecondPerBeat;
-                if (settings.PlayMetronome)
+                for (int b = 0; b < melody.Chord.Beats; b++)
                 {
-                    for (int b = 0; b < melody.Chord.Beats; b++)
+                    if (settings.PlayMetronome)
                     {
-                        _player.PlayMetronomeSound();
-                        yield return new WaitForSeconds(beatSec);
+                        _player._metronomePlayer.PlayOneShot(VolumeManager.Instance.Volume);
                     }
-                }
-                else
-                {
-                    yield return new WaitForSeconds(beatSec * melody.Chord.Beats);
+                    yield return new WaitForSeconds(beatSec);
                 }
 
                 foreach (var key in chordKeys)
@@ -367,14 +358,6 @@ namespace Assets.Scripts.UI.Melody
             var minKey = pressedKey + melody.MinInterval;
             var maxKey = pressedKey + melody.MaxInterval;
             PianoController.Instance.EnsureRangeVisible(minKey, maxKey);
-        }
-
-        /// <summary>
-        /// メトロノーム音をPlayOneShotで再生（制御不要なワンショット再生）
-        /// </summary>
-        private void PlayMetronomeSound()
-        {
-            _metronomeAudioSource.PlayOneShot(_metronomeClip, VolumeManager.Instance.Volume);
         }
 
         private bool IsMelodyPlayableWithinRange(DomainMelody melody, DomainPianoNote rootKey)

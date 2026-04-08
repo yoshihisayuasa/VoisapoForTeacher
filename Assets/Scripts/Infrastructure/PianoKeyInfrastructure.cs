@@ -44,7 +44,7 @@ namespace AsseScripts.Infrastructure
             _audioSource.Play();
         }
 
-        public void StopSound(float fadeOutDuration = 0.5f)
+        public void StopSound(float fadeOutDuration)
         {
             if (_fadeOutCts!=null) return;
             _fadeOutCts = new System.Threading.CancellationTokenSource();
@@ -58,7 +58,7 @@ namespace AsseScripts.Infrastructure
             while (time < duration)
             {
                time += Time.unscaledDeltaTime;
-                source.volume = Mathf.Lerp(startVolume, 0f, time / duration);
+                source.volume = Mathf.Lerp(startVolume, 0f, Mathf.SmoothStep(0f, 1f, time / duration));
                 await UniTask.Yield(PlayerLoopTiming.Update, token);//次のフレームまで待機
             }
 
@@ -66,7 +66,7 @@ namespace AsseScripts.Infrastructure
             source.Stop();
             _fadeOutCts?.Dispose();
             _fadeOutCts = null;
-            
+
         }
         public void SendPlayKey(PianoNote note)
         {

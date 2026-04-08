@@ -9,11 +9,35 @@ namespace Assets.Scripts.UI.Piano
     /// </summary>
     public class SoundSourceSwitcher : MonoBehaviour
     {
+        public static SoundSourceSwitcher Instance { get; private set; }
+
         [SerializeField]
         [Tooltip("切り替え可能な音源セット一覧")]
         private List<PianoSoundSet> _soundSets = new();
 
-        private int _currentIndex = 1;
+        private int _currentIndex = 0;
+
+        public int CurrentIndex => _currentIndex;
+
+        public float CurrentVolumeMultiplier => _soundSets[_currentIndex].VolumeMultiplier;
+
+        private void Awake()
+        {
+            Instance = this;
+        }
+
+        public IReadOnlyList<string> SoundSetNames
+        {
+            get
+            {
+                var names = new List<string>(_soundSets.Count);
+                foreach (var set in _soundSets)
+                {
+                    names.Add(set.SetName);
+                }
+                return names;
+            }
+        }
 
         private void Start()
         {
@@ -31,7 +55,7 @@ namespace Assets.Scripts.UI.Piano
         private void ApplySoundSet(PianoSoundSet soundSet)
         {
             var controller = Assets.Scripts.UI.Piano.PianoController.Instance;
-            
+
             foreach (var keyUI in controller.PianoKeys)
             {
                 var clip = soundSet.GetClip(keyUI.NoteEnum);

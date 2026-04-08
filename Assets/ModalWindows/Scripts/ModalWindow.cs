@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public abstract class ModalWindow<T> : MonoBehaviour where T : ModalWindow<T>
 {
@@ -10,8 +11,8 @@ public abstract class ModalWindow<T> : MonoBehaviour where T : ModalWindow<T>
     protected const string BUTTONS_PATH= "Buttons/Button_";     
 
     [SerializeField] protected Animator animator;
-    [SerializeField] protected Text headerText;
-    [SerializeField] protected Text bodyText;
+    [SerializeField] protected TMP_Text headerText;
+    [SerializeField] protected TMP_Text bodyText;
 
     [SerializeField] protected Button closeButton;
     [SerializeField] protected Button backgroundButton;

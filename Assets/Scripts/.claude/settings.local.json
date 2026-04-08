@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs grep:*)",
+      "Bash(grep \"\\\\.cs$\")",
+      "Bash(grep -r \"Font\\\\|font\\\\|TextMesh\\\\|TextMeshPro\\\\|TMP\" /c/Users/yuasa/source/repos/VoisapoForTeacher/Assets/Scripts/UI/*.cs)",
+      "Bash(git -C /c/Users/yuasa/source/repos/VoisapoForTeacher checkout HEAD -- Assets/Scripts/UI/Melody/MelodyPlayer.cs)"
+    ]
+  }
+}

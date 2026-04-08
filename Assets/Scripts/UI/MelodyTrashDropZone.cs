@@ -24,20 +24,20 @@ namespace Assets.Scripts.UI
             {
                 item.ResetToDragStart();
                 SimpleModalWindow.Create(ignorable: false)
-                    .SetHeader("通知")
-                    .SetBody("このメロディーは削除できません。")
+                    .SetHeader("Error")
+                    .SetBody("This melody cannot be deleted")
                     .AddButton("OK", () => { }, ModalButtonType.Success)
                     .Show();
                 return;
             }
 
             SimpleModalWindow.Create(ignorable: false)
-               .SetHeader("確認")
-               .SetBody("メロディーを削除してよろしいですか？")
-               .AddButton("削除する", () => {
-                   _builder.HandleTrashDrop(item); // はいを押したときだけ実行
+               .SetHeader("Confirm Deletion")
+               .SetBody("Are you sure you want to delete this melody?")
+               .AddButton("OK", () => {
+                   _builder.HandleTrashDrop(item); // Execute only when OK is pressed
                }, ModalButtonType.Danger)
-               .AddButton("キャンセル", () => {
+               .AddButton("Cancel", () => {
                    item.ResetToDragStart();
                }, ModalButtonType.Success)
                .Show();

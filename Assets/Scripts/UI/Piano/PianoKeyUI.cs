@@ -1,4 +1,4 @@
-﻿using Assets.Scripts.UI;
+﻿using AsseScripts.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -103,12 +103,13 @@ namespace Assets.Scripts.UI.Piano
         // 音のみ再生
         public void PlaySound(float volume)
         {
-            _infra.PlaySound(volume);
+            _infra.PlaySound(volume * SoundSourceSwitcher.Instance.CurrentVolumeMultiplier);
         }
 
         // 音のみ停止（フェードアウト）
-        public void StopSound(float fadeOutDuration = 0.5f)
+        public void StopSound()
         {
+            float fadeOutDuration = BPMManager.Instance.SecondPerBeat * 0.6f;
             _infra.StopSound(fadeOutDuration);
         }
 

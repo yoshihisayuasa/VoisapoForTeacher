@@ -1,10 +1,11 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class ModalWindowButton : MonoBehaviour
 {
-    [SerializeField] private Text text;
+    [SerializeField] private TMP_Text text;
     [SerializeField] private Button button;
 
     public delegate void ButtonPressed(ModalWindowButton modalWindowButton);
