@@ -10,12 +10,14 @@ namespace Assets.Scripts.UI
     {
         [SerializeField] private TMP_Dropdown _recordingDeviceDropdown;
         [SerializeField] private TMP_Dropdown _soundSourceDropdown;
+        [SerializeField] private Slider _pianoScaleSlider;
         [SerializeField] private Button _closeButton;
 
         private void Start()
         {
             InitializeRecordingDeviceDropdown();
             InitializeSoundSourceDropdown();
+            InitializePianoScaleSlider();
             _closeButton.onClick.AddListener(OnCloseButtonClicked);
         }
 
@@ -70,5 +72,25 @@ namespace Assets.Scripts.UI
         {
             SoundSourceSwitcher.Instance.SwitchTo(index);
         }
+
+        private void InitializePianoScaleSlider()
+        {
+            if (_pianoScaleSlider == null)
+            {
+                return;
+            }
+
+            var zoomController = FindObjectOfType<PianoZoomController>();
+            if (zoomController == null)
+            {
+                return;
+            }
+
+            _pianoScaleSlider.minValue = zoomController.MinScale;
+            _pianoScaleSlider.maxValue = zoomController.MaxScale;
+            _pianoScaleSlider.value = zoomController.CurrentScale;
+            _pianoScaleSlider.onValueChanged.AddListener(value => zoomController.SetScale(value));
+        }
+
     }
 }

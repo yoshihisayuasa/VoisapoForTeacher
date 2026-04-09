@@ -19,6 +19,8 @@ namespace Assets.Scripts.UI.Piano
         private readonly float _maxScale = 3.0f;
         private float _wheelSensitivity = 0.02f;
 
+        public float MinScale => _minScale;
+        public float MaxScale => _maxScale;
         public float CurrentScale => _scrollRect != null ? _scrollRect.content.localScale.x : 1f;
         private void Awake()
         {
