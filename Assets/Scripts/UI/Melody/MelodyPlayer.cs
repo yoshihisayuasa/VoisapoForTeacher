@@ -21,6 +21,11 @@ namespace Assets.Scripts.UI.Melody
 
         private bool _suppressPlayEnded = false;
 
+        /// <summary>
+        /// true の間はピアノ入力に反応しない（メロディ作成シーン用）。
+        /// </summary>
+        public bool BlockInput { get; set; } = false;
+
         private readonly struct PlayModeSettings
         {
             public bool PlayCode { get; }
@@ -416,6 +421,7 @@ namespace Assets.Scripts.UI.Melody
             piano.OnAnyKeyClickAsObservable
                 .Subscribe(key =>
                 {
+                    if (BlockInput) return;
                     var melody = MelodyManager.Instance.CurrentMelody;
                     HighlightMinMaxKeys(melody, key);
                     PlayMelody(melody, key);
