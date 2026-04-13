@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using AsseScripts.Infrastructure;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.UI.Piano
 {
@@ -23,7 +24,28 @@ namespace Assets.Scripts.UI.Piano
 
         private void Awake()
         {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
             Instance = this;
+            DontDestroyOnLoad(gameObject);
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        private void OnDestroy()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (PianoController.Instance == null)
+            {
+                return;
+            }
+            ApplySoundSet(_soundSets[_currentIndex]);
         }
 
         public IReadOnlyList<string> SoundSetNames

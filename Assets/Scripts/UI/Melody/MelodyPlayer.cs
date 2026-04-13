@@ -5,6 +5,7 @@ using AsseScripts.UI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static Assets.Scripts.UI.AutoKeyChangeManager;
 using DomainMelody = AsseScripts.Domain.Melody;
 using DomainPianoNote = AsseScripts.Domain.PianoNote;
@@ -76,6 +77,8 @@ namespace Assets.Scripts.UI.Melody
         private bool _isPlayingChord = false;
         private bool _lastPlayPiano = false;
 
+        private CompositeDisposable _pianoDisposable = new();
+
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -85,6 +88,7 @@ namespace Assets.Scripts.UI.Melody
             }
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            SceneManager.sceneLoaded += OnSceneLoaded;
 
             if (_metronomeAudioSource == null)
             {
@@ -414,9 +418,18 @@ namespace Assets.Scripts.UI.Melody
             StartCoroutine(PlayMelodyLoopCoroutine(piano, _currentMelody));
         }
 
-        private void Start()
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
+            SubscribeToPiano();
+        }
+
+        private void SubscribeToPiano()
+        {
+            _pianoDisposable.Dispose();
+            _pianoDisposable = new CompositeDisposable();
+
             var piano = PianoController.Instance;
+            if (piano == null) return;
 
             piano.OnAnyKeyClickAsObservable
                 .Subscribe(key =>
@@ -427,7 +440,7 @@ namespace Assets.Scripts.UI.Melody
                     PlayMelody(melody, key);
                     EnsureKeyRangeVisible(melody, key);
                 })
-                .AddTo(this);
+                .AddTo(_pianoDisposable);
 
             piano.OnAnyKeyEnterAsObservable
                 .Subscribe(key =>
@@ -435,7 +448,7 @@ namespace Assets.Scripts.UI.Melody
                     var melody = MelodyManager.Instance.CurrentMelody;
                     HighlightMinMaxKeys(melody, key);
                 })
-                .AddTo(this);
+                .AddTo(_pianoDisposable);
         }
 
         private void OnEnable()
@@ -452,6 +465,12 @@ namespace Assets.Scripts.UI.Melody
             {
                 AutoKeyChangeManager.Instance.OnStateChanged -= HandleAutoKeyChangeState;
             }
+        }
+
+        private void OnDestroy()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            _pianoDisposable.Dispose();
         }
 
     }

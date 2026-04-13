@@ -5,7 +5,12 @@
       "Bash(grep \"\\\\.cs$\")",
       "Bash(grep -r \"Font\\\\|font\\\\|TextMesh\\\\|TextMeshPro\\\\|TMP\" /c/Users/yuasa/source/repos/VoisapoForTeacher/Assets/Scripts/UI/*.cs)",
       "Bash(git -C /c/Users/yuasa/source/repos/VoisapoForTeacher checkout HEAD -- Assets/Scripts/UI/Melody/MelodyPlayer.cs)",
-      "Bash(xargs ls:*)"
+      "Bash(xargs ls:*)",
+      "Bash(awk 'NR>=31 && NR<=60')",
+      "Bash(awk 'NR>=308 && NR<=330')",
+      "Bash(awk 'NR>=594 && NR<=625')",
+      "Bash(find C:\\\\\\\\Users\\\\\\\\yuasa\\\\\\\\source\\\\\\\\repos\\\\\\\\VoisapoForTeacher\\\\\\\\Assets\\\\\\\\Scripts\\\\\\\\Domain -type f -name \"*.cs\")",
+      "Bash(grep -E \"\\\\.cs$\")"
     ]
   }
 }

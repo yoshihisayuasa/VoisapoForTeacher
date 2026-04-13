@@ -33,7 +33,7 @@ namespace Assets.Scripts.UI.MelodyCreate
 
         private void RefreshSaveButton()
         {
-            _saveButton.interactable = MelodyCreateManager.Instance.Draft.IsValid;
+            _saveButton.interactable = MelodyCreateManager.Instance.IsDraftValid;
         }
     }
 }

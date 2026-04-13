@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using AsseScripts.Domain;
 using Assets.Scripts.UI.Melody;
 using UnityEngine;
@@ -9,6 +10,7 @@ namespace Assets.Scripts.UI.MelodyCreate
 {
     /// <summary>
     /// メロディ作成シーンのオーケストレーター。
+    /// コード音・メロディステップの編集ロジックを一元管理する。
     /// </summary>
     public sealed class MelodyCreateManager : MonoBehaviour
     {
@@ -19,6 +21,8 @@ namespace Assets.Scripts.UI.MelodyCreate
         public MelodyDraft Draft { get; private set; }
 
         public event Action DraftChanged;
+
+        public bool IsDraftValid => Draft.IsValid;
 
         private void Awake()
         {
@@ -47,13 +51,23 @@ namespace Assets.Scripts.UI.MelodyCreate
             DraftChanged?.Invoke();
         }
 
-        public void SetChordNote(int index, DomainPianoNote key)
+        public void SetChordNotes(IReadOnlyList<DomainPianoNote> notes)
         {
-            Draft.SetChordNote(index, key);
+            for (int i = 0; i < Chord.Length; i++)
+            {
+                if (i < notes.Count)
+                {
+                    Draft.SetChordNote(i, notes[i]);
+                }
+                else
+                {
+                    Draft.ClearChordNote(i);
+                }
+            }
             DraftChanged?.Invoke();
         }
 
-        public void AddMelodyStep(StepEntry entry)
+        public void AddMelodyStep(IStepEntry entry)
         {
             Draft.AddMelodyStep(entry);
             DraftChanged?.Invoke();

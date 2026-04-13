@@ -14,10 +14,14 @@ namespace AsseScripts.Domain
     {
         public string Name { get; set; } = string.Empty;
 
-        private readonly List<StepEntry> _steps = new();
-        public IReadOnlyList<StepEntry> Steps => _steps;
+        private readonly List<IStepEntry> _steps = new();
+        public IReadOnlyList<IStepEntry> Steps => _steps;
+
+        public const int MaxMelodySteps = 26;
 
         public int MelodyStepCount => _steps.Count - Chord.Length;
+
+        public bool CanAddMelodyStep => MelodyStepCount < MaxMelodySteps;
 
         public MelodyDraft()
         {
@@ -36,8 +40,18 @@ namespace AsseScripts.Domain
             _steps[index] = new NoteStep(key);
         }
 
-        public void AddMelodyStep(StepEntry entry)
+        public void ClearChordNote(int index)
         {
+            if (index < 0 || index >= Chord.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+            _steps[index] = null;
+        }
+
+        public void AddMelodyStep(IStepEntry entry)
+        {
+            if (!CanAddMelodyStep) return;
             _steps.Add(entry);
         }
 
@@ -53,6 +67,11 @@ namespace AsseScripts.Domain
             !string.IsNullOrWhiteSpace(Name) &&
             AllChordNotesSet() &&
             HasAtLeastOneMelodyNote();
+
+        /// <summary>
+        /// 名前が未設定でもプレビュー再生できる状態か。
+        /// </summary>
+        public bool CanPreview => AllChordNotesSet() && HasAtLeastOneMelodyNote();
 
         private bool AllChordNotesSet()
         {
@@ -113,8 +132,8 @@ namespace AsseScripts.Domain
                 }
                 else if (_steps[i] is ExtendStep && notes.Count > 0)
                 {
-                    var last = notes[notes.Count - 1];
-                    notes[notes.Count - 1] = new Note(last.Interval.Value, last.Beats + 1);
+                    var last = notes[^1];
+                    notes[^1] = new Note(last.Interval.Value, last.Beats + 1);
                 }
             }
 
