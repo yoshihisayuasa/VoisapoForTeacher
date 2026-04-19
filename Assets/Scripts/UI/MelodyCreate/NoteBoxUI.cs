@@ -1,4 +1,4 @@
-using AsseScripts.Domain;
+using Assets.Scripts.Domain.ValueObjects;
 using TMPro;
 using UnityEngine;
 
@@ -11,7 +11,7 @@ namespace Assets.Scripts.UI.MelodyCreate
     {
         [SerializeField] private TMP_Text _label;
 
-        public IStepEntry Entry { get; private set; }
+        public DraftNote Entry { get; private set; }
         public bool IsChordBox { get; private set; }
 
         public void Initialize(bool isChordBox)
@@ -21,10 +21,16 @@ namespace Assets.Scripts.UI.MelodyCreate
             RefreshDisplay();
         }
 
-        public void SetEntry(IStepEntry entry)
+        public void SetEntry(DraftNote entry)
         {
             Entry = entry;
             RefreshDisplay();
+        }
+
+        public void ShowArrow()
+        {
+            Entry = null;
+            _label.text = "→";
         }
 
         private void RefreshDisplay()

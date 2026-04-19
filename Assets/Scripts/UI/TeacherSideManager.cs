@@ -2,6 +2,7 @@ using Assets.Scripts.UI.Piano;
 using R3;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.UI
@@ -12,6 +13,8 @@ namespace Assets.Scripts.UI
     {
         public static TeacherSideManager Instance { get; private set; }
 
+        [SerializeField] private string _mainSceneName = "Main";
+
         [Header("UI")]
         [SerializeField] private Toggle _toggle;
         [SerializeField] private Image _image;
@@ -20,6 +23,9 @@ namespace Assets.Scripts.UI
         private readonly Color _offColor = Color.white;
 
         private bool _teacherSideButtonState;
+
+        private readonly Subject<bool> _onStateChanged = new();
+        public Observable<bool> OnStateChanged => _onStateChanged;
 
         public bool TeacherSideButtonState
         {
@@ -37,6 +43,7 @@ namespace Assets.Scripts.UI
 
                 _teacherSideButtonState = value;
                 SyncToggle(value);
+                _onStateChanged.OnNext(value);
             }
         }
 
@@ -48,6 +55,8 @@ namespace Assets.Scripts.UI
                 return;
             }
             Instance = this;
+            DontDestroyOnLoad(gameObject);
+            SceneManager.sceneLoaded += OnSceneLoaded;
 
             if (_toggle == null)
             {
@@ -62,13 +71,23 @@ namespace Assets.Scripts.UI
             }
         }
 
+        private void OnDestroy()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            gameObject.SetActive(scene.name == _mainSceneName);
+        }
+
         private void Start()
         {
             _toggle.onValueChanged.AddListener(isOn => TeacherSideButtonState = isOn);
 
             PianoController.Instance.OnAnyKeyUpAsObservable
                 .Subscribe(_ => TeacherSideButtonState = false)
-                .AddTo(PianoController.Instance);
+                .AddTo(this);
         }
 
         private void SyncToggle(bool isOn)

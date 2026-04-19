@@ -27,7 +27,7 @@ namespace Assets.Scripts.UI.Melody
         /// </summary>
         public bool BlockInput { get; set; } = false;
 
-        private readonly struct PlayModeSettings
+        public readonly struct PlayModeSettings
         {
             public bool PlayCode { get; }
             public bool PlayPiano { get; }
@@ -75,7 +75,7 @@ namespace Assets.Scripts.UI.Melody
         private AutoKeyChangeState _autoKeyChangeState = AutoKeyChangeState.None;
         private AutoKeyChangeState _prevAutoKeyChangeState = AutoKeyChangeState.None;
         private bool _isPlayingChord = false;
-        private bool _lastPlayPiano = false;
+        private PlayModeSettings _currentSettings;
 
         private CompositeDisposable _pianoDisposable = new();
 
@@ -98,18 +98,19 @@ namespace Assets.Scripts.UI.Melody
             _metronomePlayer = new MetronomePlayer(_metronomeAudioSource, _metronomeClip);
         }
 
-        public void PlayMelody(DomainMelody melody, DomainPianoNote pressedKey)
+        public void PlayMelody(DomainMelody melody, DomainPianoNote pressedKey, PlayModeSettings settings)
         {
             // 前回のコルーチン・状態を確実に停止してから開始（競合防止）
             _suppressPlayEnded = true;
             StopMelody(true);
             _suppressPlayEnded = false;
 
-            _onPlayBegan.OnNext(TeacherSideManager.Instance.TeacherSideButtonState);
+            _onPlayBegan.OnNext(PianoTeacherSideManager.Instance.TeacherSideButtonState);
 
             var piano = PianoController.Instance;
             _currentMelody = melody;
             _currentRootKey = pressedKey;
+            _currentSettings = settings;
             StartCoroutine(PlayMelodyLoopCoroutine(piano, melody));
         }
 
@@ -295,18 +296,16 @@ namespace Assets.Scripts.UI.Melody
 
         private IEnumerator PlayMelodyLoopCoroutine(PianoController piano, DomainMelody melody)
         {
-
             if (!IsMelodyPlayableWithinRange(melody, _currentRootKey))
             {
                 yield break;
             }
-            var settings = PlayModeSettings.FromFlags(TeacherSideManager.Instance.TeacherSideButtonState, EarphoneModeManager.Instance.EarphoneMode);
-            _lastPlayPiano = settings.PlayPiano;
+            bool prevPlaySide = _currentSettings.PlayPiano;
             var strategy = GetStrategy(melody);
 
-            yield return StartCoroutine(PlayMelodyAtKeyOnce(piano, melody, _currentRootKey, settings));
+            yield return StartCoroutine(PlayMelodyAtKeyOnce(piano, melody, _currentRootKey, _currentSettings));
 
-            if(!strategy.SupportAutoKeyChange)
+            if (!strategy.SupportAutoKeyChange)
             {
                 yield break;
             }
@@ -315,9 +314,8 @@ namespace Assets.Scripts.UI.Melody
             {
                 piano.StopMelody(true);
 
-                var settingsLoop = PlayModeSettings.FromFlags(TeacherSideManager.Instance.TeacherSideButtonState, EarphoneModeManager.Instance.EarphoneMode);
-
-                if (settingsLoop.PlayPiano == _lastPlayPiano)
+                bool playSideChanged = _currentSettings.PlayPiano != prevPlaySide;
+                if (!playSideChanged)
                 {
                     _currentRootKey = GetNextRoot(_currentRootKey, _autoKeyChangeState);
 
@@ -326,9 +324,9 @@ namespace Assets.Scripts.UI.Melody
                         break;
                     }
                 }
-                _lastPlayPiano = settingsLoop.PlayPiano;
+                prevPlaySide = _currentSettings.PlayPiano;
 
-                yield return StartCoroutine(PlayMelodyAtKeyOnce(piano, melody, _currentRootKey, settingsLoop));
+                yield return StartCoroutine(PlayMelodyAtKeyOnce(piano, melody, _currentRootKey, _currentSettings));
             }
 
             _onPlayEnded.OnNext(Unit.Default);
@@ -418,6 +416,20 @@ namespace Assets.Scripts.UI.Melody
             StartCoroutine(PlayMelodyLoopCoroutine(piano, _currentMelody));
         }
 
+        private void Start()
+        {
+            EarphoneModeManager.Instance.OnModeChanged
+                .Subscribe(_ => RefreshCurrentSettings())
+                .AddTo(this);
+
+            if (TeacherSideManager.Instance != null)
+            {
+                TeacherSideManager.Instance.OnStateChanged
+                    .Subscribe(_ => RefreshCurrentSettings())
+                    .AddTo(this);
+            }
+        }
+
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             SubscribeToPiano();
@@ -437,7 +449,10 @@ namespace Assets.Scripts.UI.Melody
                     if (BlockInput) return;
                     var melody = MelodyManager.Instance.CurrentMelody;
                     HighlightMinMaxKeys(melody, key);
-                    PlayMelody(melody, key);
+                    var settings = PlayModeSettings.FromFlags(
+                        TeacherSideManager.Instance.TeacherSideButtonState,
+                        EarphoneModeManager.Instance.EarphoneMode);
+                    PlayMelody(melody, key, settings);
                     EnsureKeyRangeVisible(melody, key);
                 })
                 .AddTo(_pianoDisposable);
@@ -445,6 +460,7 @@ namespace Assets.Scripts.UI.Melody
             piano.OnAnyKeyEnterAsObservable
                 .Subscribe(key =>
                 {
+                    if (BlockInput) return;
                     var melody = MelodyManager.Instance.CurrentMelody;
                     HighlightMinMaxKeys(melody, key);
                 })
@@ -453,9 +469,7 @@ namespace Assets.Scripts.UI.Melody
 
         private void OnEnable()
         {
-            // AutoKeyChangeManager の状態変化を受け取る
             AutoKeyChangeManager.Instance.OnStateChanged += HandleAutoKeyChangeState;
-            // 起動時に現在の状態で同期
             HandleAutoKeyChangeState(AutoKeyChangeManager.Instance.State);
         }
 
@@ -465,6 +479,13 @@ namespace Assets.Scripts.UI.Melody
             {
                 AutoKeyChangeManager.Instance.OnStateChanged -= HandleAutoKeyChangeState;
             }
+        }
+
+        private void RefreshCurrentSettings()
+        {
+            _currentSettings = PlayModeSettings.FromFlags(
+                TeacherSideManager.Instance.TeacherSideButtonState,
+                EarphoneModeManager.Instance.EarphoneMode);
         }
 
         private void OnDestroy()

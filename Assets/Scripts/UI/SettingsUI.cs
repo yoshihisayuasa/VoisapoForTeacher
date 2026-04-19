@@ -80,7 +80,7 @@ namespace Assets.Scripts.UI
                 return;
             }
 
-            var zoomController = FindObjectOfType<PianoZoomController>();
+            var zoomController = FindFirstObjectByType<PianoZoomController>();
             if (zoomController == null)
             {
                 return;
@@ -91,6 +91,5 @@ namespace Assets.Scripts.UI
             _pianoScaleSlider.value = zoomController.CurrentScale;
             _pianoScaleSlider.onValueChanged.AddListener(value => zoomController.SetScale(value));
         }
-
     }
 }

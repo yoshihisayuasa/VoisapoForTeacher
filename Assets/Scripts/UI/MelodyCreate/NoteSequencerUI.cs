@@ -1,4 +1,6 @@
 using AsseScripts.Domain;
+using Assets.Scripts.Domain;
+using Assets.Scripts.Domain.ValueObjects;
 using Assets.Scripts.UI.Piano;
 using R3;
 using System.Collections;
@@ -78,7 +80,7 @@ namespace Assets.Scripts.UI.MelodyCreate
         {
             if (_isChordMode)
             {
-                InputToChordBox(key);
+                AddCordNote(key);
             }
             else
             {
@@ -113,7 +115,7 @@ namespace Assets.Scripts.UI.MelodyCreate
             _previewingNote = null;
         }
 
-        private void InputToChordBox(DomainPianoNote key)
+        private void AddCordNote(DomainPianoNote key)
         {
             _enteredChordNotes.Add(key);
             SortAndApplyChordNotes();
@@ -136,7 +138,7 @@ namespace Assets.Scripts.UI.MelodyCreate
                 int noteIdx = i - offset;
                 if (noteIdx >= 0)
                 {
-                    _chordBoxes[i].SetEntry(new NoteStep(_enteredChordNotes[noteIdx]));
+                    _chordBoxes[i].SetEntry(new DraftNote(_enteredChordNotes[noteIdx]));
                 }
                 else
                 {
@@ -144,16 +146,16 @@ namespace Assets.Scripts.UI.MelodyCreate
                 }
             }
 
-            MelodyCreateManager.Instance.SetChordNotes(_enteredChordNotes);
+            MelodyCreateManager.Instance.AddChordNotes(_enteredChordNotes);
         }
 
         private void AddMelodyNote(DomainPianoNote key)
         {
             if (_cursorIndex >= MelodyBoxCount) return;
 
-            var entry = new NoteStep(key);
-            MelodyCreateManager.Instance.AddMelodyStep(entry);
-            _melodyBoxes[_cursorIndex].SetEntry(entry);
+            var note = new DraftNote(key);
+            MelodyCreateManager.Instance.AddMelodyNote(note);
+            _melodyBoxes[_cursorIndex].SetEntry(note);
 
             _cursorIndex++;
         }
@@ -165,10 +167,17 @@ namespace Assets.Scripts.UI.MelodyCreate
             if (_isChordMode) return;
             if (_cursorIndex >= MelodyBoxCount) return;
 
-            var entry = new ExtendStep();
-            MelodyCreateManager.Instance.AddMelodyStep(entry);
-            _melodyBoxes[_cursorIndex].SetEntry(entry);
+            var draft = MelodyCreateManager.Instance.Draft;
+            if (draft.MelodyNotes.Count == 0)
+            {
+                MelodyCreateManager.Instance.ExtendChord();
+            }
+            else
+            {
+                MelodyCreateManager.Instance.ExtendLastMelodyNote();
+            }
 
+            _melodyBoxes[_cursorIndex].ShowArrow();
             _cursorIndex++;
             RefreshExtendButton();
         }
@@ -178,32 +187,49 @@ namespace Assets.Scripts.UI.MelodyCreate
             if (_isChordMode)
             {
                 DeleteLastChordNote();
-            }
-            else if (_cursorIndex > 0)
-            {
-                MelodyCreateManager.Instance.RemoveLastMelodyStep();
-
-                _cursorIndex--;
-                _melodyBoxes[_cursorIndex].SetEntry(null);
                 RefreshExtendButton();
+                return;
             }
-            else
+
+            var draft = MelodyCreateManager.Instance.Draft;
+
+            if (_cursorIndex == 0)
             {
-                // メロディが空なのでコードモードに戻して最後の和音を削除
                 _isChordMode = true;
                 DeleteLastChordNote();
             }
+            else if (draft.MelodyNotes.Count == 0)
+            {
+                // 和音延長ボックスを1つ戻す
+                MelodyCreateManager.Instance.ShrinkChord();
+                _cursorIndex--;
+                _melodyBoxes[_cursorIndex].SetEntry(null);
+            }
+            else
+            {
+                var lastNote = draft.MelodyNotes[^1];
+                if (lastNote.Beats > 1)
+                {
+                    MelodyCreateManager.Instance.ShrinkLastMelodyNote();
+                    _cursorIndex--;
+                    _melodyBoxes[_cursorIndex].SetEntry(null);
+                }
+                else
+                {
+                    MelodyCreateManager.Instance.RemoveLastMelodyNote();
+                    _cursorIndex--;
+                    _melodyBoxes[_cursorIndex].SetEntry(null);
+                }
+            }
+
+            RefreshExtendButton();
         }
 
         private void DeleteLastChordNote()
         {
-            if (_enteredChordNotes.Count == 0)
-            {
-                return;
-            }
+            if (_enteredChordNotes.Count == 0) return;
             _enteredChordNotes.RemoveAt(_enteredChordNotes.Count - 1);
             SortAndApplyChordNotes();
-            RefreshExtendButton();
         }
 
         // ── 状態管理 ─────────────────────────────────────────────────────

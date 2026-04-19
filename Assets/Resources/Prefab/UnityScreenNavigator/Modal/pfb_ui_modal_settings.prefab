@@ -2524,7 +2524,7 @@ GameObject:
   - component: {fileID: 693122848065358376}
   - component: {fileID: 7837180706157788290}
   - component: {fileID: 4993470444775762338}
-  - component: {fileID: 5720219400348293182}
+  - component: {fileID: 6752945001931520619}
   m_Layer: 0
   m_Name: pfb_ui_modal_settings
   m_TagString: Untagged
@@ -2607,7 +2607,7 @@ MonoBehaviour:
   _animationContainer:
     _enterAnimations: []
     _exitAnimations: []
---- !u!114 &5720219400348293182
+--- !u!114 &6752945001931520619
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2616,13 +2616,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 5687472065562744594}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf8744b3b8befe14da08a9da26465730, type: 3}
+  m_Script: {fileID: 11500000, guid: ad51087f89c51904faf09da7b1f5ae27, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.SettingsUI
-  _recordingDeviceDropdown: {fileID: 262993507141404753}
-  _soundSourceDropdown: {fileID: 1228149220685300808}
-  _pianoScaleSlider: {fileID: 3665054097195576930}
-  _closeButton: {fileID: 9102582938984568392}
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.MelodyCreate.MelodyNameInputPopupUI
+  _nameField: {fileID: 0}
+  _confirmButton: {fileID: 9102582938984568392}
+  _cancelButton: {fileID: 9102582938984568392}
 --- !u!1 &6600686123124684844
 GameObject:
   m_ObjectHideFlags: 0

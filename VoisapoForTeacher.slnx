@@ -8,7 +8,6 @@
   <Project Path="PhotonUnityNetworking.Utilities.csproj" />
   <Project Path="PunDemos.DemoHubEditor.csproj" />
   <Project Path="PunDemos.DemoSlotcarEditor.csproj" />
-  <Project Path="MIAssembly.csproj" />
   <Project Path="PhotonUnityNetworking.Utilities.PhotonPlayer.Editor.csproj" />
   <Project Path="Assembly-CSharp-firstpass.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />

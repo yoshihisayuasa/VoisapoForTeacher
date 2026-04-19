@@ -1,43 +1,41 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using AsseScripts.Domain;
 using Assets.Scripts.Domain.ValueObjects;
+using DomainMelody = AsseScripts.Domain.Melody;
 
-namespace AsseScripts.Domain
+namespace Assets.Scripts.Domain
 {
     /// <summary>
     /// メロディ作成中の可変下書き。
-    /// Steps[0-2] がコード用 NoteStep、Steps[3+] がメロディ用ステップ列。
-    /// 各 NoteStep は押した鍵の絶対音を保持する。
+    /// コード音・コード拍数・メロディ音列を個別に管理する。
     /// 保存時、メロディ1音目をルートとしてインターバルに変換する。
     /// </summary>
     public sealed class MelodyDraft
     {
-        public string Name { get; set; } = string.Empty;
+        private readonly DraftNote[] _chordNotes = new DraftNote[Chord.Length];
+        private int _chordBeats = 1;
+        private readonly List<DraftNote> _melodyNotes = new();
 
-        private readonly List<IStepEntry> _steps = new();
-        public IReadOnlyList<IStepEntry> Steps => _steps;
+        public IReadOnlyList<DraftNote> MelodyNotes => _melodyNotes;
 
         public const int MaxMelodySteps = 26;
+        public int MelodyStepCount => _melodyNotes.Count;
+        public bool CanAddMelodyNote => MelodyStepCount < MaxMelodySteps;
 
-        public int MelodyStepCount => _steps.Count - Chord.Length;
+        private PianoNote _root;
+        public PianoNote Root => _root;
 
-        public bool CanAddMelodyStep => MelodyStepCount < MaxMelodySteps;
+        // ── コード操作 ──────────────────────────────────────────────────────
 
-        public MelodyDraft()
-        {
-            for (int i = 0; i < Chord.Length; i++)
-            {
-                _steps.Add(null);
-            }
-        }
-
-        public void SetChordNote(int index, PianoNote key)
+        public void AddChordNote(int index, PianoNote key)
         {
             if (index < 0 || index >= Chord.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
-            _steps[index] = new NoteStep(key);
+            _chordNotes[index] = new DraftNote(key);
         }
 
         public void ClearChordNote(int index)
@@ -46,107 +44,90 @@ namespace AsseScripts.Domain
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
-            _steps[index] = null;
+            _chordNotes[index] = null;
         }
 
-        public void AddMelodyStep(IStepEntry entry)
+        public void ExtendChord()
         {
-            if (!CanAddMelodyStep) return;
-            _steps.Add(entry);
+            _chordBeats++;
         }
 
-        public void RemoveLastMelodyStep()
+        public void ShrinkChord()
         {
-            if (_steps.Count > Chord.Length)
+            _chordBeats = Math.Max(1, _chordBeats - 1);
+        }
+
+        // ── メロディ操作 ─────────────────────────────────────────────────────
+
+        public void AddMelodyNote(DraftNote note)
+        {
+            if (!CanAddMelodyNote) return;
+            _melodyNotes.Add(note);
+            if (_root == null)
             {
-                _steps.RemoveAt(_steps.Count - 1);
+                _root = note.Key;
             }
         }
 
-        public bool IsValid =>
-            !string.IsNullOrWhiteSpace(Name) &&
-            AllChordNotesSet() &&
-            HasAtLeastOneMelodyNote();
+        public void ExtendLastMelodyNote()
+        {
+            if (_melodyNotes.Count == 0) return;
+            var last = _melodyNotes[^1];
+            _melodyNotes[^1] = last.WithBeats(last.Beats + 1);
+        }
 
-        /// <summary>
-        /// 名前が未設定でもプレビュー再生できる状態か。
-        /// </summary>
-        public bool CanPreview => AllChordNotesSet() && HasAtLeastOneMelodyNote();
+        public void ShrinkLastMelodyNote()
+        {
+            if (_melodyNotes.Count == 0) return;
+            var last = _melodyNotes[^1];
+            if (last.Beats <= 1) return;
+            _melodyNotes[^1] = last.WithBeats(last.Beats - 1);
+        }
+
+        public void RemoveLastMelodyNote()
+        {
+            if (_melodyNotes.Count == 0) return;
+            _melodyNotes.RemoveAt(_melodyNotes.Count - 1);
+            _root = _melodyNotes.Count > 0 ? _melodyNotes[0].Key : null;
+        }
+
+        // ── 検証 ────────────────────────────────────────────────────────────
+
+        public bool CanPreview => AllChordNotesSet() && _melodyNotes.Count > 0;
 
         private bool AllChordNotesSet()
         {
             for (int i = 0; i < Chord.Length; i++)
             {
-                if (_steps[i] == null) return false;
+                if (_chordNotes[i] == null) return false;
             }
             return true;
         }
 
-        private bool HasAtLeastOneMelodyNote()
-        {
-            for (int i = Chord.Length; i < _steps.Count; i++)
-            {
-                if (_steps[i] is NoteStep) return true;
-            }
-            return false;
-        }
+        // ── ビルド ───────────────────────────────────────────────────────────
 
         /// <summary>
         /// メロディ1音目をルートとして全ステップをインターバルに変換し Melody を生成する。
         /// </summary>
-        public Melody Build(int position)
+        public DomainMelody Build(string name, int position)
         {
-            var root = FindMelodyRoot();
-            if (root == null)
+            if (_root == null)
             {
                 throw new InvalidOperationException("メロディに音符がありません");
             }
 
-            var chordIntervals = new List<Interval>();
-            for (int i = 0; i < Chord.Length; i++)
-            {
-                if (_steps[i] is NoteStep step)
-                {
-                    chordIntervals.Add(new Interval(step.Key.Index - root.Index));
-                }
-            }
+            var chordIntervals = _chordNotes
+                .Where(n => n != null)
+                .Select(n => new Interval(n.Key.Index - _root.Index))
+                .ToList();
 
-            // メロディ先頭の ExtendStep を和音拍数として解釈する
-            int chordBeats = 0;
-            int melodyStart = Chord.Length;
-            while (melodyStart < _steps.Count && _steps[melodyStart] is ExtendStep)
-            {
-                chordBeats++;
-                melodyStart++;
-            }
-            chordBeats = chordBeats + 1;
+            var chord = new Chord(chordIntervals, _chordBeats);
 
-            var chord = new Chord(chordIntervals, chordBeats);
+            var notes = _melodyNotes
+                .Select(n => new Note(n.Key.Index - _root.Index, n.Beats))
+                .ToList();
 
-            var notes = new List<Note>();
-            for (int i = melodyStart; i < _steps.Count; i++)
-            {
-                if (_steps[i] is NoteStep noteStep)
-                {
-                    notes.Add(new Note(noteStep.Key.Index - root.Index, 1));
-                }
-                else if (_steps[i] is ExtendStep && notes.Count > 0)
-                {
-                    var last = notes[^1];
-                    notes[^1] = new Note(last.Interval.Value, last.Beats + 1);
-                }
-            }
-
-            return new Melody(Name, chord, notes, position);
-        }
-
-        private PianoNote FindMelodyRoot()
-        {
-            for (int i = Chord.Length; i < _steps.Count; i++)
-            {
-                if (_steps[i] is NoteStep ns) return ns.Key;
-            }
-            return null;
+            return new DomainMelody(name, chord, notes, position);
         }
     }
 }

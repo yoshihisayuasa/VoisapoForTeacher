@@ -42,6 +42,7 @@ namespace Assets.Scripts.UI.Melody
         }
 
         public IReadOnlyList<DomainMelody> GetAllMelodies() => _melodies;
+        public int MelodyCount => _melodies.Count;
         public void AddMelody(DomainMelody melody)
         {
             _melodies.Add(melody);

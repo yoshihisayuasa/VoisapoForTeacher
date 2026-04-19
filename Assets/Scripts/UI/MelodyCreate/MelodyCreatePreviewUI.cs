@@ -1,3 +1,4 @@
+using R3;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,22 +16,19 @@ namespace Assets.Scripts.UI.MelodyCreate
         private void Start()
         {
             _previewButton.onClick.AddListener(OnClicked);
-            MelodyCreateManager.Instance.DraftChanged += Refresh;
+            MelodyCreateManager.Instance.DraftChanged
+                .Subscribe(_ => Refresh())
+                .AddTo(this);
             Refresh();
-        }
-
-        private void OnDestroy()
-        {
-            if (MelodyCreateManager.Instance != null)
-            {
-                MelodyCreateManager.Instance.DraftChanged -= Refresh;
-            }
         }
 
         private void OnClicked()
         {
-            _melodyPlayer.Play(MelodyCreateManager.Instance.Draft);
+            var manager = MelodyCreateManager.Instance;
+            _melodyPlayer.Play(manager.CurrentMelody, manager.Draft.Root);
         }
+
+
 
         private void Refresh()
         {

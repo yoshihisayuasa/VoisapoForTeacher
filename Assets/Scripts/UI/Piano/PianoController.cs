@@ -39,6 +39,7 @@ namespace Assets.Scripts.UI.Piano
                 return;
             }
             Instance = this;
+            DontDestroyOnLoad(gameObject);
 
             _keyDict = new Dictionary<PianoNoteEnum, PianoKeyUI>(_pianoKeys.Count);
             foreach (var key in _pianoKeys)

@@ -10,7 +10,9 @@
       "Bash(awk 'NR>=308 && NR<=330')",
       "Bash(awk 'NR>=594 && NR<=625')",
       "Bash(find C:\\\\\\\\Users\\\\\\\\yuasa\\\\\\\\source\\\\\\\\repos\\\\\\\\VoisapoForTeacher\\\\\\\\Assets\\\\\\\\Scripts\\\\\\\\Domain -type f -name \"*.cs\")",
-      "Bash(grep -E \"\\\\.cs$\")"
+      "Bash(grep -E \"\\\\.cs$\")",
+      "Bash(wc -l \"/c/Users/yuasa/source/repos/VoisapoForTeacher/Assets/Scripts\"/**/*.cs)",
+      "Bash(grep -v \"^--$\")"
     ]
   }
 }

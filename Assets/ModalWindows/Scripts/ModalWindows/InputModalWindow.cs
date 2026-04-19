@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class InputModalWindow : ModalWindow<InputModalWindow>
 {
@@ -34,7 +35,7 @@ public class InputModalWindow : ModalWindow<InputModalWindow>
     protected override void Update()
     {
         base.Update();
-        if (inputField.isFocused && inputField.text != "" && Input.GetKeyUp(KeyCode.Return))
+        if (inputField.isFocused && inputField.text != "" && Keyboard.current != null && Keyboard.current.enterKey.wasPressedThisFrame)
             SubmitInput();
     }
 

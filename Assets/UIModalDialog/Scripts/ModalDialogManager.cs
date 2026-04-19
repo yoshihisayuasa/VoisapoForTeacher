@@ -1,19 +1,14 @@
-﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.Events;
+﻿using Assets.UIModalDialog.Scripts;
 using System;
-using Assets.UIModalDialog.Scripts;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class ModalDialogManager : MonoBehaviour
 {
-
     public const string MODAL_DLG_TAG = "ModalDialog";
 
     public event EventHandler<DialogEventArgs> DialogOpened;
-
     public event EventHandler<DialogClosingEventArgs> DialogClosing;
-
     public event EventHandler<DialogClosedEventArgs> DialogClosed;
 
     private GameObject _currentDialog = null;
@@ -27,7 +22,9 @@ public class ModalDialogManager : MonoBehaviour
         get
         {
             if (_instance == null)
-                _instance = GameObject.FindObjectOfType<ModalDialogManager>();
+            {
+                _instance = FindObjectsByType<ModalDialogManager>(FindObjectsSortMode.None)[0];
+            }
             return _instance;
         }
     }
@@ -44,7 +41,7 @@ public class ModalDialogManager : MonoBehaviour
     /// </summary>
     private void HideAllDialogs()
     {
-        Canvas[] canvasObjects = GameObject.FindObjectsOfType<Canvas>();
+        Canvas[] canvasObjects = FindObjectsByType<Canvas>(FindObjectsSortMode.None);
         foreach (Canvas canvas in canvasObjects)
         {
             foreach (Transform transform in canvas.transform)
@@ -77,14 +74,10 @@ public class ModalDialogManager : MonoBehaviour
             return;
         }
 
-        // Find Canvas
-        Canvas[] canvasObjects = FindObjectsOfType<Canvas>();
-
+        Canvas[] canvasObjects = FindObjectsByType<Canvas>(FindObjectsSortMode.None);
         ModalDialog modalDlg = null;
-
         bool found = false;
 
-        // Get the first modal dialog and open it
         foreach (Canvas canvas in canvasObjects)
         {
             foreach (Transform transform in canvas.transform)
@@ -93,7 +86,6 @@ public class ModalDialogManager : MonoBehaviour
 
                 if (modalDlg != null)
                 {
-                    // Try to find a special dialog
                     if (!String.IsNullOrEmpty(dialogName))
                     {
                         if (transform.name == dialogName)
@@ -115,27 +107,24 @@ public class ModalDialogManager : MonoBehaviour
             }
 
             if (found)
+            {
                 break;
+            }
         }
 
         if (modalDlg != null)
         {
             modalDlg.Show();
 
-            if (DialogOpened != null)
-            {
-                DialogEventArgs dlgArgs = new DialogEventArgs();
-                dlgArgs.DialogPanel = _currentDialog.transform.Find("ModalDialogPanel");
-                dlgArgs.DialogName = _currentDialog.name;
-
-                DialogOpened(this, dlgArgs);
-            }
+            DialogEventArgs dlgArgs = new DialogEventArgs();
+            dlgArgs.DialogPanel = _currentDialog.transform.Find("ModalDialogPanel");
+            dlgArgs.DialogName = _currentDialog.name;
+            DialogOpened?.Invoke(this, dlgArgs);
         }
         else
         {
             Debug.LogError("No modal dialog found to show");
         }
-
     }
 
     public void CloseDialog(Button sender)
@@ -144,29 +133,26 @@ public class ModalDialogManager : MonoBehaviour
 
         if (DialogClosing != null)
         {
-            DialogClosingEventArgs dlgArgs = new DialogClosingEventArgs();
-            dlgArgs.CloseButton = sender;
-            dlgArgs.DialogPanel = _currentDialog.transform.Find("ModalDialogPanel");
+            DialogClosingEventArgs closingArgs = new()
+            {
+                CloseButton = sender,
+                DialogPanel = _currentDialog.transform.Find("ModalDialogPanel")
+            };
 
-            DialogClosing(sender, dlgArgs);
-
-            cancel = dlgArgs.Cancel;
+            DialogClosing?.Invoke(sender, closingArgs);
+            cancel = closingArgs.Cancel;
         }
 
         if (!cancel)
         {
-            DialogClosedEventArgs dlgArgs = new DialogClosedEventArgs();
-            dlgArgs.DialogName = _currentDialog.name;
-            dlgArgs.CloseButton = sender;
+            DialogClosedEventArgs closedArgs = new DialogClosedEventArgs();
+            closedArgs.DialogName = _currentDialog.name;
+            closedArgs.CloseButton = sender;
 
             _currentDialog.SetActive(false);
             _currentDialog = null;
 
-            if (DialogClosed != null)
-            {
-                DialogClosed(sender, dlgArgs);    
-            }
+            DialogClosed?.Invoke(sender, closedArgs);
         }
-
     }
 }
