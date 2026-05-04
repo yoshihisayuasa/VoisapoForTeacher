@@ -29,6 +29,7 @@ namespace Assets.Scripts.UI
 
             EnsureSlotComponents();
             Build();
+            MelodyManager.Instance.ResetToDefault();
         }
 
         public void Build()

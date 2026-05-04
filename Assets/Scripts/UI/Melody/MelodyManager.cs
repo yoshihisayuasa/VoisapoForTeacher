@@ -55,6 +55,20 @@ namespace Assets.Scripts.UI.Melody
             MelodyChanged?.Invoke(melody);
         }
 
+        public void ClearCurrentMelody()
+        {
+            CurrentMelody = null;
+        }
+
+        public void ResetToDefault()
+        {
+            var melody = _melodies.Find(m => m.Name == defaultMelodyName);
+            if (melody != null)
+            {
+                SetCurrentMelody(melody);
+            }
+        }
+
         public void RemoveMelody(DomainMelody melody)
         {
             _melodies.Remove(melody);

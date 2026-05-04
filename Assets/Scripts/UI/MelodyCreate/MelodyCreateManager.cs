@@ -50,15 +50,7 @@ namespace Assets.Scripts.UI.MelodyCreate
             Instance = this;
             Draft = new MelodyDraft();
 
-            MelodyPlayer.Instance.BlockInput = true;
-        }
-
-        private void OnDestroy()
-        {
-            if (MelodyPlayer.Instance != null)
-            {
-                MelodyPlayer.Instance.BlockInput = false;
-            }
+            MelodyManager.Instance.ClearCurrentMelody();
         }
 
         public void AddChordNotes(IReadOnlyList<DomainPianoNote> notes)
@@ -142,7 +134,6 @@ namespace Assets.Scripts.UI.MelodyCreate
 
         private void LoadMainScene()
         {
-            MelodyPlayer.Instance.BlockInput = false;
             SceneManager.LoadScene(_mainSceneName);
         }
     }

@@ -30,23 +30,8 @@ namespace Assets.Scripts.UI.Piano
                 return;
             }
             Instance = this;
-            DontDestroyOnLoad(gameObject);
-            SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
-        private void OnDestroy()
-        {
-            SceneManager.sceneLoaded -= OnSceneLoaded;
-        }
-
-        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-        {
-            if (PianoController.Instance == null)
-            {
-                return;
-            }
-            ApplySoundSet(_soundSets[_currentIndex]);
-        }
 
         public IReadOnlyList<string> SoundSetNames
         {

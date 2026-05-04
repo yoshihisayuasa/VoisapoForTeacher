@@ -22,11 +22,6 @@ namespace Assets.Scripts.UI.Melody
 
         private bool _suppressPlayEnded = false;
 
-        /// <summary>
-        /// true の間はピアノ入力に反応しない（メロディ作成シーン用）。
-        /// </summary>
-        public bool BlockInput { get; set; } = false;
-
         public readonly struct PlayModeSettings
         {
             public bool PlayCode { get; }
@@ -105,7 +100,7 @@ namespace Assets.Scripts.UI.Melody
             StopMelody(true);
             _suppressPlayEnded = false;
 
-            _onPlayBegan.OnNext(PianoTeacherSideManager.Instance.TeacherSideButtonState);
+            _onPlayBegan.OnNext(TeacherSideManager.Instance.TeacherSideButtonState);
 
             var piano = PianoController.Instance;
             _currentMelody = melody;
@@ -133,6 +128,7 @@ namespace Assets.Scripts.UI.Melody
         {
             bool SupportAutoKeyChange { get; }
             bool CanDelete { get; }
+            bool StopOnKeyUp { get; }
             IEnumerator Execute(PianoController piano, DomainMelody melody,
                                 DomainPianoNote pressedKey, PlayModeSettings settings);
         }
@@ -141,6 +137,7 @@ namespace Assets.Scripts.UI.Melody
         {
             public bool SupportAutoKeyChange => false;
             public bool CanDelete => false;
+            public bool StopOnKeyUp => true;
             public IEnumerator Execute(PianoController piano, DomainMelody melody,
                                        DomainPianoNote pressedKey, PlayModeSettings settings)
             {
@@ -157,6 +154,7 @@ namespace Assets.Scripts.UI.Melody
 
             public bool SupportAutoKeyChange => false;
             public bool CanDelete => false;
+            public bool StopOnKeyUp => false;
 
             public IEnumerator Execute(PianoController piano, DomainMelody melody,
                                        DomainPianoNote pressedKey, PlayModeSettings settings)
@@ -185,6 +183,7 @@ namespace Assets.Scripts.UI.Melody
             public MajorPlayStrategy(MelodyPlayer player) => _player = player;
             public bool SupportAutoKeyChange => false;
             public bool CanDelete => false;
+            public bool StopOnKeyUp => false;
             public IEnumerator Execute(PianoController piano, DomainMelody melody,
                                        DomainPianoNote pressedKey, PlayModeSettings settings)
             {
@@ -229,6 +228,7 @@ namespace Assets.Scripts.UI.Melody
 
             public bool SupportAutoKeyChange => true;
             public bool CanDelete => true;
+            public bool StopOnKeyUp => false;
 
             public IEnumerator Execute(PianoController piano, DomainMelody melody,
                                        DomainPianoNote pressedKey, PlayModeSettings settings)
@@ -446,8 +446,8 @@ namespace Assets.Scripts.UI.Melody
             piano.OnAnyKeyClickAsObservable
                 .Subscribe(key =>
                 {
-                    if (BlockInput) return;
                     var melody = MelodyManager.Instance.CurrentMelody;
+                    if (melody == null) return;
                     HighlightMinMaxKeys(melody, key);
                     var settings = PlayModeSettings.FromFlags(
                         TeacherSideManager.Instance.TeacherSideButtonState,
@@ -457,11 +457,23 @@ namespace Assets.Scripts.UI.Melody
                 })
                 .AddTo(_pianoDisposable);
 
+            piano.OnAnyKeyUpAsObservable
+                .Subscribe(key =>
+                {
+                    var melody = MelodyManager.Instance.CurrentMelody;
+                    if (melody == null) return;
+                    if (GetStrategy(melody).StopOnKeyUp)
+                    {
+                        piano.Stop(key, false);
+                    }
+                })
+                .AddTo(_pianoDisposable);
+
             piano.OnAnyKeyEnterAsObservable
                 .Subscribe(key =>
                 {
-                    if (BlockInput) return;
                     var melody = MelodyManager.Instance.CurrentMelody;
+                    if (melody == null) return;
                     HighlightMinMaxKeys(melody, key);
                 })
                 .AddTo(_pianoDisposable);

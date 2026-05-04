@@ -13,7 +13,6 @@ namespace Assets.Scripts.UI
     {
         public static TeacherSideManager Instance { get; private set; }
 
-        [SerializeField] private string _mainSceneName = "Main";
 
         [Header("UI")]
         [SerializeField] private Toggle _toggle;
@@ -55,8 +54,6 @@ namespace Assets.Scripts.UI
                 return;
             }
             Instance = this;
-            DontDestroyOnLoad(gameObject);
-            SceneManager.sceneLoaded += OnSceneLoaded;
 
             if (_toggle == null)
             {
@@ -71,15 +68,7 @@ namespace Assets.Scripts.UI
             }
         }
 
-        private void OnDestroy()
-        {
-            SceneManager.sceneLoaded -= OnSceneLoaded;
-        }
 
-        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-        {
-            gameObject.SetActive(scene.name == _mainSceneName);
-        }
 
         private void Start()
         {
