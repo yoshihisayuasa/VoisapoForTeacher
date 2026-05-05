@@ -12,7 +12,16 @@
       "Bash(find C:\\\\\\\\Users\\\\\\\\yuasa\\\\\\\\source\\\\\\\\repos\\\\\\\\VoisapoForTeacher\\\\\\\\Assets\\\\\\\\Scripts\\\\\\\\Domain -type f -name \"*.cs\")",
       "Bash(grep -E \"\\\\.cs$\")",
       "Bash(wc -l \"/c/Users/yuasa/source/repos/VoisapoForTeacher/Assets/Scripts\"/**/*.cs)",
-      "Bash(grep -v \"^--$\")"
+      "Bash(grep -v \"^--$\")",
+      "Bash(awk '/^--- !u!224 &896514259/{found=1; start=NR} found && NR<=start+60{print NR\": \"$0} NR>start+60{found=0}' Assets/Scenes/MelodyCreate.unity)",
+      "Bash(awk '/^--- !u!114 &917836691/{found=1; start=NR} found && NR<=start+50{print NR\": \"$0} NR>start+50{found=0}' Assets/Scenes/MelodyCreate.unity)",
+      "Bash(awk '/^--- !u!1 &736802736/{found=1; start=NR} found && NR<=start+15{print NR\": \"$0} NR>start+15{found=0}' Assets/Scenes/MelodyCreate.unity)",
+      "Bash(awk '/^--- !u!1 &1616475291/{found=1; start=NR} found && NR<=start+15{print NR\": \"$0} NR>start+15{found=0}' Assets/Scenes/MelodyCreate.unity)",
+      "Bash(Get-ChildItem -Recurse -Filter \"*.cs\")",
+      "Bash(Select-Object -First 30)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\yuasa\\\\source\\\\repos\\\\VoisapoForTeacher\\\\Assets\\\\Scripts\" -Recurse -Filter \"*.cs\")",
+      "Bash(Select-Object FullName)",
+      "Bash(Sort-Object FullName)"
     ]
   }
 }

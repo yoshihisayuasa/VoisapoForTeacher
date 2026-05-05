@@ -18,6 +18,7 @@ namespace Assets.Scripts.UI.Melody
 
         private void OnClicked()
         {
+            MelodyPlayer.Instance.StopMelody(true, shouldDelayRecordStop: false);
             SceneManager.LoadScene(_melodyCreateSceneName);
         }
     }

@@ -7,7 +7,7 @@ public class PianoScrollController : MonoBehaviour, IPointerDownHandler, IDragHa
 {
     [SerializeField] private ScrollRect pianoScrollRect;
     [SerializeField] private RectTransform miniMapRect;
-    [SerializeField] private RectTransform viewRect;
+    [SerializeField] private RectTransform miniMapViewRect;
 
     private float _prevDragLocalX = 0f;
     private Coroutine _initRoutine;
@@ -49,7 +49,7 @@ public class PianoScrollController : MonoBehaviour, IPointerDownHandler, IDragHa
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (miniMapRect == null || viewRect == null)
+        if (miniMapRect == null || miniMapViewRect == null)
         {
             return;
         }
@@ -64,15 +64,15 @@ public class PianoScrollController : MonoBehaviour, IPointerDownHandler, IDragHa
         _prevDragLocalX = localPoint.x;
 
         float localX = localPoint.x - miniMapRect.rect.x;
-        float barLeft = viewRect.anchoredPosition.x;
-        float barRight = barLeft + viewRect.rect.width;
+        float barLeft = miniMapViewRect.anchoredPosition.x;
+        float barRight = barLeft + miniMapViewRect.rect.width;
 
         if (localX < barLeft || localX > barRight)
         {
-            float maxMove = miniMapRect.rect.width - viewRect.rect.width;
+            float maxMove = miniMapRect.rect.width - miniMapViewRect.rect.width;
             if (maxMove > 0.0001f)
             {
-                float targetLeft = localX - viewRect.rect.width / 2f;
+                float targetLeft = localX - miniMapViewRect.rect.width / 2f;
                 pianoScrollRect.horizontalNormalizedPosition = Mathf.Clamp01(targetLeft / maxMove);
                 UpdateViewRect();
             }
@@ -81,7 +81,7 @@ public class PianoScrollController : MonoBehaviour, IPointerDownHandler, IDragHa
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (miniMapRect == null || pianoScrollRect == null || viewRect == null)
+        if (miniMapRect == null || pianoScrollRect == null || miniMapViewRect == null)
         {
             return;
         }
@@ -96,7 +96,7 @@ public class PianoScrollController : MonoBehaviour, IPointerDownHandler, IDragHa
         float deltaX = localPoint.x - _prevDragLocalX;
         _prevDragLocalX = localPoint.x;
 
-        float maxMove = miniMapRect.rect.width - viewRect.rect.width;
+        float maxMove = miniMapRect.rect.width - miniMapViewRect.rect.width;
         if (maxMove <= 0.0001f)
         {
             return;
@@ -113,7 +113,7 @@ public class PianoScrollController : MonoBehaviour, IPointerDownHandler, IDragHa
     /// </summary>
     private void UpdateViewRect()
     {
-        if (pianoScrollRect == null || miniMapRect == null || viewRect == null)
+        if (pianoScrollRect == null || miniMapRect == null || miniMapViewRect == null)
         {
             return;
         }
@@ -136,7 +136,7 @@ public class PianoScrollController : MonoBehaviour, IPointerDownHandler, IDragHa
         float normalized = Mathf.Clamp01(pianoScrollRect.horizontalNormalizedPosition);
         float pos = normalized * posRange;
 
-        viewRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, ratio * miniMapWidth);
-        viewRect.anchoredPosition = new Vector2(pos, viewRect.anchoredPosition.y);
+        miniMapViewRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, ratio * miniMapWidth);
+        miniMapViewRect.anchoredPosition = new Vector2(pos, miniMapViewRect.anchoredPosition.y);
     }
 }

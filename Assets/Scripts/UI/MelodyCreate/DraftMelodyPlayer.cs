@@ -21,7 +21,7 @@ namespace Assets.Scripts.UI.MelodyCreate
 
         public void Stop()
         {
-            MelodyPlayer.Instance.StopMelody(true);
+            MelodyPlayer.Instance.StopMelody(true, shouldDelayRecordStop: false);
         }
     }
 }

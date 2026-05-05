@@ -901,9 +901,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad51087f89c51904faf09da7b1f5ae27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.MelodyCreate.MelodyNameInputPopupUI
-  _nameField: {fileID: 2798536076300693274}
-  _confirmButton: {fileID: 9102582938984568392}
-  _cancelButton: {fileID: 5649468050275655429}
 --- !u!1 &6574765180243164645
 GameObject:
   m_ObjectHideFlags: 0

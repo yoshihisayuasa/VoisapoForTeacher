@@ -17,7 +17,7 @@ namespace Assets.Scripts.UI
             DontDestroyOnLoad(gameObject);
             if (TryGetComponent<Canvas>(out var canvas))
             {
-                canvas.sortingOrder = 100;
+                canvas.sortingOrder = 0;
             }
         }
     }

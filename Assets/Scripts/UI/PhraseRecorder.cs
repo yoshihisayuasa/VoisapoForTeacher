@@ -58,12 +58,12 @@ namespace Assets.Scripts.UI
 
         private void Start()
         {
-            MelodyPlayer.Instance.OnPlayBegan
+            MelodyPlayer.Instance.OnMelodyBegan
                 .Subscribe(_ => StartRecording())
                 .AddTo(this);
 
             MelodyPlayer.Instance.OnPlayEnded
-                .Subscribe(_ => OnPlayEnded())
+                .Subscribe(shouldCapture => OnPlayEnded(shouldCapture))
                 .AddTo(this);
         }
 
@@ -73,10 +73,6 @@ namespace Assets.Scripts.UI
             {
                 return;
             }
-            if (Microphone.IsRecording(_selectedDevice))
-            {
-                Microphone.End(_selectedDevice);
-            }
             _micClip = Microphone.Start(_selectedDevice, false, MaxPhraseSec, SampleRate);
             if (_micClip == null)
             {
@@ -85,13 +81,20 @@ namespace Assets.Scripts.UI
             }
         }
 
-        private void OnPlayEnded()
+        private void OnPlayEnded(bool shouldCapture)
         {
             if (!_isRecordingEnabled.Value)
             {
                 return;
             }
-            StartCoroutine(CaptureAfterDelay(0.5f));
+            if (shouldCapture)
+            {
+                StartCoroutine(CaptureAfterDelay(0.5f));
+            }
+            else
+            {
+                Microphone.End(_selectedDevice);
+            }
         }
 
         private IEnumerator CaptureAfterDelay(float delaySec)

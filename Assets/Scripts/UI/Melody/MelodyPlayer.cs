@@ -15,12 +15,12 @@ namespace Assets.Scripts.UI.Melody
     public sealed class MelodyPlayer : MonoBehaviour
     {
         private readonly Subject<bool> _onPlayBegan = new();
-        private readonly Subject<Unit> _onPlayEnded = new();
+        private readonly Subject<bool> _onPlayEnded = new();
+        private readonly Subject<bool> _onMelodyBegan = new();
 
         public Observable<bool> OnPlayBegan => _onPlayBegan;
-        public Observable<Unit> OnPlayEnded => _onPlayEnded;
-
-        private bool _suppressPlayEnded = false;
+        public Observable<bool> OnPlayEnded => _onPlayEnded;
+        public Observable<bool> OnMelodyBegan => _onMelodyBegan;
 
         public readonly struct PlayModeSettings
         {
@@ -95,10 +95,7 @@ namespace Assets.Scripts.UI.Melody
 
         public void PlayMelody(DomainMelody melody, DomainPianoNote pressedKey, PlayModeSettings settings)
         {
-            // 前回のコルーチン・状態を確実に停止してから開始（競合防止）
-            _suppressPlayEnded = true;
-            StopMelody(true);
-            _suppressPlayEnded = false;
+            StopMelody(true, shouldDelayRecordStop: false);
 
             _onPlayBegan.OnNext(TeacherSideManager.Instance.TeacherSideButtonState);
 
@@ -109,7 +106,7 @@ namespace Assets.Scripts.UI.Melody
             StartCoroutine(PlayMelodyLoopCoroutine(piano, melody));
         }
 
-        public void StopMelody(bool setKeyVisual)
+        public void StopMelody(bool setKeyVisual, bool shouldDelayRecordStop)
         {
             var piano = PianoController.Instance;
             piano.StopMelody(setKeyVisual);
@@ -119,10 +116,7 @@ namespace Assets.Scripts.UI.Melody
 
             _metronomePlayer.Stop();
 
-            if (!_suppressPlayEnded)
-            {
-                _onPlayEnded.OnNext(Unit.Default);
-            }
+            _onPlayEnded.OnNext(shouldDelayRecordStop);
         }
         private interface IMelodyPlayStrategy
         {
@@ -135,16 +129,19 @@ namespace Assets.Scripts.UI.Melody
 
         private sealed class SinglePlayStrategy : IMelodyPlayStrategy
         {
+            private readonly MelodyPlayer _player;
+            public SinglePlayStrategy(MelodyPlayer player) => _player = player;
+
             public bool SupportAutoKeyChange => false;
             public bool CanDelete => false;
             public bool StopOnKeyUp => true;
             public IEnumerator Execute(PianoController piano, DomainMelody melody,
                                        DomainPianoNote pressedKey, PlayModeSettings settings)
             {
+                _player._onMelodyBegan.OnNext(TeacherSideManager.Instance.TeacherSideButtonState);
                 piano.Play(pressedKey, settings.PlayPiano, VolumeManager.Instance.Volume);
                 yield break;
             }
-
         }
 
         private sealed class MajorWithMetronomePlayStrategy : IMelodyPlayStrategy
@@ -159,20 +156,46 @@ namespace Assets.Scripts.UI.Melody
             public IEnumerator Execute(PianoController piano, DomainMelody melody,
                                        DomainPianoNote pressedKey, PlayModeSettings settings)
             {
+                var chordKeys = new List<DomainPianoNote>();
                 foreach (var interval in melody.Chord.Intervals)
                 {
                     var key = pressedKey + interval;
+                    if (0 <= key.Index && key.Index < piano.KeyCount)
+                    {
+                        chordKeys.Add(key);
+                    }
+                }
+
+                foreach (var key in chordKeys)
+                {
                     piano.Play(key, settings.PlayCode, VolumeManager.Instance.Volume);
                 }
 
                 _player._isPlayingChord = true;
+
+                float beatSec = BPMManager.Instance.SecondPerBeat;
+                for (int b = 0; b < melody.Chord.Beats; b++)
+                {
+                    if (settings.PlayMetronome)
+                    {
+                        _player._metronomePlayer.PlayOneShot(VolumeManager.Instance.Volume);
+                    }
+                    yield return new WaitForSeconds(beatSec);
+                }
+
+                foreach (var key in chordKeys)
+                {
+                    piano.Stop(key, false);
+                }
+
+                _player._onMelodyBegan.OnNext(TeacherSideManager.Instance.TeacherSideButtonState);
                 while (true)
                 {
                     if (settings.PlayMetronome)
                     {
                         _player._metronomePlayer.PlayOneShot(VolumeManager.Instance.Volume);
                     }
-                    yield return new WaitForSeconds(BPMManager.Instance.SecondPerBeat);
+                    yield return new WaitForSeconds(beatSec);
                 }
             }
         }
@@ -267,6 +290,7 @@ namespace Assets.Scripts.UI.Melody
                 _player._isPlayingChord = false;
 
                 // ── メロディパート ──
+                _player._onMelodyBegan.OnNext(TeacherSideManager.Instance.TeacherSideButtonState);
                 foreach (var note in melody.Notes)
                 {
                     var key = pressedKey + note.Interval;
@@ -280,7 +304,7 @@ namespace Assets.Scripts.UI.Melody
         private IMelodyPlayStrategy GetStrategy(DomainMelody melody) =>
             melody.Name switch
             {
-                "Single"           => new SinglePlayStrategy(),
+                "Single"           => new SinglePlayStrategy(this),
                 "Major& Metronome" => new MajorWithMetronomePlayStrategy(this),
                 "Major Code"       => new MajorPlayStrategy(this),
                 _                  => new DefaultPlayStrategy(this),
@@ -329,7 +353,7 @@ namespace Assets.Scripts.UI.Melody
                 yield return StartCoroutine(PlayMelodyAtKeyOnce(piano, melody, _currentRootKey, _currentSettings));
             }
 
-            _onPlayEnded.OnNext(Unit.Default);
+            StopMelody(false, shouldDelayRecordStop: true);
         }
 
         private DomainPianoNote GetNextRoot(DomainPianoNote current, AutoKeyChangeState direction)
@@ -408,7 +432,7 @@ namespace Assets.Scripts.UI.Melody
             }
 
             // 現在コード停止（色は保持）
-            StopMelody(true);
+            StopMelody(true, shouldDelayRecordStop: false);
 
             // 新ルート設定・再開
             _currentRootKey = transposed;
@@ -464,7 +488,7 @@ namespace Assets.Scripts.UI.Melody
                     if (melody == null) return;
                     if (GetStrategy(melody).StopOnKeyUp)
                     {
-                        piano.Stop(key, false);
+                        StopMelody(false, shouldDelayRecordStop: true);
                     }
                 })
                 .AddTo(_pianoDisposable);

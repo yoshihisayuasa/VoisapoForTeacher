@@ -134,6 +134,7 @@ namespace Assets.Scripts.UI.MelodyCreate
 
         private void LoadMainScene()
         {
+            MelodyPlayer.Instance.StopMelody(true, shouldDelayRecordStop: false);
             SceneManager.LoadScene(_mainSceneName);
         }
     }

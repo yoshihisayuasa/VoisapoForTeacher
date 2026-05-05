@@ -15,10 +15,10 @@ namespace Assets.Scripts.UI
 
         private void Start()
         {
+            _closeButton.onClick.AddListener(OnCloseButtonClicked);
             InitializeRecordingDeviceDropdown();
             InitializeSoundSourceDropdown();
             InitializePianoScaleSlider();
-            _closeButton.onClick.AddListener(OnCloseButtonClicked);
         }
 
         private void OnCloseButtonClicked()

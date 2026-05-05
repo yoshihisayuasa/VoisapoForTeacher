@@ -34,7 +34,7 @@ namespace Assets.Scripts.UI
             {
                 return;
             }
-            player.StopMelody(false);
+            player.StopMelody(false, shouldDelayRecordStop: true);
         }
     }
 }

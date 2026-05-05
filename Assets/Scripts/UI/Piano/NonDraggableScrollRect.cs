@@ -37,17 +37,8 @@ public class NonDraggableScrollRect : ScrollRect
 
         if (Mathf.Abs(delta) > 0f && !ctrl)
         {
-            // ƒXƒNƒ[ƒ‹•ûŒü‚É‰‚¶‚ÄScrollRect‚ğ“®‚©‚·
-            if (vertical)
-            {
-                verticalNormalizedPosition += delta;
-                verticalNormalizedPosition = Mathf.Clamp01(verticalNormalizedPosition);
-            }
-            else if (horizontal)
-            {
                 horizontalNormalizedPosition += delta;
                 horizontalNormalizedPosition = Mathf.Clamp01(horizontalNormalizedPosition);
-            }
         }
     }
 
