@@ -11,7 +11,7 @@ public class InputModalWindow : ModalWindow<InputModalWindow>
 
     private Action<string> onInputFieldDone;
 
-    public InputModalWindow SetInputField(Action<string> onDone, string initialValue = "", string placeholderValue = "Type here")
+    public InputModalWindow SetInputField(Action<string> onDone, string initialValue = "", string placeholderValue = "Melody name...")
     {
         inputField.text = initialValue;
         ((Text)inputField.placeholder).text = placeholderValue;

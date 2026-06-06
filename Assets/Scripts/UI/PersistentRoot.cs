@@ -15,6 +15,7 @@ namespace Assets.Scripts.UI
             }
             _instance = this;
             DontDestroyOnLoad(gameObject);
+            PersistentRegistry.Register(gameObject);
             if (TryGetComponent<Canvas>(out var canvas))
             {
                 canvas.sortingOrder = 0;

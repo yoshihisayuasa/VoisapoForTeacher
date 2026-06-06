@@ -1,4 +1,4 @@
-using Assets.Scripts.UI.Melody;
+using Assets.Scripts.UI.MelodyUI;
 using R3;
 using TMPro;
 using UnityEngine;
@@ -16,8 +16,9 @@ namespace Assets.Scripts.UI
             MelodyPlayer.Instance.OnPlayBegan
                 .Subscribe(isTeacherSide =>
                 {
-                    _statusText.text = isTeacherSide ? "Playing on teacher side" : "Playing on student side";
-                    _statusText.color = isTeacherSide ? AppColors.TeacherSide : AppColors.StudentSide;
+                    if (!isTeacherSide) return;
+                    _statusText.text = "Playing on teacher side";
+                    _statusText.color = AppColors.TeacherSide;
                     _statusText.gameObject.SetActive(true);
                 })
                 .AddTo(this);

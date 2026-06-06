@@ -1,14 +1,15 @@
 using AsseScripts.Domain;
-using System;
+using R3;
 
 namespace AsseScripts.UI
 {
-    public class BPMManager
+    public sealed class BPMManager
     {
         public static BPMManager Instance { get; } = new BPMManager();
 
-        private BPM _bpm = new BPM(120);
-        public event Action<int> BpmChanged;
+        private BPM _bpm = new(120);
+        private readonly Subject<int> _bpmChanged = new();
+        public Observable<int> BpmChanged => _bpmChanged;
 
         public float SecondPerBeat => _bpm.SecondPerBeat;
         public int Value => _bpm.Value;
@@ -17,12 +18,12 @@ namespace AsseScripts.UI
         public void Increment(int step = 10)
         {
             _bpm = _bpm.Increment(step);
-            BpmChanged?.Invoke(_bpm.Value);
+            _bpmChanged.OnNext(_bpm.Value);
         }
         public void Decrement(int step = 10)
         {
             _bpm = _bpm.Decrement(step);
-            BpmChanged?.Invoke(_bpm.Value);
+            _bpmChanged.OnNext(_bpm.Value);
         }
 
     }

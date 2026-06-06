@@ -7,7 +7,7 @@ namespace Assets.Scripts.UI
     /// イヤホンモードボタンUI制御
     /// 他のクラスにボタンのオンオフ状態を通知する
     /// </summary>
-    public class EarphoneModeUI : MonoBehaviour
+    public sealed class EarphoneModeUI : MonoBehaviour
     {
         [SerializeField] private Button _earphoneModeButton;
         [SerializeField] private Image _targetImage;                // 色を変える対象（必ず割り当てる）

@@ -1,9 +1,7 @@
+using Assets.Scripts.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using DomainChord = AsseScripts.Domain.Chord;
-using DomainMelody = AsseScripts.Domain.Melody;
-using DomainNote = AsseScripts.Domain.Note;
 
 namespace AsseScripts.Infrastructure
 {
@@ -15,10 +13,10 @@ namespace AsseScripts.Infrastructure
         // ── 公開API ──────────────────────────────────────────────────
 
         /// <summary>
-        /// JSONファイルからメロディリストを読み込む。
+        /// JSONファイルからメロディエントリリストを読み込む。
         /// 旧フォーマットを検出した場合は自動マイグレーションを行う。
         /// </summary>
-        public static List<DomainMelody> LoadFromJsonResource(string fileName)
+        public static List<SavedMelody> LoadFromJsonResource(string fileName)
         {
             string path = GetPersistentPath(fileName);
             string jsonText;
@@ -35,7 +33,7 @@ namespace AsseScripts.Infrastructure
                 if (textAsset == null)
                 {
                     Debug.LogError($"JSONファイルのロードに失敗: {fileName}");
-                    return new List<DomainMelody>();
+                    return new List<SavedMelody>();
                 }
                 jsonText = textAsset.text;
                 System.IO.File.WriteAllText(path, jsonText);
@@ -59,21 +57,21 @@ namespace AsseScripts.Infrastructure
                 if (wrapper.Melodies == null || wrapper.Melodies.Count == 0)
                 {
                     Debug.LogError("JSONデータが不正です");
-                    return new List<DomainMelody>();
+                    return new List<SavedMelody>();
                 }
                 return ParseNew(wrapper);
             }
             catch (Exception ex)
             {
                 Debug.LogError($"JSONパースエラー: {ex.Message}");
-                return new List<DomainMelody>();
+                return new List<SavedMelody>();
             }
         }
 
         /// <summary>
         /// 各メロディの Position のみを保存する。
         /// </summary>
-        public static void SavePositions(string fileName, IReadOnlyList<DomainMelody> melodies)
+        public static void SavePositions(string fileName, IReadOnlyList<SavedMelody> entries)
         {
             string path = GetPersistentPath(fileName);
             if (!System.IO.File.Exists(path))
@@ -89,11 +87,11 @@ namespace AsseScripts.Infrastructure
                 // 名前で突き合わせて Position を更新
                 foreach (var data in wrapper.Melodies)
                 {
-                    foreach (var melody in melodies)
+                    foreach (var entry in entries)
                     {
-                        if (melody.Name == data.Name)
+                        if (entry.Melody.Name == data.Name)
                         {
-                            data.Position = melody.Position;
+                            data.Position = entry.Position;
                             break;
                         }
                     }
@@ -111,12 +109,12 @@ namespace AsseScripts.Infrastructure
         /// <summary>
         /// 全メロディを保存する。
         /// </summary>
-        public static void SaveAllMelodies(string fileName, IReadOnlyList<DomainMelody> melodies)
+        public static void SaveAllMelodies(string fileName, IReadOnlyList<SavedMelody> entries)
         {
             try
             {
                 string path = GetPersistentPath(fileName);
-                System.IO.File.WriteAllText(path, SerializeNew(melodies));
+                System.IO.File.WriteAllText(path, SerializeNew(entries));
                 Debug.Log($"メロディを保存しました: {path}");
             }
             catch (Exception ex)
@@ -130,11 +128,12 @@ namespace AsseScripts.Infrastructure
         private static string GetPersistentPath(string fileName)
             => System.IO.Path.Combine(Application.persistentDataPath, fileName + ".json");
 
-        private static string SerializeNew(IReadOnlyList<DomainMelody> melodies)
+        private static string SerializeNew(IReadOnlyList<SavedMelody> entries)
         {
             var wrapper = new MelodyListWrapper { Melodies = new List<MelodyData>() };
-            foreach (var melody in melodies)
+            foreach (var entry in entries)
             {
+                var melody = entry.Melody;
                 var chordData = new ChordData
                 {
                     Intervals = new List<int>(),
@@ -148,7 +147,7 @@ namespace AsseScripts.Infrastructure
                 var data = new MelodyData
                 {
                     Name = melody.Name,
-                    Position = melody.Position,
+                    Position = entry.Position,
                     Chord = chordData,
                     Notes = new List<NoteData>()
                 };
@@ -161,63 +160,57 @@ namespace AsseScripts.Infrastructure
             return JsonUtility.ToJson(wrapper, true);
         }
 
-        private static DomainChord ParseChordData(ChordData chordData)
+        private static Chord ParseChordData(ChordData chordData)
         {
             var intervals = new List<Assets.Scripts.Domain.ValueObjects.Interval>();
             foreach (var v in chordData.Intervals)
             {
                 intervals.Add(new Assets.Scripts.Domain.ValueObjects.Interval(v));
             }
-            return new DomainChord(intervals, chordData.Beats);
+            return new Chord(intervals, chordData.Beats);
         }
 
-        private static List<DomainMelody> ParseNew(MelodyListWrapper wrapper)
+        private static List<SavedMelody> ParseNew(MelodyListWrapper wrapper)
         {
-            var melodies = new List<DomainMelody>();
+            var entries = new List<SavedMelody>();
             foreach (var data in wrapper.Melodies)
             {
-                if (string.IsNullOrEmpty(data.Name))
-                {
-                    continue;
-                }
+                if (string.IsNullOrEmpty(data.Name)) continue;
 
                 var chord = ParseChordData(data.Chord);
 
-                var notes = new List<DomainNote>();
+                var notes = new List<Note>();
                 if (data.Notes != null)
                 {
                     foreach (var n in data.Notes)
                     {
-                        notes.Add(new DomainNote(n.Interval, n.Beats));
+                        notes.Add(new Note(n.Interval, n.Beats));
                     }
                 }
-                melodies.Add(new DomainMelody(data.Name, chord, notes, data.Position));
+                entries.Add(new SavedMelody(new Melody(data.Name, chord, notes), data.Position));
             }
-            return melodies;
+            return entries;
         }
 
-        private static List<DomainMelody> ParseLegacy(LegacyScaleDataWrapper legacy)
+        private static List<SavedMelody> ParseLegacy(LegacyScaleDataWrapper legacy)
         {
             var type = typeof(LegacyScaleDataWrapper);
-            var melodies = new List<DomainMelody>();
+            var entries = new List<SavedMelody>();
 
             for (int i = 0; i < legacy.ScaleName.Count; i++)
             {
                 string name = legacy.ScaleName[i].Replace("～", "~").Replace("*", "");
-                if (string.IsNullOrEmpty(name))
-                {
-                    continue;
-                }
-                int position = legacy.ScalePos[i] ;
+                if (string.IsNullOrEmpty(name)) continue;
+
+                int position = legacy.ScalePos[i];
 
                 var noteArr = type.GetField($"ScaleNote{i}")?.GetValue(legacy) as int[];
                 var beatArr = type.GetField($"ScaleBeat{i}")?.GetValue(legacy) as int[];
                 int len = noteArr.Length;
 
-                // 旧フォーマット: 先頭3音 = 和音、残り = メロディ
-                int legacyCordLength = DomainChord.Length;
+                int legacyCordLength = Chord.Length;
                 var chordIntervals = new List<Assets.Scripts.Domain.ValueObjects.Interval>();
-                var notes = new List<DomainNote>();
+                var notes = new List<Note>();
 
                 for (int j = 0; j < len; j++)
                 {
@@ -230,24 +223,20 @@ namespace AsseScripts.Infrastructure
                     }
                     else
                     {
-                        if (beat == 0)
-                        {
-                            break;
-                        }
-                        notes.Add(new DomainNote(interval, beat));
+                        if (beat == 0) break;
+                        notes.Add(new Note(interval, beat));
                     }
                 }
 
-                // 和音が3音未満の場合はルート(0)で埋める
                 while (chordIntervals.Count < legacyCordLength)
                 {
                     chordIntervals.Add(new Assets.Scripts.Domain.ValueObjects.Interval(0));
                 }
 
-                var chord = new DomainChord(chordIntervals, legacyCordLength);
-                melodies.Add(new DomainMelody(name, chord, notes, position));
+                var chord = new Chord(chordIntervals, legacyCordLength);
+                entries.Add(new SavedMelody(new Melody(name, chord, notes), position));
             }
-            return melodies;
+            return entries;
         }
 
         // ── 新フォーマット用シリアライズクラス ────────────────────────

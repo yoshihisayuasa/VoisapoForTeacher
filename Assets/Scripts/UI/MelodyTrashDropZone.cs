@@ -1,5 +1,5 @@
 
-using Assets.Scripts.UI.Melody;
+using Assets.Scripts.UI.MelodyUI;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -15,12 +15,12 @@ namespace Assets.Scripts.UI
         }
         public void OnDrop(PointerEventData eventData)
         {
-            if (!eventData.pointerDrag.TryGetComponent<MelodyReorderItem>(out var item))
+            if (!eventData.pointerDrag.TryGetComponent<DraggableMelodyButton>(out var item))
             {
                 return;
             }
 
-            if (!MelodyPlayer.Instance.CanDeleteMelody(item.Melody))
+            if (!MelodyPlayer.Instance.CanDeleteMelody(item.Entry.Melody))
             {
                 item.ResetToDragStart();
                 SimpleModalWindow.Create(ignorable: false)

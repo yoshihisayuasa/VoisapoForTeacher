@@ -21,7 +21,10 @@
       "Bash(Select-Object -First 30)",
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\yuasa\\\\source\\\\repos\\\\VoisapoForTeacher\\\\Assets\\\\Scripts\" -Recurse -Filter \"*.cs\")",
       "Bash(Select-Object FullName)",
-      "Bash(Sort-Object FullName)"
+      "Bash(Sort-Object FullName)",
+      "Bash(Get-ChildItem *)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(Sort-Object)"
     ]
   }
 }

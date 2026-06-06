@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using AsseScripts.UI.Piano;
-using Assets.Scripts.UI.Melody;
+using Assets.Scripts.UI.MelodyUI;
 
 namespace Assets.Scripts.UI
 {

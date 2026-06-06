@@ -1,0 +1,562 @@
+{
+    "Melodies": [
+           {
+            "Name": "3tone",
+            "Position": 2,
+            "Chord": {
+                "Intervals": [
+                    0,
+                    4,
+                    7
+                ],
+                "Beats": 3
+            },
+            "Notes": [
+                {
+                    "Interval": 0,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 4,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 7,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 4,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 0,
+                    "Beats": 3
+                }
+            ]
+        },
+        {
+            "Name": "1octave",
+            "Position": 3,
+            "Chord": {
+                "Intervals": [
+                    0,
+                    4,
+                    7
+                ],
+                "Beats": 3
+            },
+            "Notes": [
+                {
+                    "Interval": 0,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 4,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 7,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 12,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 7,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 4,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 0,
+                    "Beats": 3
+                }
+            ]
+        },
+        {
+            "Name": "1.5octave",
+            "Position": 4,
+            "Chord": {
+                "Intervals": [
+                    0,
+                    4,
+                    7
+                ],
+                "Beats": 4
+            },
+            "Notes": [
+                {
+                    "Interval": 0,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 4,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 7,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 12,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 16,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 19,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 17,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 14,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 11,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 7,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 5,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 2,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 0,
+                    "Beats": 3
+                }
+            ]
+        },
+        {
+            "Name": "Octave Repeat",
+            "Position": 5,
+            "Chord": {
+                "Intervals": [
+                    0,
+                    4,
+                    7
+                ],
+                "Beats": 3
+            },
+            "Notes": [
+                {
+                    "Interval": 0,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 4,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 7,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 12,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 12,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 12,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 12,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 7,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 4,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 0,
+                    "Beats": 3
+                }
+            ]
+        },
+        {
+            "Name": "[↓]Octave",
+            "Position": 6,
+            "Chord": {
+                "Intervals": [
+                    -12,
+                    -8,
+                    -5
+                ],
+                "Beats": 3
+            },
+            "Notes": [
+                {
+                    "Interval": 0,
+                    "Beats": 1
+                },
+                {
+                    "Interval": -5,
+                    "Beats": 1
+                },
+                {
+                    "Interval": -8,
+                    "Beats": 1
+                },
+                {
+                    "Interval": -12,
+                    "Beats": 3
+                }
+            ]
+        },
+        {
+            "Name": "[↓]Octave Rpeat",
+            "Position": 7,
+            "Chord": {
+                "Intervals": [
+                    -12,
+                    -8,
+                    -5
+                ],
+                "Beats": 3
+            },
+            "Notes": [
+                {
+                    "Interval": 0,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 0,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 0,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 0,
+                    "Beats": 1
+                },
+                {
+                    "Interval": -5,
+                    "Beats": 1
+                },
+                {
+                    "Interval": -8,
+                    "Beats": 1
+                },
+                {
+                    "Interval": -12,
+                    "Beats": 3
+                }
+            ]
+        },
+        {
+            "Name": "[~]Octave Repeat",
+            "Position": 8,
+            "Chord": {
+                "Intervals": [
+                    0,
+                    4,
+                    7
+                ],
+                "Beats": 3
+            },
+            "Notes": [
+                {
+                    "Interval": 0,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 4,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 7,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 12,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 12,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 12,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 12,
+                    "Beats": 3
+                },
+                {
+                    "Interval": 7,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 4,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 0,
+                    "Beats": 3
+                }
+            ]
+        },
+        {
+            "Name": "Broken Arpeggio",
+            "Position": 9,
+            "Chord": {
+                "Intervals": [
+                    0,
+                    4,
+                    7
+                ],
+                "Beats": 3
+            },
+            "Notes": [
+                {
+                    "Interval": 0,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 7,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 4,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 12,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 7,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 4,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 0,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 7,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 4,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 12,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 7,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 4,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 0,
+                    "Beats": 3
+                }
+            ]
+        },
+        {
+            "Name": "Back&Forth",
+            "Position": 10,
+            "Chord": {
+                "Intervals": [
+                    -12,
+                    -8,
+                    -5
+                ],
+                "Beats": 3
+            },
+            "Notes": [
+                {
+                    "Interval": 0,
+                    "Beats": 1
+                },
+                {
+                    "Interval": -5,
+                    "Beats": 1
+                },
+                {
+                    "Interval": -8,
+                    "Beats": 1
+                },
+                {
+                    "Interval": -12,
+                    "Beats": 1
+                },
+                {
+                    "Interval": -8,
+                    "Beats": 1
+                },
+                {
+                    "Interval": -5,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 0,
+                    "Beats": 1
+                },
+                {
+                    "Interval": -5,
+                    "Beats": 1
+                },
+                {
+                    "Interval": -8,
+                    "Beats": 1
+                },
+                {
+                    "Interval": -12,
+                    "Beats": 3
+                }
+            ]
+        },
+        {
+            "Name": "2octave",
+            "Position": 11,
+            "Chord": {
+                "Intervals": [
+                    0,
+                    4,
+                    7
+                ],
+                "Beats": 3
+            },
+            "Notes": [
+                {
+                    "Interval": 0,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 4,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 7,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 12,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 16,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 19,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 24,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 19,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 16,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 12,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 7,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 4,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 0,
+                    "Beats": 3
+                }
+            ]
+        },
+        {
+            "Name": "5tone",
+            "Position": 12,
+            "Chord": {
+                "Intervals": [
+                    0,
+                    4,
+                    7
+                ],
+                "Beats": 4
+            },
+            "Notes": [
+                {
+                    "Interval": 0,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 2,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 4,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 5,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 7,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 5,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 4,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 2,
+                    "Beats": 1
+                },
+                {
+                    "Interval": 0,
+                    "Beats": 3
+                }
+            ]
+        }
+    ]
+}

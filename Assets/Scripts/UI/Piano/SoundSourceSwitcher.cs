@@ -8,7 +8,7 @@ namespace Assets.Scripts.UI.Piano
     /// <summary>
     /// ピアノ音源セットの切り替えを管理するクラス。on
     /// </summary>
-    public class SoundSourceSwitcher : MonoBehaviour
+    public sealed class SoundSourceSwitcher : MonoBehaviour
     {
         public static SoundSourceSwitcher Instance { get; private set; }
 

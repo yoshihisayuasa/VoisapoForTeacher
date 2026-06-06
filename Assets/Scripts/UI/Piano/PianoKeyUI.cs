@@ -12,7 +12,7 @@ namespace Assets.Scripts.UI.Piano
     /// UI操作（UI層）
     /// </summary>
     [RequireComponent(typeof(Image))]
-    public class PianoKeyUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler
+    public sealed class PianoKeyUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler
     {
 
         private readonly Subject<PianoNote> _onClickKeySubject = new();
@@ -37,7 +37,7 @@ namespace Assets.Scripts.UI.Piano
         private PianoKeyInfrastructure _infra;
 
         private enum KeyLogicalState  { Default, Playing, Played }
-        private enum KeyHighlightState { None, Min, Max }
+        private enum KeyHighlightState { None, Min, Max, Accent }
 
 
         public PianoNoteEnum NoteEnum => _keyEnum;
@@ -131,11 +131,29 @@ namespace Assets.Scripts.UI.Piano
             UpdateVisual();
         }
 
+        public void SetAccentColor()
+        {
+            _highlightState = KeyHighlightState.Accent;
+            UpdateVisual();
+        }
+
+        public void ResetAccentColor()
+        {
+            _highlightState = KeyHighlightState.None;
+            UpdateVisual();
+        }
+
         private void UpdateVisual()
         {
             if (_logicalState == KeyLogicalState.Playing)
             {
                 _keyLabelBg.color = AppColors.PianoKeyPlaying;
+                return;
+            }
+
+            if (_highlightState == KeyHighlightState.Accent)
+            {
+                _keyLabelBg.color = AppColors.Accent;
                 return;
             }
 

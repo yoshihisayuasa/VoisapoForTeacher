@@ -1,13 +1,18 @@
+using Assets.Scripts.UI.Piano;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
 
-public class PianoScrollController : MonoBehaviour, IPointerDownHandler, IDragHandler
+public sealed class PianoScrollController : MonoBehaviour, IPointerDownHandler, IDragHandler
 {
     [SerializeField] private ScrollRect pianoScrollRect;
     [SerializeField] private RectTransform miniMapRect;
     [SerializeField] private RectTransform miniMapViewRect;
+    [SerializeField] private RectTransform leftDarkOverlay;
+    [SerializeField] private RectTransform rightDarkOverlay;
+    [SerializeField] private Button octaveUpButton;
+    [SerializeField] private Button octaveDownButton;
 
     private float _prevDragLocalX = 0f;
     private Coroutine _initRoutine;
@@ -19,6 +24,9 @@ public class PianoScrollController : MonoBehaviour, IPointerDownHandler, IDragHa
             pianoScrollRect.onValueChanged.AddListener(OnScrollChanged);
         }
 
+        if (octaveUpButton != null) octaveUpButton.onClick.AddListener(ScrollOctaveUp);
+        if (octaveDownButton != null) octaveDownButton.onClick.AddListener(ScrollOctaveDown);
+
         _initRoutine = StartCoroutine(DeferredInit());
     }
 
@@ -28,6 +36,10 @@ public class PianoScrollController : MonoBehaviour, IPointerDownHandler, IDragHa
         {
             pianoScrollRect.onValueChanged.RemoveListener(OnScrollChanged);
         }
+
+        if (octaveUpButton != null) octaveUpButton.onClick.RemoveListener(ScrollOctaveUp);
+        if (octaveDownButton != null) octaveDownButton.onClick.RemoveListener(ScrollOctaveDown);
+
         if (_initRoutine != null)
         {
             StopCoroutine(_initRoutine);
@@ -108,6 +120,34 @@ public class PianoScrollController : MonoBehaviour, IPointerDownHandler, IDragHa
         UpdateViewRect();
     }
 
+    public void ScrollOctaveUp() => ScrollByKeys(12);
+    public void ScrollOctaveDown() => ScrollByKeys(-12);
+
+    private void ScrollByKeys(int keyCount)
+    {
+        if (pianoScrollRect == null) return;
+
+        var content = pianoScrollRect.content;
+        var viewport = pianoScrollRect.viewport;
+        if (content == null || viewport == null) return;
+
+        float scale = content.localScale.x > 0f ? content.localScale.x : 1f;
+        float contentWidth = content.rect.width * scale;
+        float viewportWidth = viewport.rect.width;
+        float scrollable = contentWidth - viewportWidth;
+        if (scrollable <= 0f) return;
+
+        int totalKeys = PianoController.Instance.KeyCount;
+        if (totalKeys <= 0) return;
+
+        float singleKeyWidth = contentWidth / totalKeys;
+        float delta = keyCount * singleKeyWidth / scrollable;
+
+        pianoScrollRect.horizontalNormalizedPosition =
+            Mathf.Clamp01(pianoScrollRect.horizontalNormalizedPosition + delta);
+        UpdateViewRect();
+    }
+
     /// <summary>
     /// ミニマップ更新。viewRect は左端アンカー・左端ピボット前提。
     /// </summary>
@@ -136,7 +176,19 @@ public class PianoScrollController : MonoBehaviour, IPointerDownHandler, IDragHa
         float normalized = Mathf.Clamp01(pianoScrollRect.horizontalNormalizedPosition);
         float pos = normalized * posRange;
 
-        miniMapViewRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, ratio * miniMapWidth);
+        float viewRectWidth = ratio * miniMapWidth;
+        miniMapViewRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, viewRectWidth);
         miniMapViewRect.anchoredPosition = new Vector2(pos, miniMapViewRect.anchoredPosition.y);
+
+        if (leftDarkOverlay != null)
+        {
+            leftDarkOverlay.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, pos);
+        }
+
+        if (rightDarkOverlay != null)
+        {
+            float rightStart = pos + viewRectWidth;
+            rightDarkOverlay.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, miniMapWidth - rightStart);
+        }
     }
 }

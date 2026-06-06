@@ -11,7 +11,7 @@ namespace Assets.Scripts.UI.Piano
     /// - ズーム時は常にビューポート中央をフォーカスしてスクロール位置を補正
     /// - Ctrl + マウスホイールでズーム
     /// </summary>
-    public class PianoZoomController : MonoBehaviour
+    public sealed class PianoZoomController : MonoBehaviour
     {
         [SerializeField] private ScrollRect _scrollRect;
         [Header("Zoom Settings")]

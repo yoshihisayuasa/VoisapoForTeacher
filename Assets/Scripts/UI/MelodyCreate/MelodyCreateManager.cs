@@ -1,13 +1,11 @@
-using AsseScripts.Domain;
-using Assets.Scripts.Domain;
+using Assets.Scripts.Domain.Entities;
+using Assets.Scripts.Domain.Modules;
 using Assets.Scripts.Domain.ValueObjects;
-using Assets.Scripts.UI.Melody;
+using Assets.Scripts.UI.MelodyUI;
 using R3;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using DomainMelody = AsseScripts.Domain.Melody;
 using DomainPianoNote = AsseScripts.Domain.PianoNote;
 
 namespace Assets.Scripts.UI.MelodyCreate
@@ -24,11 +22,12 @@ namespace Assets.Scripts.UI.MelodyCreate
 
         public MelodyDraft Draft { get; private set; }
 
-        public DomainMelody CurrentMelody { get; private set; }
+        public Melody CurrentMelody { get; private set; }
 
         private readonly Subject<Unit> _draftChanged = new();
         public Observable<Unit> DraftChanged => _draftChanged;
 
+        public bool IsChordComplete => Draft.IsChordComplete;
         public bool CanPreview => Draft.CanPreview;
         public DomainPianoNote DraftRoot => Draft.Root;
 
@@ -36,7 +35,7 @@ namespace Assets.Scripts.UI.MelodyCreate
         {
             if (Draft.CanPreview)
             {
-                CurrentMelody = Draft.Build(string.Empty, 0);
+                CurrentMelody = Draft.Build(string.Empty);
             }
         }
 
@@ -50,7 +49,7 @@ namespace Assets.Scripts.UI.MelodyCreate
             Instance = this;
             Draft = new MelodyDraft();
 
-            MelodyManager.Instance.ClearCurrentMelody();
+
         }
 
         public void AddChordNotes(IReadOnlyList<DomainPianoNote> notes)
@@ -77,37 +76,37 @@ namespace Assets.Scripts.UI.MelodyCreate
             _draftChanged.OnNext(Unit.Default);
         }
 
-        public void ExtendLastMelodyNote()
+        public void ClearAll()
         {
-            Draft.ExtendLastMelodyNote();
+            Draft.ClearAll();
+            CurrentMelody = null;
+            _draftChanged.OnNext(Unit.Default);
+        }
+
+        public void Extend()
+        {
+            if (Draft.MelodyNotes.Count == 0)
+                Draft.ExtendChord();
+            else
+                Draft.ExtendLastMelodyNote();
             RebuildCurrentMelody();
             _draftChanged.OnNext(Unit.Default);
         }
 
-        public void ShrinkLastMelodyNote()
+        public void ShrinkLastStep()
         {
-            Draft.ShrinkLastMelodyNote();
-            RebuildCurrentMelody();
-            _draftChanged.OnNext(Unit.Default);
-        }
-
-        public void RemoveLastMelodyNote()
-        {
-            Draft.RemoveLastMelodyNote();
-            RebuildCurrentMelody();
-            _draftChanged.OnNext(Unit.Default);
-        }
-
-        public void ExtendChord()
-        {
-            Draft.ExtendChord();
-            RebuildCurrentMelody();
-            _draftChanged.OnNext(Unit.Default);
-        }
-
-        public void ShrinkChord()
-        {
-            Draft.ShrinkChord();
+            if (Draft.MelodyNotes.Count == 0)
+            {
+                Draft.ShrinkChord();
+            }
+            else if (Draft.MelodyNotes[^1].Beats > 1)
+            {
+                Draft.ShrinkLastMelodyNote();
+            }
+            else
+            {
+                Draft.RemoveLastMelodyNote();
+            }
             RebuildCurrentMelody();
             _draftChanged.OnNext(Unit.Default);
         }
@@ -119,10 +118,20 @@ namespace Assets.Scripts.UI.MelodyCreate
                 Debug.LogWarning("メロディが無効です: 和音3音・メロディ1音以上が必要です");
                 return;
             }
-            
+
+            if (MelodyManager.Instance.ContainsMelodyWithName(name))
+            {
+                SimpleModalWindow.Create(ignorable: false)
+                    .SetHeader("Error")
+                    .SetBody($"A melody named \"{name}\" already exists.")
+                    .AddButton("OK", () => { }, ModalButtonType.Success)
+                    .Show();
+                return;
+            }
+
             int position = MelodyManager.Instance.MelodyCount;
-            var melody = Draft.Build(name, position);
-            MelodyManager.Instance.AddMelody(melody);
+            Melody melody = Draft.Build(name);
+            MelodyManager.Instance.AddMelody(new SavedMelody(melody, position));
 
             LoadMainScene();
         }

@@ -7,7 +7,7 @@ namespace Assets.Scripts.UI
     /// <summary>
     /// 音量スライダーUI制御
     /// </summary>
-    public class VolumeSliderUI : MonoBehaviour
+    public sealed class VolumeSliderUI : MonoBehaviour
     {
         [SerializeField] private Slider _slider;
 

@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BPMUI : MonoBehaviour
+public sealed class BPMUI : MonoBehaviour
 {
     [SerializeField] private Button _plusButton;
     [SerializeField] private Button _minusButton;
@@ -18,6 +18,7 @@ public class BPMUI : MonoBehaviour
     {
         _plusButton.onClick.AddListener(OnPlusClicked);
         _minusButton.onClick.AddListener(OnMinusClicked);
+        RefreshBpmText();
     }
 
     private void OnDestroy()

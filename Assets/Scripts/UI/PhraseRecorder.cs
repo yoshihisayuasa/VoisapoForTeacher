@@ -1,4 +1,4 @@
-using Assets.Scripts.UI.Melody;
+using Assets.Scripts.UI.MelodyUI;
 using R3;
 using System.Collections;
 using UnityEngine;

@@ -1,23 +1,17 @@
-﻿using System;
+﻿using R3;
 
 namespace Assets.Scripts.UI
 {
     public class AutoKeyChangeManager
     {
         public static AutoKeyChangeManager Instance { get; } = new AutoKeyChangeManager();
-        private AutoKeyChangeState _state = AutoKeyChangeState.None;
-        public AutoKeyChangeState State => _state;
-        public event Action<AutoKeyChangeState> OnStateChanged;
+        public ReactiveProperty<AutoKeyChangeState> State { get; } = new ReactiveProperty<AutoKeyChangeState>(AutoKeyChangeState.None);
 
-        public void SetState(AutoKeyChangeState newState)
-        {
-            _state = newState;
-            OnStateChanged?.Invoke(_state);
-        }
+        public void SetState(AutoKeyChangeState newState) => State.Value = newState;
 
         public void Toggle(AutoKeyChangeState target)
         {
-            if (_state == target)
+            if (State.Value == target)
             {
                 SetState(AutoKeyChangeState.None);
             }

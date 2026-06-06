@@ -1,5 +1,5 @@
-using AsseScripts.Domain;
-using Assets.Scripts.Domain;
+using Assets.Scripts.Domain.Entities;
+using Assets.Scripts.Domain.Modules;
 using Assets.Scripts.Domain.ValueObjects;
 using Assets.Scripts.UI.Piano;
 using R3;
@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DomainPianoNote = AsseScripts.Domain.PianoNote;
+using DomainPianoNoteEnum = AsseScripts.Domain.PianoNoteEnum;
 
 namespace Assets.Scripts.UI.MelodyCreate
 {
@@ -23,6 +24,8 @@ namespace Assets.Scripts.UI.MelodyCreate
         [SerializeField] private GameObject _boxPrefab;
         [SerializeField] private Button _extendButton;
         [SerializeField] private Button _deleteButton;
+        [SerializeField] private Button _clearButton;
+        [SerializeField] private MelodyTemplateSelectorUI _templateSelector;
 
         private static int MelodyBoxCount => MelodyDraft.MaxMelodySteps;
 
@@ -32,8 +35,6 @@ namespace Assets.Scripts.UI.MelodyCreate
 
         // 次に入力されるメロディボックスのインデックス
         private int _cursorIndex = 0;
-
-        private bool _isChordMode = true;
 
         private Coroutine _previewSoundCoroutine;
         private DomainPianoNote _previewingNote;
@@ -46,12 +47,13 @@ namespace Assets.Scripts.UI.MelodyCreate
 
             _extendButton.onClick.AddListener(OnExtendClicked);
             _deleteButton.onClick.AddListener(OnDeleteClicked);
+            _clearButton.onClick.AddListener(OnClearClicked);
 
             PianoController.Instance.OnAnyKeyClickAsObservable
                 .Subscribe(OnPianoKeyClicked)
                 .AddTo(this);
 
-            RefreshExtendButton();
+            RefreshButtons();
         }
 
         // ── 初期化 ──────────────────────────────────────────────────────
@@ -78,7 +80,7 @@ namespace Assets.Scripts.UI.MelodyCreate
 
         private void OnPianoKeyClicked(DomainPianoNote key)
         {
-            if (_isChordMode)
+            if (!MelodyCreateManager.Instance.IsChordComplete)
             {
                 AddCordNote(key);
             }
@@ -87,7 +89,7 @@ namespace Assets.Scripts.UI.MelodyCreate
                 AddMelodyNote(key);
             }
 
-            RefreshExtendButton();
+            RefreshButtons();
             StartPreviewSound(key);
         }
 
@@ -119,11 +121,6 @@ namespace Assets.Scripts.UI.MelodyCreate
         {
             _enteredChordNotes.Add(key);
             SortAndApplyChordNotes();
-
-            if (_enteredChordNotes.Count >= Chord.Length)
-            {
-                _isChordMode = false;
-            }
         }
 
         private void SortAndApplyChordNotes()
@@ -164,65 +161,56 @@ namespace Assets.Scripts.UI.MelodyCreate
 
         private void OnExtendClicked()
         {
-            if (_isChordMode) return;
+            if (!MelodyCreateManager.Instance.IsChordComplete) return;
             if (_cursorIndex >= MelodyBoxCount) return;
 
-            var draft = MelodyCreateManager.Instance.Draft;
-            if (draft.MelodyNotes.Count == 0)
-            {
-                MelodyCreateManager.Instance.ExtendChord();
-            }
-            else
-            {
-                MelodyCreateManager.Instance.ExtendLastMelodyNote();
-            }
-
+            MelodyCreateManager.Instance.Extend();
             _melodyBoxes[_cursorIndex].ShowArrow();
             _cursorIndex++;
-            RefreshExtendButton();
+            RefreshButtons();
         }
 
         private void OnDeleteClicked()
         {
-            if (_isChordMode)
+            if (!MelodyCreateManager.Instance.IsChordComplete)
             {
                 DeleteLastChordNote();
-                RefreshExtendButton();
+                RefreshButtons();
                 return;
             }
 
-            var draft = MelodyCreateManager.Instance.Draft;
-
             if (_cursorIndex == 0)
             {
-                _isChordMode = true;
                 DeleteLastChordNote();
-            }
-            else if (draft.MelodyNotes.Count == 0)
-            {
-                // 和音延長ボックスを1つ戻す
-                MelodyCreateManager.Instance.ShrinkChord();
-                _cursorIndex--;
-                _melodyBoxes[_cursorIndex].SetEntry(null);
             }
             else
             {
-                var lastNote = draft.MelodyNotes[^1];
-                if (lastNote.Beats > 1)
-                {
-                    MelodyCreateManager.Instance.ShrinkLastMelodyNote();
-                    _cursorIndex--;
-                    _melodyBoxes[_cursorIndex].SetEntry(null);
-                }
-                else
-                {
-                    MelodyCreateManager.Instance.RemoveLastMelodyNote();
-                    _cursorIndex--;
-                    _melodyBoxes[_cursorIndex].SetEntry(null);
-                }
+                MelodyCreateManager.Instance.ShrinkLastStep();
+                _cursorIndex--;
+                _melodyBoxes[_cursorIndex].SetEntry(null);
             }
 
-            RefreshExtendButton();
+            RefreshButtons();
+        }
+
+        private void OnClearClicked()
+        {
+            MelodyCreateManager.Instance.ClearAll();
+            _templateSelector?.ResetSelection();
+
+            foreach (var box in _chordBoxes)
+            {
+                box.SetEntry(null);
+            }
+            foreach (var box in _melodyBoxes)
+            {
+                box.SetEntry(null);
+            }
+
+            _enteredChordNotes.Clear();
+            _cursorIndex = 0;
+
+            RefreshButtons();
         }
 
         private void DeleteLastChordNote()
@@ -234,9 +222,55 @@ namespace Assets.Scripts.UI.MelodyCreate
 
         // ── 状態管理 ─────────────────────────────────────────────────────
 
-        private void RefreshExtendButton()
+        private void RefreshButtons()
         {
-            _extendButton.interactable = !_isChordMode && _cursorIndex < MelodyBoxCount;
+            bool isChordComplete = MelodyCreateManager.Instance.IsChordComplete;
+            bool hasAnyInput = _enteredChordNotes.Count > 0;
+            _extendButton.interactable = isChordComplete && _cursorIndex < MelodyBoxCount;
+            _deleteButton.interactable = hasAnyInput;
+            _clearButton.interactable = hasAnyInput;
+        }
+
+        // ── テンプレート読み込み ─────────────────────────────────────────────
+
+        public void LoadTemplate(Melody template)
+        {
+            OnClearClicked();
+
+            var root = new DomainPianoNote(DomainPianoNoteEnum.C4);
+
+            foreach (var interval in template.Chord.Intervals)
+            {
+                _enteredChordNotes.Add(root + interval);
+            }
+            SortAndApplyChordNotes();
+
+            for (int b = 1; b < template.Chord.Beats; b++)
+            {
+                if (_cursorIndex >= MelodyBoxCount) break;
+                MelodyCreateManager.Instance.Extend();
+                _melodyBoxes[_cursorIndex].ShowArrow();
+                _cursorIndex++;
+            }
+
+            foreach (var note in template.Notes)
+            {
+                if (_cursorIndex >= MelodyBoxCount) break;
+                var draftNote = new DraftNote(root + note.Interval);
+                MelodyCreateManager.Instance.AddMelodyNote(draftNote);
+                _melodyBoxes[_cursorIndex].SetEntry(draftNote);
+                _cursorIndex++;
+
+                for (int b = 1; b < note.Beats; b++)
+                {
+                    if (_cursorIndex >= MelodyBoxCount) break;
+                    MelodyCreateManager.Instance.Extend();
+                    _melodyBoxes[_cursorIndex].ShowArrow();
+                    _cursorIndex++;
+                }
+            }
+
+            RefreshButtons();
         }
 
         // ── ヘルパー ─────────────────────────────────────────────────────

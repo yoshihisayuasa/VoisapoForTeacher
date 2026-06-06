@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using R3;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.UI
@@ -6,7 +7,7 @@ namespace Assets.Scripts.UI
     /// <summary>
     /// 自動キー変更 UI（上/下ボタン）
     /// </summary>
-    public class AutoKeyChangeUI : MonoBehaviour
+    public sealed class AutoKeyChangeUI : MonoBehaviour
     {
         [SerializeField] private Button _upButton;
         [SerializeField] private Button _downButton;
@@ -20,18 +21,7 @@ namespace Assets.Scripts.UI
         {
             _upButton.onClick.AddListener(OnUpClicked);
             _downButton.onClick.AddListener(OnDownClicked);
-        }
-
-        void OnEnable() 
-        {
-            AutoKeyChangeManager.Instance.OnStateChanged += HandleStateChanged;
-            // 初期表示
-            HandleStateChanged(AutoKeyChangeManager.Instance.State);
-        }
-
-        void OnDisable()
-        {
-            AutoKeyChangeManager.Instance.OnStateChanged -= HandleStateChanged;
+            AutoKeyChangeManager.Instance.State.Subscribe(HandleStateChanged).AddTo(this);
         }
 
         private void OnUpClicked()

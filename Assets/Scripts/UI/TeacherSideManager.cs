@@ -9,7 +9,7 @@ namespace Assets.Scripts.UI
 {
     [RequireComponent(typeof(Toggle))]
     [RequireComponent(typeof(Selectable))]
-    public class TeacherSideManager : MonoBehaviour
+    public sealed class TeacherSideManager : MonoBehaviour
     {
         public static TeacherSideManager Instance { get; private set; }
 
@@ -31,7 +31,7 @@ namespace Assets.Scripts.UI
             get => _teacherSideButtonState;
             private set
             {
-                if (!value && IsCtrlHeld())
+                if (!value && IsShiftHeld())
                 {
                     return;
                 }
@@ -93,74 +93,44 @@ namespace Assets.Scripts.UI
 
         private void Update()
         {
-            if (IsCtrlPressedThisFrame())
+            if (IsShiftPressedThisFrame())
             {
                 TeacherSideButtonState = true;
             }
-            else if (IsCtrlReleasedThisFrame())
+            else if (IsShiftReleasedThisFrame())
             {
                 TeacherSideButtonState = false;
             }
         }
 
-        private static bool IsCtrlHeld()
+        private static bool IsShiftHeld()
         {
             var kb = Keyboard.current;
             if (kb == null)
             {
                 return false;
             }
-            if (kb.leftCtrlKey.isPressed || kb.rightCtrlKey.isPressed)
-            {
-                return true;
-            }
-#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
-            if (kb.leftCommandKey.isPressed || kb.rightCommandKey.isPressed)
-            {
-                return true;
-            }
-#endif
-            return false;
+            return kb.leftShiftKey.isPressed || kb.rightShiftKey.isPressed;
         }
 
-        private static bool IsCtrlPressedThisFrame()
+        private static bool IsShiftPressedThisFrame()
         {
             var kb = Keyboard.current;
             if (kb == null)
             {
                 return false;
             }
-            if (kb.leftCtrlKey.wasPressedThisFrame || kb.rightCtrlKey.wasPressedThisFrame)
-            {
-                return true;
-            }
-#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
-            if (kb.leftCommandKey.wasPressedThisFrame || kb.rightCommandKey.wasPressedThisFrame)
-            {
-                return true;
-            }
-#endif
-            return false;
+            return kb.leftShiftKey.wasPressedThisFrame || kb.rightShiftKey.wasPressedThisFrame;
         }
 
-        private static bool IsCtrlReleasedThisFrame()
+        private static bool IsShiftReleasedThisFrame()
         {
             var kb = Keyboard.current;
             if (kb == null)
             {
                 return false;
             }
-            if (kb.leftCtrlKey.wasReleasedThisFrame || kb.rightCtrlKey.wasReleasedThisFrame)
-            {
-                return true;
-            }
-#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
-            if (kb.leftCommandKey.wasReleasedThisFrame || kb.rightCommandKey.wasReleasedThisFrame)
-            {
-                return true;
-            }
-#endif
-            return false;
+            return kb.leftShiftKey.wasReleasedThisFrame || kb.rightShiftKey.wasReleasedThisFrame;
         }
     }
 }
