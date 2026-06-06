@@ -77,11 +77,14 @@ namespace Assets.Scripts.UI.Piano
             ResetAccent();
         }
 
+        /// <summary>
+        /// // シングルトン重複検知で Awake を早期 return した場合、Subject が未初期化のため nullチェックが必要
+        /// </summary>
         private void OnDestroy()
         {
-            _virtualKeyClicks.Dispose();
-            _virtualKeyUps.Dispose();
-            _virtualKeyEnters.Dispose();
+            _virtualKeyClicks?.Dispose();
+            _virtualKeyUps?.Dispose();
+            _virtualKeyEnters?.Dispose();
         }
 
         private void Update()
