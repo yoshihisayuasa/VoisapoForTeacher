@@ -2,7 +2,6 @@ using Assets.Scripts.UI.Piano;
 using R3;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.UI
@@ -12,7 +11,6 @@ namespace Assets.Scripts.UI
     public sealed class TeacherSideManager : MonoBehaviour
     {
         public static TeacherSideManager Instance { get; private set; }
-
 
         [Header("UI")]
         [SerializeField] private Toggle _toggle;
@@ -26,25 +24,7 @@ namespace Assets.Scripts.UI
         private readonly Subject<bool> _onStateChanged = new();
         public Observable<bool> OnStateChanged => _onStateChanged;
 
-        public bool TeacherSideButtonState
-        {
-            get => _teacherSideButtonState;
-            private set
-            {
-                if (!value && IsShiftHeld())
-                {
-                    return;
-                }
-                if (_teacherSideButtonState == value)
-                {
-                    return;
-                }
-
-                _teacherSideButtonState = value;
-                SyncToggle(value);
-                _onStateChanged.OnNext(value);
-            }
-        }
+        public bool TeacherSideButtonState => _teacherSideButtonState;
 
         private void Awake()
         {
@@ -55,82 +35,57 @@ namespace Assets.Scripts.UI
             }
             Instance = this;
 
-            if (_toggle == null)
-            {
-                _toggle = GetComponent<Toggle>();
-            }
-            if (_image == null)
-            {
-                if (GetComponent<Selectable>().targetGraphic is Image img)
-                {
-                    _image = img;
-                }
-            }
+            if (_toggle == null) _toggle = GetComponent<Toggle>();
+            if (_image == null && GetComponent<Selectable>().targetGraphic is Image img) _image = img;
         }
-
-
 
         private void Start()
         {
-            _toggle.onValueChanged.AddListener(isOn => TeacherSideButtonState = isOn);
+            _toggle.onValueChanged.AddListener(SetState);
 
             PianoController.Instance.OnAnyKeyUpAsObservable
-                .Subscribe(_ => TeacherSideButtonState = false)
+                .Subscribe(_ => SetState(false))
                 .AddTo(this);
+        }
+
+        public void SetState(bool value)
+        {
+            if (!value && IsShiftHeld()) return;
+            if (_teacherSideButtonState == value) return;
+
+            _teacherSideButtonState = value;
+            SyncToggle(value);
+            _onStateChanged.OnNext(value);
         }
 
         private void SyncToggle(bool isOn)
         {
-            if (_toggle != null && _toggle.isOn != isOn)
-            {
-                _toggle.isOn = isOn;
-            }
-            if (_image != null)
-            {
-                _image.color = isOn ? _onColor : _offColor;
-            }
+            if (_toggle != null && _toggle.isOn != isOn) _toggle.isOn = isOn;
+            if (_image != null) _image.color = isOn ? _onColor : _offColor;
         }
 
         private void Update()
         {
-            if (IsShiftPressedThisFrame())
-            {
-                TeacherSideButtonState = true;
-            }
-            else if (IsShiftReleasedThisFrame())
-            {
-                TeacherSideButtonState = false;
-            }
+            if (IsShiftPressedThisFrame())       SetState(true);
+            else if (IsShiftReleasedThisFrame()) SetState(false);
         }
 
         private static bool IsShiftHeld()
         {
             var kb = Keyboard.current;
-            if (kb == null)
-            {
-                return false;
-            }
-            return kb.leftShiftKey.isPressed || kb.rightShiftKey.isPressed;
+            return kb != null && (kb.leftShiftKey.isPressed || kb.rightShiftKey.isPressed);
         }
 
         private static bool IsShiftPressedThisFrame()
         {
             var kb = Keyboard.current;
-            if (kb == null)
-            {
-                return false;
-            }
-            return kb.leftShiftKey.wasPressedThisFrame || kb.rightShiftKey.wasPressedThisFrame;
+            return kb != null && (kb.leftShiftKey.wasPressedThisFrame || kb.rightShiftKey.wasPressedThisFrame);
         }
 
         private static bool IsShiftReleasedThisFrame()
         {
             var kb = Keyboard.current;
-            if (kb == null)
-            {
-                return false;
-            }
-            return kb.leftShiftKey.wasReleasedThisFrame || kb.rightShiftKey.wasReleasedThisFrame;
+            return kb != null && (kb.leftShiftKey.wasReleasedThisFrame || kb.rightShiftKey.wasReleasedThisFrame);
         }
     }
 }
