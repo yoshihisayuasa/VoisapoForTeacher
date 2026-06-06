@@ -7738,7 +7738,6 @@ GameObject:
   - component: {fileID: 483347619}
   - component: {fileID: 483347621}
   - component: {fileID: 483347620}
-  - component: {fileID: 483347622}
   m_Layer: 0
   m_Name: PianoSection
   m_TagString: Untagged
@@ -7799,18 +7798,6 @@ MonoBehaviour:
   rightDarkOverlay: {fileID: 1859124002}
   octaveUpButton: {fileID: 1147503452}
   octaveDownButton: {fileID: 211419269}
---- !u!114 &483347622
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 483347618}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fdb29bab59fe87c4ba31434f1aed4352, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyboardShortcutController
 --- !u!1 &491860273
 GameObject:
   m_ObjectHideFlags: 0
@@ -10418,7 +10405,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 253.88342, y: -280.00052}
+  m_AnchoredPosition: {x: 510.86218, y: -280.00052}
   m_SizeDelta: {x: 0, y: 280}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &602490586

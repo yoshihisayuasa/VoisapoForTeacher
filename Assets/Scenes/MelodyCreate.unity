@@ -281,6 +281,7 @@ GameObject:
   m_Component:
   - component: {fileID: 90827622}
   - component: {fileID: 90827623}
+  - component: {fileID: 90827624}
   m_Layer: 0
   m_Name: MelodyInputSaveUI
   m_TagString: Untagged
@@ -315,6 +316,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad51087f89c51904faf09da7b1f5ae27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.MelodyCreate.MelodyNameInputPopupUI
+--- !u!114 &90827624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 90827621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cb53408b5f17e148b09c766ce542267, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.MelodyCreate.DraftMelodyPlayer
 --- !u!1 &197463109
 GameObject:
   m_ObjectHideFlags: 0
@@ -692,7 +705,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.MelodyCreate.MelodyCreatePreviewUI
   _previewButton: {fileID: 584323197}
-  _melodyPlayer: {fileID: 379410488}
 --- !u!114 &379410488
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1424,6 +1436,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.MelodyCreate.MelodyCreateManager
   _mainSceneName: Main
+  _draftMelodyPlayer: {fileID: 90827624}
 --- !u!4 &649563451
 Transform:
   m_ObjectHideFlags: 0

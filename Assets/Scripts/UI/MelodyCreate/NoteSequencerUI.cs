@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DomainPianoNote = AsseScripts.Domain.PianoNote;
-using DomainPianoNoteEnum = AsseScripts.Domain.PianoNoteEnum;
 
 namespace Assets.Scripts.UI.MelodyCreate
 {
@@ -125,25 +124,13 @@ namespace Assets.Scripts.UI.MelodyCreate
 
         private void SortAndApplyChordNotes()
         {
-            // 高い音が上、低い音が下になるよう降順ソート
-            _enteredChordNotes.Sort((a, b) => b.Index.CompareTo(a.Index));
+            MelodyCreateManager.Instance.AddChordNotes(_enteredChordNotes);
 
-            // 入力済み音を下詰めで表示する
-            int offset = Chord.Length - _enteredChordNotes.Count;
+            var chordNotes = MelodyCreateManager.Instance.ChordNotes;
             for (int i = 0; i < Chord.Length; i++)
             {
-                int noteIdx = i - offset;
-                if (noteIdx >= 0)
-                {
-                    _chordBoxes[i].SetEntry(new DraftNote(_enteredChordNotes[noteIdx]));
-                }
-                else
-                {
-                    _chordBoxes[i].SetEntry(null);
-                }
+                _chordBoxes[i].SetEntry(chordNotes[i]);
             }
-
-            MelodyCreateManager.Instance.AddChordNotes(_enteredChordNotes);
         }
 
         private void AddMelodyNote(DomainPianoNote key)
@@ -237,34 +224,32 @@ namespace Assets.Scripts.UI.MelodyCreate
         {
             OnClearClicked();
 
-            var root = new DomainPianoNote(DomainPianoNoteEnum.C4);
+            var manager = MelodyCreateManager.Instance;
+            manager.LoadTemplate(template);
 
-            foreach (var interval in template.Chord.Intervals)
+            var chordNotes = manager.ChordNotes;
+            for (int i = 0; i < Chord.Length; i++)
             {
-                _enteredChordNotes.Add(root + interval);
+                _chordBoxes[i].SetEntry(chordNotes[i]);
+                if (chordNotes[i] != null) _enteredChordNotes.Add(chordNotes[i].Key);
             }
-            SortAndApplyChordNotes();
 
-            for (int b = 1; b < template.Chord.Beats; b++)
+            for (int b = 1; b < manager.ChordBeats; b++)
             {
                 if (_cursorIndex >= MelodyBoxCount) break;
-                MelodyCreateManager.Instance.Extend();
                 _melodyBoxes[_cursorIndex].ShowArrow();
                 _cursorIndex++;
             }
 
-            foreach (var note in template.Notes)
+            foreach (var draftNote in manager.MelodyNotes)
             {
                 if (_cursorIndex >= MelodyBoxCount) break;
-                var draftNote = new DraftNote(root + note.Interval);
-                MelodyCreateManager.Instance.AddMelodyNote(draftNote);
                 _melodyBoxes[_cursorIndex].SetEntry(draftNote);
                 _cursorIndex++;
 
-                for (int b = 1; b < note.Beats; b++)
+                for (int b = 1; b < draftNote.Beats; b++)
                 {
                     if (_cursorIndex >= MelodyBoxCount) break;
-                    MelodyCreateManager.Instance.Extend();
                     _melodyBoxes[_cursorIndex].ShowArrow();
                     _cursorIndex++;
                 }

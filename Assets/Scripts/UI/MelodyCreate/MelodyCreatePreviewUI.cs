@@ -11,7 +11,6 @@ namespace Assets.Scripts.UI.MelodyCreate
     public sealed class MelodyCreatePreviewUI : MonoBehaviour
     {
         [SerializeField] private Button _previewButton;
-        [SerializeField] private DraftMelodyPlayer _melodyPlayer;
 
         private void Start()
         {
@@ -24,15 +23,12 @@ namespace Assets.Scripts.UI.MelodyCreate
 
         private void OnClicked()
         {
-            var manager = MelodyCreateManager.Instance;
-            _melodyPlayer.Play(manager.CurrentMelody, manager.Draft.Root);
+            MelodyCreateManager.Instance.Preview();
         }
-
-
 
         private void Refresh()
         {
-            _previewButton.interactable = MelodyCreateManager.Instance.Draft.CanPreview;
+            _previewButton.interactable = MelodyCreateManager.Instance.CanPreview;
         }
     }
 }

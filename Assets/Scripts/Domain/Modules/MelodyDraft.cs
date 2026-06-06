@@ -19,6 +19,8 @@ namespace Assets.Scripts.Domain.Modules
         private readonly List<DraftNote> _melodyNotes = new();
 
         public IReadOnlyList<DraftNote> MelodyNotes => _melodyNotes;
+        public IReadOnlyList<DraftNote> ChordNotes => _chordNotes;
+        public int ChordBeats => _chordBeats;
 
         public const int MaxMelodySteps = 26;
         public int MelodyStepCount => _melodyNotes.Count;
@@ -45,6 +47,15 @@ namespace Assets.Scripts.Domain.Modules
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
             _chordNotes[index] = null;
+        }
+
+        public void SetChordNotes(IEnumerable<PianoNote> notes)
+        {
+            var sorted = notes.OrderByDescending(n => n.Index).ToList();
+            for (int i = 0; i < Chord.Length; i++)
+            {
+                _chordNotes[i] = i < sorted.Count ? new DraftNote(sorted[i]) : null;
+            }
         }
 
         public void ExtendChord()
@@ -100,6 +111,21 @@ namespace Assets.Scripts.Domain.Modules
             _chordBeats = 1;
             _melodyNotes.Clear();
             _root = null;
+        }
+
+        // ── 複合操作 ─────────────────────────────────────────────────────────
+
+        public void Extend()
+        {
+            if (_melodyNotes.Count == 0) ExtendChord();
+            else ExtendLastMelodyNote();
+        }
+
+        public void ShrinkLastStep()
+        {
+            if (_melodyNotes.Count == 0) ShrinkChord();
+            else if (_melodyNotes[^1].Beats > 1) ShrinkLastMelodyNote();
+            else RemoveLastMelodyNote();
         }
 
         // ── 検証 ────────────────────────────────────────────────────────────
