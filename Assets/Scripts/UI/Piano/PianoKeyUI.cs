@@ -103,7 +103,7 @@ namespace Assets.Scripts.UI.Piano
         // 音のみ再生
         public void PlaySound(float volume)
         {
-            _infra.PlaySound(volume * SoundSourceSwitcher.Instance.CurrentVolumeMultiplier);
+            _infra.PlaySound(volume);
         }
 
         // 音のみ停止（フェードアウト）

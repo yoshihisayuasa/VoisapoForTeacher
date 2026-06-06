@@ -130,7 +130,7 @@ namespace Assets.Scripts.UI.Piano
             key.SetPlayingVisual();
             if (isPlaySound)
             {
-                key.PlaySound(volume);
+                key.PlaySound(volume * SoundSourceSwitcher.Instance.CurrentVolumeMultiplier);
             }
         }
 
