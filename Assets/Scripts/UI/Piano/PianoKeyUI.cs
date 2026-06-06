@@ -107,9 +107,8 @@ namespace Assets.Scripts.UI.Piano
         }
 
         // 音のみ停止（フェードアウト）
-        public void StopSound()
+        public void StopSound(float fadeOutDuration)
         {
-            float fadeOutDuration = BPMManager.Instance.SecondPerBeat * 0.6f;
             _infra.StopSound(fadeOutDuration);
         }
 

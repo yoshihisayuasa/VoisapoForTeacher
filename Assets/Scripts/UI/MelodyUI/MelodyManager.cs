@@ -3,6 +3,8 @@ using Assets.Scripts.Domain.Entities;
 using R3;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using static Assets.Scripts.UI.AutoKeyChangeManager;
 
 namespace Assets.Scripts.UI.MelodyUI
 {
@@ -91,6 +93,15 @@ namespace Assets.Scripts.UI.MelodyUI
         public void SaveAllMelodies()
         {
             MelodyJsonLoader.SaveAllMelodies(_jsonFileName, _melodies);
+        }
+
+        public void NavigateToMelodyCreate(string sceneName)
+        {
+            MelodyPlayer.Instance.StopMelody(true, shouldDelayRecordStop: false);
+            ClearCurrentMelody();
+            AutoKeyChangeManager.Instance.SetState(AutoKeyChangeState.None);
+            EarphoneModeManager.Instance.SetMode(false);
+            SceneManager.LoadScene(sceneName);
         }
     }
 }

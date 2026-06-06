@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.UI.MelodyUI
@@ -18,11 +17,7 @@ namespace Assets.Scripts.UI.MelodyUI
 
         private void OnClicked()
         {
-            MelodyPlayer.Instance.StopMelody(true, shouldDelayRecordStop: false);
-            MelodyManager.Instance.ClearCurrentMelody();
-            AutoKeyChangeManager.Instance.SetState(AutoKeyChangeManager.AutoKeyChangeState.None);
-            EarphoneModeManager.Instance.SetMode(false);
-            SceneManager.LoadScene(_melodyCreateSceneName);
+            MelodyManager.Instance.NavigateToMelodyCreate(_melodyCreateSceneName);
         }
     }
 }

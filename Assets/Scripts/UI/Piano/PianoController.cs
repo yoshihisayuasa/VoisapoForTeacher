@@ -1,6 +1,7 @@
 using R3;
 using AsseScripts.Domain;
 using AsseScripts.Infrastructure;
+using AsseScripts.UI;
 using AsseScripts.UI.Piano;
 using System.Collections.Generic;
 using System.Linq;
@@ -145,16 +146,17 @@ namespace Assets.Scripts.UI.Piano
                 _coloredKeys.Remove(key);
             }
             var keyUI = GetKeyUI(key);
-            keyUI.StopSound();
+            keyUI.StopSound(BPMManager.Instance.SecondPerBeat * 0.6f);
             keyUI.SetKeyVisual(setPlayedColor);
         }
 
         public void StopMelody(bool setKeyVisual)
         {
+            float fadeOut = BPMManager.Instance.SecondPerBeat * 0.6f;
             foreach (var key in _playingKeys)
             {
                 var keyUI = GetKeyUI(key);
-                keyUI.StopSound();
+                keyUI.StopSound(fadeOut);
                 if(setKeyVisual)
                 {
                     keyUI.SetKeyVisual(false);
