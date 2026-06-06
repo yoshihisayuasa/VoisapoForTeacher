@@ -1,5 +1,6 @@
 using R3;
 using AsseScripts.Domain;
+using AsseScripts.Infrastructure;
 using AsseScripts.UI.Piano;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +31,13 @@ namespace Assets.Scripts.UI.Piano
 
         [SerializeField]
         [Tooltip("ピアノ鍵盤を含む ScrollRect (水平スクロール)")] private ScrollRect _scrollRect;
-        public IReadOnlyList<PianoKeyUI> PianoKeys => _pianoKeys;
+        public void ApplySoundSet(PianoSoundSet soundSet)
+        {
+            foreach (var keyUI in _pianoKeys)
+            {
+                keyUI.SwapAudioClip(soundSet.GetClip(keyUI.NoteEnum));
+            }
+        }
 
         public static PianoController Instance { get; private set; }
 

@@ -30,6 +30,9 @@ namespace Assets.Scripts.UI.MelodyCreate
         private readonly Subject<Unit> _draftChanged = new();
         public Observable<Unit> DraftChanged => _draftChanged;
 
+        private readonly Subject<Melody> _templateLoaded = new();
+        public Observable<Melody> TemplateLoaded => _templateLoaded;
+
         public bool IsChordComplete => Draft.IsChordComplete;
         public bool CanPreview => Draft.CanPreview;
         public IReadOnlyList<DraftNote> ChordNotes => Draft.ChordNotes;
@@ -121,6 +124,7 @@ namespace Assets.Scripts.UI.MelodyCreate
 
             RebuildCurrentMelody();
             _draftChanged.OnNext(Unit.Default);
+            _templateLoaded.OnNext(template);
         }
 
         public void Preview()

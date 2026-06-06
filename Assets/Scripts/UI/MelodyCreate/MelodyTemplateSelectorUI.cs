@@ -7,7 +7,6 @@ namespace Assets.Scripts.UI.MelodyCreate
 {
     public sealed class MelodyTemplateSelectorUI : MonoBehaviour
     {
-        [SerializeField] private NoteSequencerUI _sequencer;
         [SerializeField] private TMP_Dropdown _dropdown;
 
         private void Start()
@@ -34,7 +33,7 @@ namespace Assets.Scripts.UI.MelodyCreate
         private void OnValueChanged(int index)
         {
             if (index == 0) return;
-            _sequencer.LoadTemplate(MelodyTemplateLibrary.All[index - 1]);
+            MelodyCreateManager.Instance.LoadTemplate(MelodyTemplateLibrary.All[index - 1]);
         }
 
         public void ResetSelection()

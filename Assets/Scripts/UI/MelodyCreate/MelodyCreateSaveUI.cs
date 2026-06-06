@@ -11,7 +11,7 @@ namespace Assets.Scripts.UI.MelodyCreate
 
         private void Start()
         {
-            _saveButton.onClick.AddListener(_popup.Open);
+            _saveButton.onClick.AddListener(() => _popup.Open(MelodyCreateManager.Instance.SaveWithName));
 
             MelodyCreateManager.Instance.DraftChanged
                 .Subscribe(_ => RefreshSaveButton())

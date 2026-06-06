@@ -61,13 +61,7 @@ namespace Assets.Scripts.UI.Piano
         }
         private void ApplySoundSet(PianoSoundSet soundSet)
         {
-            var controller = Assets.Scripts.UI.Piano.PianoController.Instance;
-
-            foreach (var keyUI in controller.PianoKeys)
-            {
-                var clip = soundSet.GetClip(keyUI.NoteEnum);
-                keyUI.SwapAudioClip(clip);
-            }
+            PianoController.Instance.ApplySoundSet(soundSet);
         }
     }
 }

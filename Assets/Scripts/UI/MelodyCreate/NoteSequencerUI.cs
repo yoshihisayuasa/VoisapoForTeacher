@@ -52,6 +52,10 @@ namespace Assets.Scripts.UI.MelodyCreate
                 .Subscribe(OnPianoKeyClicked)
                 .AddTo(this);
 
+            MelodyCreateManager.Instance.TemplateLoaded
+                .Subscribe(RebuildFromTemplate)
+                .AddTo(this);
+
             RefreshButtons();
         }
 
@@ -220,12 +224,14 @@ namespace Assets.Scripts.UI.MelodyCreate
 
         // ── テンプレート読み込み ─────────────────────────────────────────────
 
-        public void LoadTemplate(Melody template)
+        private void RebuildFromTemplate(Melody template)
         {
-            OnClearClicked();
+            foreach (var box in _chordBoxes) box.SetEntry(null);
+            foreach (var box in _melodyBoxes) box.SetEntry(null);
+            _enteredChordNotes.Clear();
+            _cursorIndex = 0;
 
             var manager = MelodyCreateManager.Instance;
-            manager.LoadTemplate(template);
 
             var chordNotes = manager.ChordNotes;
             for (int i = 0; i < Chord.Length; i++)
