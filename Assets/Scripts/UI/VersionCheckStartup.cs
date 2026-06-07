@@ -2,11 +2,15 @@ using AsseScripts.Domain;
 using AsseScripts.Infrastructure;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityScreenNavigator.Runtime.Core.Modal;
 
 namespace Assets.Scripts.UI
 {
     public sealed class VersionCheckStartup : MonoBehaviour
     {
+        private const string ModalResourcePath =
+            "Prefab/UnityScreenNavigator/Modal/pfb_ui_modal_version_update";
+
         [SerializeField] private string _versionJsonUrl;
 
         private void Start()
@@ -23,14 +27,13 @@ namespace Assets.Scripts.UI
                 ShowUpdatePopup(result.LatestVersion, result.DownloadUrl);
         }
 
-        private static void ShowUpdatePopup(AppVersion latestVersion, string downloadUrl)
+        private void ShowUpdatePopup(AppVersion latestVersion, string downloadUrl)
         {
-            SimpleModalWindow.Create(ignorable: true)
-                .SetHeader("アップデートがあります")
-                .SetBody($"最新版 {latestVersion} が公開されています。")
-                .AddButton("後で", null, ModalButtonType.Danger)
-                .AddButton("ダウンロードページへ", () => Application.OpenURL(downloadUrl), ModalButtonType.Success)
-                .Show();
+            ModalContainer.Find("ModalContainer").Push(ModalResourcePath, true, onLoad: x =>
+            {
+                var ui = x.modal.GetComponent<VersionUpdateUI>();
+                ui.Setup(latestVersion, downloadUrl);
+            });
         }
     }
 }

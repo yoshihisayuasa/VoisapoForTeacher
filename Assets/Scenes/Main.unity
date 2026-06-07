@@ -10405,7 +10405,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 510.86218, y: -280.00052}
+  m_AnchoredPosition: {x: -428.5951, y: -280.00052}
   m_SizeDelta: {x: 0, y: 280}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &602490586
@@ -23414,7 +23414,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35d5f3df5f80f424f8ec5e9ee0aadab0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.VersionCheckStartup
-  _versionJsonUrl: ' https://yoshihisayuasa.github.io/VoisapoForTeacher/version.json'
+  _versionJsonUrl: https://yoshihisayuasa.github.io/VoisapoForTeacher/version.json
 --- !u!4 &1580619897
 Transform:
   m_ObjectHideFlags: 0
