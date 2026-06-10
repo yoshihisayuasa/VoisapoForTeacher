@@ -1,9 +1,9 @@
 using System;
 using AsseScripts.Domain;
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using R3;
-using UnityEngine;
 
 namespace Assets.Scripts.UI.LessonRoom
 {
@@ -61,6 +61,8 @@ namespace Assets.Scripts.UI.LessonRoom
 
         public override void OnCreatedRoom()
         {
+            var props = new Hashtable { { "isNewTeacher", true } };
+            PhotonNetwork.CurrentRoom.SetCustomProperties(props);
             _onRoomCreated.OnNext(_pendingRoomId);
         }
 
