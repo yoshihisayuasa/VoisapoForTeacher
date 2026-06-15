@@ -13,6 +13,22 @@ namespace AsseScripts.Domain
             _version = parsed;
         }
 
+        private AppVersion(Version version)
+        {
+            _version = version;
+        }
+
+        public static bool TryCreate(string versionString, out AppVersion result)
+        {
+            if (Version.TryParse(versionString, out var parsed))
+            {
+                result = new AppVersion(parsed);
+                return true;
+            }
+            result = null;
+            return false;
+        }
+
         public bool IsNewerThan(AppVersion other) => CompareTo(other) > 0;
 
         public override string ToString() => _version.ToString();
