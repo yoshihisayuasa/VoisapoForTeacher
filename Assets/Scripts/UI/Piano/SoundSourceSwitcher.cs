@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using AsseScripts.Infrastructure;
+using R3;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -19,6 +20,9 @@ namespace Assets.Scripts.UI.Piano
         private int _currentIndex = 0;
 
         public int CurrentIndex => _currentIndex;
+
+        private readonly Subject<int> _onChanged = new();
+        public Observable<int> OnChanged => _onChanged;
 
         public float CurrentVolumeMultiplier => _soundSets[_currentIndex].VolumeMultiplier;
 
@@ -58,6 +62,7 @@ namespace Assets.Scripts.UI.Piano
         {
             _currentIndex = index;
             ApplySoundSet(_soundSets[_currentIndex]);
+            _onChanged.OnNext(index);
         }
         private void ApplySoundSet(PianoSoundSet soundSet)
         {

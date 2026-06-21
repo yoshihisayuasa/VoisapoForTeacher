@@ -26,7 +26,10 @@
       "Bash(Select-Object -ExpandProperty FullName)",
       "Bash(Sort-Object)",
       "Bash(Remove-Item \"C:\\\\Users\\\\yuasa\\\\source\\\\repos\\\\VoisapoForTeacher\\\\Assets\\\\Scripts\\\\UI\\\\TeacherSideUI.cs\" -ErrorAction SilentlyContinue)",
-      "Bash(Remove-Item \"C:\\\\Users\\\\yuasa\\\\source\\\\repos\\\\VoisapoForTeacher\\\\Assets\\\\Scripts\\\\UI\\\\TeacherSideUI.cs.meta\" -ErrorAction SilentlyContinue)"
+      "Bash(Remove-Item \"C:\\\\Users\\\\yuasa\\\\source\\\\repos\\\\VoisapoForTeacher\\\\Assets\\\\Scripts\\\\UI\\\\TeacherSideUI.cs.meta\" -ErrorAction SilentlyContinue)",
+      "Bash(git *)",
+      "Read(//c/Users/yuasa/source/repos/VoisapoForTeacher/**)",
+      "Bash(find Assets -iname \"PhotonServerSettings*\")"
     ]
   }
 }

@@ -26,12 +26,19 @@ namespace Assets.Scripts.UI.Piano
         private readonly HashSet<PianoNote> _coloredKeys = new();
         private Dictionary<PianoNoteEnum, PianoKeyUI> _keyDict;
 
-        private Subject<PianoNote> _virtualKeyClicks;
-        private Subject<PianoNote> _virtualKeyUps;
+        // キーボード操作・受信など、ポインタ以外からの押下／離鍵を注入するストリーム。
+        private Subject<PianoNote> _keyClicks;
+        private Subject<PianoNote> _keyUps;
         private Subject<PianoNote> _virtualKeyEnters;
+
+        // 選択確定後にクリックを外部へ通知するストリーム。
+        private Subject<PianoNote> _anyKeyClick;
 
         [SerializeField]
         [Tooltip("ピアノ鍵盤を含む ScrollRect (水平スクロール)")] private ScrollRect _scrollRect;
+
+        [SerializeField]
+        [Tooltip("鍵盤入力のPhoton通信ゲートウェイ")] private PianoNetworkGateway _network;
         public void ApplySoundSet(PianoSoundSet soundSet)
         {
             foreach (var keyUI in _pianoKeys)
@@ -57,24 +64,41 @@ namespace Assets.Scripts.UI.Piano
                 _keyDict[key.NoteEnum] = key;
             }
 
-            _virtualKeyClicks = new Subject<PianoNote>();
-            _virtualKeyUps    = new Subject<PianoNote>();
+            _keyClicks        = new Subject<PianoNote>();
+            _keyUps           = new Subject<PianoNote>();
             _virtualKeyEnters = new Subject<PianoNote>();
+            _anyKeyClick      = new Subject<PianoNote>();
 
-            OnAnyKeyUpAsObservable    = _pianoKeys.Select(k => k.OnPointerUpAsObservable).Merge().Merge(_virtualKeyUps);
-            OnAnyKeyClickAsObservable = _pianoKeys.Select(k => k.OnClickKeyAsObservable).Merge().Merge(_virtualKeyClicks);
+            var pointerUps    = _pianoKeys.Select(k => k.OnPointerUpAsObservable).Merge();
+
+            // 再生は「根音(SelectedKey)を確定してから」通知する。生のクリックを一旦受けて
+            // SelectKey 後に _anyKeyClick へ流し直すことで、購読者の登録順に依存せず
+            // すべての購読者が確定後の SelectedKey を読めるようにする。
+            var rawClicks = _pianoKeys.Select(k => k.OnClickKeyAsObservable).Merge().Merge(_keyClicks);
+            rawClicks.Subscribe(note =>
+            {
+                SelectKey(note);
+                _anyKeyClick.OnNext(note);
+            }).AddTo(this);
+
+            OnAnyKeyClickAsObservable = _anyKeyClick;
+            OnAnyKeyUpAsObservable    = pointerUps.Merge(_keyUps);
             OnAnyKeyEnterAsObservable = _pianoKeys.Select(k => k.OnPointerEnterAsObservable).Merge().Merge(_virtualKeyEnters);
+
+            // 送信可否（先生のみ）はゲートウェイ側で判定。受信由来も同じ経路を通るが、
+            // 生徒は送信が権限で弾かれるためループしない。
+            OnAnyKeyClickAsObservable.Subscribe(note => _network.SendKeyDown(note)).AddTo(this);
+            OnAnyKeyUpAsObservable.Subscribe(note => _network.SendKeyUp(note)).AddTo(this);
         }
 
         private void Start()
         {
-            SetAccent(new PianoNote(PianoNoteEnum.C4));
-            OnAnyKeyClickAsObservable.Subscribe(SetAccent).AddTo(this);
+            SelectKey(new PianoNote(PianoNoteEnum.C4));
         }
 
         private void OnDisable()
         {
-            ResetAccent();
+            Deselect();
         }
 
         /// <summary>
@@ -82,9 +106,10 @@ namespace Assets.Scripts.UI.Piano
         /// </summary>
         private void OnDestroy()
         {
-            _virtualKeyClicks?.Dispose();
-            _virtualKeyUps?.Dispose();
+            _keyClicks?.Dispose();
+            _keyUps?.Dispose();
             _virtualKeyEnters?.Dispose();
+            _anyKeyClick?.Dispose();
         }
 
         private void Update()
@@ -96,8 +121,8 @@ namespace Assets.Scripts.UI.Piano
             if (kb.fKey.wasPressedThisFrame||kb.lKey.wasPressedThisFrame) MoveSelection(1);
             if (kb.gKey.wasPressedThisFrame || kb.semicolonKey.wasPressedThisFrame) MoveSelection(-6);
             if (kb.aKey.wasPressedThisFrame || kb.hKey.wasPressedThisFrame) MoveSelection(6);
-            if ((kb.dKey.wasPressedThisFrame||kb.kKey.wasPressedThisFrame) && _selectedKey != null) _virtualKeyClicks.OnNext(_selectedKey);
-            if ((kb.dKey.wasReleasedThisFrame||kb.kKey.wasReleasedThisFrame) && _selectedKey != null) _virtualKeyUps.OnNext(_selectedKey);
+            if ((kb.dKey.wasPressedThisFrame||kb.kKey.wasPressedThisFrame) && _selectedKey != null) _keyClicks.OnNext(_selectedKey);
+            if ((kb.dKey.wasReleasedThisFrame||kb.kKey.wasReleasedThisFrame) && _selectedKey != null) _keyUps.OnNext(_selectedKey);
         }
 
         private void MoveSelection(int delta)
@@ -107,7 +132,7 @@ namespace Assets.Scripts.UI.Piano
             int nextIndex = Mathf.Clamp(currentIndex + delta, 0, KeyCount - 1);
             var nextKey = new PianoNote((PianoNoteEnum)nextIndex);
 
-            SetAccent(nextKey);
+            SelectKey(nextKey);
             _virtualKeyEnters.OnNext(nextKey);
         }
 
@@ -118,7 +143,23 @@ namespace Assets.Scripts.UI.Piano
         public PianoNote SelectedKey
         {
             get => _selectedKey;
-            set => SetAccent(value);
+            set => SelectKey(value);
+        }
+
+        /// <summary>
+        /// 受信した鍵盤押下を、自分の鍵盤がクリックされたのと同等に扱う。
+        /// </summary>
+        public void PressKeyFromRemote(PianoNote note)
+        {
+            _keyClicks.OnNext(note);
+        }
+
+        /// <summary>
+        /// 受信した鍵盤リリースを、自分の鍵盤を離したのと同等に扱う。
+        /// </summary>
+        public void ReleaseKeyFromRemote(PianoNote note)
+        {
+            _keyUps.OnNext(note);
         }
 
         public int KeyCount => _pianoKeys.Count;
@@ -216,7 +257,7 @@ namespace Assets.Scripts.UI.Piano
             return _keyDict[pressedKey.Note];
         }
 
-        public void SetAccent(PianoNote key)
+        public void SelectKey(PianoNote key)
         {
             if (_selectedKey != null)
             {
@@ -227,7 +268,7 @@ namespace Assets.Scripts.UI.Piano
             GetKeyUI(_selectedKey).SetAccentColor();
         }
 
-        public void ResetAccent()
+        public void Deselect()
         {
             if (_selectedKey == null) return;
             GetKeyUI(_selectedKey).ResetAccentColor();
@@ -249,18 +290,27 @@ namespace Assets.Scripts.UI.Piano
             var minKey = key1.Index <= key2.Index ? key1 : key2;
             var maxKey = key1.Index <= key2.Index ? key2 : key1;
 
-            if (_highlightedKeys.HasValue)
-            {
-                var oldMin = _highlightedKeys.Value.Min;
-                var oldMax = _highlightedKeys.Value.Max;
-                if (oldMin != _selectedKey) GetKeyUI(oldMin).ResetHighlightedColor();
-                if (oldMax != _selectedKey) GetKeyUI(oldMax).ResetHighlightedColor();
-            }
+            ClearHighlight();
 
             _highlightedKeys = (minKey, maxKey);
 
             if (minKey != _selectedKey) GetKeyUI(minKey).SetMinHighlightColor();
             if (maxKey != _selectedKey) GetKeyUI(maxKey).SetMaxHighlightColor();
+        }
+
+        /// <summary>
+        /// 現在のハイライト範囲（Min/Max）を解除する。再生可能範囲外のキーを選択したときに呼ぶ。
+        /// </summary>
+        public void ClearHighlight()
+        {
+            if (!_highlightedKeys.HasValue) return;
+
+            var oldMin = _highlightedKeys.Value.Min;
+            var oldMax = _highlightedKeys.Value.Max;
+            if (oldMin != _selectedKey) GetKeyUI(oldMin).ResetHighlightedColor();
+            if (oldMax != _selectedKey) GetKeyUI(oldMax).ResetHighlightedColor();
+
+            _highlightedKeys = null;
         }
 
     }

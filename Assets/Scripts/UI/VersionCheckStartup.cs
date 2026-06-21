@@ -20,7 +20,7 @@ namespace Assets.Scripts.UI
 
         private async UniTaskVoid CheckVersionAsync()
         {
-            IVersionFetcher fetcher = new JsonVersionFetcher(_versionJsonUrl);
+            var fetcher = new JsonVersionFetcher(_versionJsonUrl);
             var result = await fetcher.FetchLatestAsync();
 
             if (result.HasUpdate)

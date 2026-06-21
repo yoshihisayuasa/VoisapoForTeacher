@@ -123,39 +123,85 @@ namespace AsseScripts.Infrastructure
             }
         }
 
+        /// <summary>
+        /// 単一メロディを JSON 文字列へシリアライズする（ネットワーク送信用）。
+        /// </summary>
+        public static string SerializeMelody(Melody melody)
+        {
+            return JsonUtility.ToJson(ToData(melody, 0));
+        }
+
+        /// <summary>
+        /// JSON 文字列から単一メロディを復元する（ネットワーク受信用）。失敗時は null。
+        /// </summary>
+        public static Melody DeserializeMelody(string json)
+        {
+            if (string.IsNullOrEmpty(json)) return null;
+            try
+            {
+                var data = JsonUtility.FromJson<MelodyData>(json);
+                if (data == null || string.IsNullOrEmpty(data.Name)) return null;
+                return ToMelody(data);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"メロディの復元に失敗: {ex.Message}");
+                return null;
+            }
+        }
+
         // ── プライベートヘルパー ──────────────────────────────────────
 
         private static string GetPersistentPath(string fileName)
             => System.IO.Path.Combine(Application.persistentDataPath, fileName + ".json");
+
+        private static MelodyData ToData(Melody melody, int position)
+        {
+            var chordData = new ChordData
+            {
+                Intervals = new List<int>(),
+                Beats = melody.Chord.Beats
+            };
+            foreach (var interval in melody.Chord.Intervals)
+            {
+                chordData.Intervals.Add(interval.Value);
+            }
+
+            var data = new MelodyData
+            {
+                Name = melody.Name,
+                Position = position,
+                Chord = chordData,
+                Notes = new List<NoteData>()
+            };
+            foreach (var note in melody.Notes)
+            {
+                data.Notes.Add(new NoteData { Interval = note.Interval.Value, Beats = note.Beats });
+            }
+            return data;
+        }
+
+        private static Melody ToMelody(MelodyData data)
+        {
+            var chord = ParseChordData(data.Chord);
+
+            var notes = new List<Note>();
+            if (data.Notes != null)
+            {
+                foreach (var n in data.Notes)
+                {
+                    notes.Add(new Note(n.Interval, n.Beats));
+                }
+            }
+            return new Melody(data.Name, chord, notes);
+        }
 
         private static string SerializeNew(IReadOnlyList<SavedMelody> entries)
         {
             var wrapper = new MelodyListWrapper { Melodies = new List<MelodyData>() };
             foreach (var entry in entries)
             {
-                var melody = entry.Melody;
-                var chordData = new ChordData
-                {
-                    Intervals = new List<int>(),
-                    Beats = melody.Chord.Beats
-                };
-                foreach (var interval in melody.Chord.Intervals)
-                {
-                    chordData.Intervals.Add(interval.Value);
-                }
-
-                var data = new MelodyData
-                {
-                    Name = melody.Name,
-                    Position = entry.Position,
-                    Chord = chordData,
-                    Notes = new List<NoteData>()
-                };
-                foreach (var note in melody.Notes)
-                {
-                    data.Notes.Add(new NoteData { Interval = note.Interval.Value, Beats = note.Beats });
-                }
-                wrapper.Melodies.Add(data);
+                wrapper.Melodies.Add(ToData(entry.Melody, entry.Position));
             }
             return JsonUtility.ToJson(wrapper, true);
         }
@@ -176,18 +222,7 @@ namespace AsseScripts.Infrastructure
             foreach (var data in wrapper.Melodies)
             {
                 if (string.IsNullOrEmpty(data.Name)) continue;
-
-                var chord = ParseChordData(data.Chord);
-
-                var notes = new List<Note>();
-                if (data.Notes != null)
-                {
-                    foreach (var n in data.Notes)
-                    {
-                        notes.Add(new Note(n.Interval, n.Beats));
-                    }
-                }
-                entries.Add(new SavedMelody(new Melody(data.Name, chord, notes), data.Position));
+                entries.Add(new SavedMelody(ToMelody(data), data.Position));
             }
             return entries;
         }

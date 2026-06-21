@@ -8,9 +8,9 @@ namespace Assets.Scripts.UI
 {
     [RequireComponent(typeof(Toggle))]
     [RequireComponent(typeof(Selectable))]
-    public sealed class TeacherSideManager : MonoBehaviour
+    public sealed class PlaySideManager : MonoBehaviour
     {
-        public static TeacherSideManager Instance { get; private set; }
+        public static PlaySideManager Instance { get; private set; }
 
         [Header("UI")]
         [SerializeField] private Toggle _toggle;
@@ -19,12 +19,12 @@ namespace Assets.Scripts.UI
         private readonly Color _onColor = AppColors.Accent;
         private readonly Color _offColor = Color.white;
 
-        private bool _teacherSideButtonState;
+        private bool _isSoundPlay = false;
 
         private readonly Subject<bool> _onStateChanged = new();
         public Observable<bool> OnStateChanged => _onStateChanged;
 
-        public bool TeacherSideButtonState => _teacherSideButtonState;
+        public bool IsSoundPlay => _isSoundPlay;
 
         private void Awake()
         {
@@ -51,11 +51,24 @@ namespace Assets.Scripts.UI
         public void SetState(bool value)
         {
             if (!value && IsShiftHeld()) return;
-            if (_teacherSideButtonState == value) return;
+            if (_isSoundPlay == value) return;
 
-            _teacherSideButtonState = value;
+            _isSoundPlay = value;
             SyncToggle(value);
             _onStateChanged.OnNext(value);
+        }
+
+        /// <summary>
+        /// 先生から受信した状態を反映する（生徒ビルド用）。
+        /// 送信側で反転済みの値がそのまま渡る。
+        /// </summary>
+        public void ApplyRemoteSoundPlayState(bool isSoundPlay)
+        {
+            if (_isSoundPlay == isSoundPlay) return;
+
+            _isSoundPlay = isSoundPlay;
+            SyncToggle(isSoundPlay);
+            _onStateChanged.OnNext(isSoundPlay);
         }
 
         private void SyncToggle(bool isOn)

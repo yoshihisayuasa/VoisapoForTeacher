@@ -34,14 +34,16 @@ namespace Assets.Scripts.UI.MelodyUI
                 PlayMetronome = playMetronome;
             }
 
-            public static PlayModeSettings FromFlags(bool isTeacherSide, bool earphoneOn)
+            // 生徒ビルドには EarphoneModeManager が存在しないため、
+            // earphoneOn の欠如（null）を「オフ」として扱えるよう nullable で受ける。
+            public static PlayModeSettings FromFlags(bool isTeacherSide, bool? earphoneOn)
             {
                 if (isTeacherSide)
                 {
                     // 先生側: コード＋メトロノーム＋ピアノ
                     return new PlayModeSettings(true, true, true);
                 }
-                else if (earphoneOn)
+                else if (earphoneOn ?? false)
                 {
                     // イヤホンモード: コード＋メトロノーム（ピアノなし）
                     return new PlayModeSettings(true, true, false);
@@ -54,6 +56,7 @@ namespace Assets.Scripts.UI.MelodyUI
             }
         }
 
+        private bool _isTeacherSide = false;
         private Melody _currentMelody;
         public static MelodyPlayer Instance { get; private set; }
 
@@ -92,11 +95,17 @@ namespace Assets.Scripts.UI.MelodyUI
             _metronomePlayer = new MetronomePlayer(_metronomeAudioSource, _metronomeClip);
         }
 
+        public void SetTeacherSide(bool value)
+        {
+            _isTeacherSide = value;
+            RefreshCurrentSettings();
+        }
+
         public void PlayMelody(Melody melody, PlayModeSettings settings)
         {
             StopMelody(true, shouldDelayRecordStop: false);
 
-            _onPlayBegan.OnNext(TeacherSideManager.Instance.TeacherSideButtonState);
+            _onPlayBegan.OnNext(_isTeacherSide);
 
             var piano = PianoController.Instance;
             _currentMelody = melody;
@@ -136,7 +145,7 @@ namespace Assets.Scripts.UI.MelodyUI
             public IEnumerator Execute(PianoController piano, Melody melody,
                                        DomainPianoNote pressedKey, PlayModeSettings settings)
             {
-                _player._onMelodyBegan.OnNext(TeacherSideManager.Instance.TeacherSideButtonState);
+                _player._onMelodyBegan.OnNext(_player._isTeacherSide);
                 piano.Play(pressedKey, settings.PlayPiano, VolumeManager.Instance.Volume);
                 yield break;
             }
@@ -186,7 +195,7 @@ namespace Assets.Scripts.UI.MelodyUI
                     piano.Stop(key, false);
                 }
 
-                _player._onMelodyBegan.OnNext(TeacherSideManager.Instance.TeacherSideButtonState);
+                _player._onMelodyBegan.OnNext(_player._isTeacherSide);
                 while (true)
                 {
                     if (settings.PlayMetronome)
@@ -288,7 +297,7 @@ namespace Assets.Scripts.UI.MelodyUI
                 _player._isPlayingChord = false;
 
                 // ── メロディパート ──
-                _player._onMelodyBegan.OnNext(TeacherSideManager.Instance.TeacherSideButtonState);
+                _player._onMelodyBegan.OnNext(PlaySideManager.Instance.IsSoundPlay);
                 foreach (var note in melody.Notes)
                 {
                     var key = pressedKey + note.Interval;
@@ -373,7 +382,11 @@ namespace Assets.Scripts.UI.MelodyUI
         private void HighlightMelodyRange(PianoController piano, Melody melody)
         {
             var rootKey = piano.SelectedKey;
-            if (rootKey == null || !IsMelodyPlayableWithinRange(melody, rootKey, piano.KeyCount)) return;
+            if (rootKey == null || !IsMelodyPlayableWithinRange(melody, rootKey, piano.KeyCount))
+            {
+                piano.ClearHighlight();
+                return;
+            }
             piano.SetHighlight(rootKey + melody.MinInterval, rootKey + melody.MaxInterval);
         }
 
@@ -442,12 +455,14 @@ namespace Assets.Scripts.UI.MelodyUI
                 .Subscribe(_ => RefreshCurrentSettings())
                 .AddTo(this);
 
-            if (TeacherSideManager.Instance != null)
+            if (PlaySideManager.Instance != null)
             {
-                TeacherSideManager.Instance.OnStateChanged
+                PlaySideManager.Instance.OnStateChanged
                     .Subscribe(_ => RefreshCurrentSettings())
                     .AddTo(this);
             }
+
+            RefreshCurrentSettings();
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -469,10 +484,7 @@ namespace Assets.Scripts.UI.MelodyUI
                     var melody = MelodyManager.Instance.CurrentMelody;
                     if (melody == null) return;
                     HighlightMelodyRange(piano, melody);
-                    var settings = PlayModeSettings.FromFlags(
-                        TeacherSideManager.Instance.TeacherSideButtonState,
-                        EarphoneModeManager.Instance.EarphoneMode);
-                    PlayMelody(melody, settings);
+                    PlayMelody(melody, _currentSettings);
                     EnsureKeyRangeVisible(piano, melody);
                 })
                 .AddTo(_pianoDisposable);
@@ -499,11 +511,12 @@ namespace Assets.Scripts.UI.MelodyUI
                 .AddTo(_pianoDisposable);
         }
 
+        // 現在の再生サイド・イヤホン状態から再生設定を組み立て直す。
         private void RefreshCurrentSettings()
         {
             _currentSettings = PlayModeSettings.FromFlags(
-                TeacherSideManager.Instance.TeacherSideButtonState,
-                EarphoneModeManager.Instance.EarphoneMode);
+                PlaySideManager.Instance.IsSoundPlay,
+                EarphoneModeManager.Instance?.EarphoneMode);
         }
 
         private void OnMelodyChanged(Melody melody)

@@ -55,20 +55,12 @@ namespace Assets.Scripts.UI.Piano
             }
 
             _domain = new PianoKeyDomain(_keyEnum);
-            _infra = new PianoKeyInfrastructure(_audioSource, null, GetComponent<Photon.Pun.PhotonView>());
+            _infra = new PianoKeyInfrastructure(_audioSource, null);
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
             _onClickKeySubject.OnNext(_domain.Key);
-            try
-            {
-                _infra.SendPlayKey(_domain.Key);
-            }
-            catch (System.Exception ex)
-            {
-                Debug.LogWarning($"Photon RPC failed: {ex.Message}");
-            }
         }
    
         public void OnPointerUp(PointerEventData eventData)

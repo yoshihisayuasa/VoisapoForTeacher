@@ -1,28 +1,24 @@
-﻿using Photon.Pun;
-using UnityEngine;
-using AsseScripts.Domain;
+﻿using UnityEngine;
 using Cysharp.Threading.Tasks;
 
 namespace AsseScripts.Infrastructure
 {
     /// <summary>
-    /// 音源再生・Photon通信（インフラ層）
+    /// 音源再生（インフラ層）
     /// </summary>
     public class PianoKeyInfrastructure
     {
         private readonly AudioSource _audioSource;
-        private readonly PhotonView _photonView;
         private System.Threading.CancellationTokenSource _fadeOutCts;
-        
+
         /// <summary>
         /// フェードアウト中かどうかを管理するフラグ
         /// </summary>
 
-        public PianoKeyInfrastructure(AudioSource audioSource, AudioClip audioClip, PhotonView photonView)
+        public PianoKeyInfrastructure(AudioSource audioSource, AudioClip audioClip)
         {
             _audioSource = audioSource;
             _audioSource.clip = audioClip;
-            _photonView = photonView;
         }
 
         public void SwapClip(AudioClip newClip)
@@ -67,10 +63,6 @@ namespace AsseScripts.Infrastructure
             _fadeOutCts?.Dispose();
             _fadeOutCts = null;
 
-        }
-        public void SendPlayKey(PianoNote note)
-        {
-            _photonView?.RPC("PlayKeyReciver", RpcTarget.Others, note);
         }
     }
 }

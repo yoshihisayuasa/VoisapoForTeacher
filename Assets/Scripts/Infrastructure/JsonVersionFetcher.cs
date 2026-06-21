@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 
 namespace AsseScripts.Infrastructure
 {
-    public sealed class JsonVersionFetcher : IVersionFetcher
+    public sealed class JsonVersionFetcher
     {
         private readonly string _jsonUrl;
 
@@ -51,7 +51,7 @@ namespace AsseScripts.Infrastructure
             public string versionMac;
             public string versionWindows;
             public string downloadUrlMac;
-            public string downloadUrlWindows;
+          public string downloadUrlWindows;
         }
     }
 }
