@@ -1,6 +1,8 @@
 using R3;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine;
+using ExitGames.Client.Photon;
 
 namespace Assets.Scripts.UI.LessonRoom
 {
@@ -38,6 +40,12 @@ namespace Assets.Scripts.UI.LessonRoom
         public void Join(string input)
         {
             _input = input;
+
+            var props = new Hashtable
+            {
+                { StudentVersionObserver.StudentVersionKey, Application.version }
+            };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(props);
 
             if (PhotonNetwork.IsConnectedAndReady)
             {

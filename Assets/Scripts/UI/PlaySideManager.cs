@@ -6,12 +6,15 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.UI
 {
+    /// <summary>
+    /// 音再生側トグルの UI と入力（トグル・Shift・キーリリース）を担当する先生専用クラス。
+    /// 実際の状態は <see cref="SoundPlayState"/> が保持し、ここはそれを駆動・表示するだけ。
+    /// 生徒ビルドには配置しない（生徒は受信状態のみで駆動する）。
+    /// </summary>
     [RequireComponent(typeof(Toggle))]
     [RequireComponent(typeof(Selectable))]
     public sealed class PlaySideManager : MonoBehaviour
     {
-        public static PlaySideManager Instance { get; private set; }
-
         [Header("UI")]
         [SerializeField] private Toggle _toggle;
         [SerializeField] private Image _image;
@@ -19,56 +22,39 @@ namespace Assets.Scripts.UI
         private readonly Color _onColor = AppColors.Accent;
         private readonly Color _offColor = Color.white;
 
-        private bool _isSoundPlay = false;
-
-        private readonly Subject<bool> _onStateChanged = new();
-        public Observable<bool> OnStateChanged => _onStateChanged;
-
-        public bool IsSoundPlay => _isSoundPlay;
-
         private void Awake()
         {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
-            Instance = this;
-
             if (_toggle == null) _toggle = GetComponent<Toggle>();
             if (_image == null && GetComponent<Selectable>().targetGraphic is Image img) _image = img;
         }
 
         private void Start()
         {
-            _toggle.onValueChanged.AddListener(SetState);
+            // 先生は毎シーン生成されるため、シーン遷移時は必ずオフから始める。
+            SoundPlayState.Instance.SetState(false);
+
+            _toggle.onValueChanged.AddListener(RequestState);
 
             PianoController.Instance.OnAnyKeyUpAsObservable
-                .Subscribe(_ => SetState(false))
+                .Subscribe(_ => RequestState(false))
                 .AddTo(this);
+
+            SoundPlayState.Instance.OnStateChanged
+                .Subscribe(SyncToggle)
+                .AddTo(this);
+
+            SyncToggle(SoundPlayState.Instance.IsSoundPlay);
         }
 
-        public void SetState(bool value)
+        private void RequestState(bool value)
         {
-            if (!value && IsShiftHeld()) return;
-            if (_isSoundPlay == value) return;
+            // Shift押下中はオフにしない（押している間だけ鳴らす momentary 操作）。
+            if (!value && IsShiftHeld())
+            {
+                return;
+            }
 
-            _isSoundPlay = value;
-            SyncToggle(value);
-            _onStateChanged.OnNext(value);
-        }
-
-        /// <summary>
-        /// 先生から受信した状態を反映する（生徒ビルド用）。
-        /// 送信側で反転済みの値がそのまま渡る。
-        /// </summary>
-        public void ApplyRemoteSoundPlayState(bool isSoundPlay)
-        {
-            if (_isSoundPlay == isSoundPlay) return;
-
-            _isSoundPlay = isSoundPlay;
-            SyncToggle(isSoundPlay);
-            _onStateChanged.OnNext(isSoundPlay);
+            SoundPlayState.Instance.SetState(value);
         }
 
         private void SyncToggle(bool isOn)
@@ -79,8 +65,8 @@ namespace Assets.Scripts.UI
 
         private void Update()
         {
-            if (IsShiftPressedThisFrame())       SetState(true);
-            else if (IsShiftReleasedThisFrame()) SetState(false);
+            if (IsShiftPressedThisFrame())       RequestState(true);
+            else if (IsShiftReleasedThisFrame()) RequestState(false);
         }
 
         private static bool IsShiftHeld()

@@ -297,7 +297,7 @@ namespace Assets.Scripts.UI.MelodyUI
                 _player._isPlayingChord = false;
 
                 // ── メロディパート ──
-                _player._onMelodyBegan.OnNext(PlaySideManager.Instance.IsSoundPlay);
+                _player._onMelodyBegan.OnNext(SoundPlayState.Instance.IsSoundPlay);
                 foreach (var note in melody.Notes)
                 {
                     var key = pressedKey + note.Interval;
@@ -455,12 +455,9 @@ namespace Assets.Scripts.UI.MelodyUI
                 .Subscribe(_ => RefreshCurrentSettings())
                 .AddTo(this);
 
-            if (PlaySideManager.Instance != null)
-            {
-                PlaySideManager.Instance.OnStateChanged
-                    .Subscribe(_ => RefreshCurrentSettings())
-                    .AddTo(this);
-            }
+            SoundPlayState.Instance.OnStateChanged
+                .Subscribe(_ => RefreshCurrentSettings())
+                .AddTo(this);
 
             RefreshCurrentSettings();
         }
@@ -515,7 +512,7 @@ namespace Assets.Scripts.UI.MelodyUI
         private void RefreshCurrentSettings()
         {
             _currentSettings = PlayModeSettings.FromFlags(
-                PlaySideManager.Instance.IsSoundPlay,
+                SoundPlayState.Instance.IsSoundPlay,
                 EarphoneModeManager.Instance?.EarphoneMode);
         }
 

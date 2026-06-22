@@ -23,9 +23,8 @@ namespace AsseScripts.Infrastructure
         private void Start()
         {
             if (!AppMode.IsTeacher) return;
-            if (PlaySideManager.Instance == null) return;
 
-            PlaySideManager.Instance.OnStateChanged
+            SoundPlayState.Instance.OnStateChanged
                 .Subscribe(SendSoundPlayState)
                 .AddTo(this);
 
@@ -54,11 +53,8 @@ namespace AsseScripts.Infrastructure
                 _photonView.RPC("SelectMelodyReciver", newPlayer, MelodyJsonLoader.SerializeMelody(melody));
             }
 
-            if (PlaySideManager.Instance != null)
-            {
-                // 送信側で反転（先生がfalseならば生徒はtrue）
-                _photonView.RPC("SoundPlayStateReciver", newPlayer, !PlaySideManager.Instance.IsSoundPlay);
-            }
+            // 送信側で反転（先生がfalseならば生徒はtrue）
+            _photonView.RPC("SoundPlayStateReciver", newPlayer, !SoundPlayState.Instance.IsSoundPlay);
 
             if (SoundSourceSwitcher.Instance != null)
             {
@@ -137,7 +133,7 @@ namespace AsseScripts.Infrastructure
         [PunRPC]
         private void SoundPlayStateReciver(bool isSoundPlay)
         {
-            PlaySideManager.Instance.ApplyRemoteSoundPlayState(isSoundPlay);
+            SoundPlayState.Instance.SetState(isSoundPlay);
         }
     }
 }
