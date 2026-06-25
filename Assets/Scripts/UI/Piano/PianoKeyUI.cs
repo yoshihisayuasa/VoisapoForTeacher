@@ -1,10 +1,8 @@
 ﻿using AsseScripts.UI;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using AsseScripts.Domain;
 using AsseScripts.Infrastructure;
-using R3;
 
 namespace Assets.Scripts.UI.Piano
 {
@@ -12,13 +10,8 @@ namespace Assets.Scripts.UI.Piano
     /// UI操作（UI層）
     /// </summary>
     [RequireComponent(typeof(Image))]
-    public sealed class PianoKeyUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler
+    public sealed class PianoKeyUI : MonoBehaviour
     {
-
-        private readonly Subject<PianoNote> _onClickKeySubject = new();
-        private readonly Subject<PianoNote> _onPointerUpSubject = new();
-        private readonly Subject<PianoNote> _onPointerEnterSubject = new();
-
         [SerializeField]
         [Tooltip("鍵盤の種別")]
         private PianoNoteEnum _keyEnum;
@@ -33,7 +26,6 @@ namespace Assets.Scripts.UI.Piano
         private Image _keyLabelBg;
         private Color _defaultColor;
 
-        private PianoKeyDomain _domain;
         private PianoKeyInfrastructure _infra;
 
         private enum KeyLogicalState  { Default, Playing, Played }
@@ -41,10 +33,6 @@ namespace Assets.Scripts.UI.Piano
 
 
         public PianoNoteEnum NoteEnum => _keyEnum;
-
-        public Observable<PianoNote> OnClickKeyAsObservable => _onClickKeySubject;
-        public Observable<PianoNote> OnPointerUpAsObservable => _onPointerUpSubject;
-        public Observable<PianoNote> OnPointerEnterAsObservable => _onPointerEnterSubject;
 
         private void Awake()
         {
@@ -54,23 +42,7 @@ namespace Assets.Scripts.UI.Piano
                 _defaultColor = _keyLabelBg.color;
             }
 
-            _domain = new PianoKeyDomain(_keyEnum);
             _infra = new PianoKeyInfrastructure(_audioSource, null);
-        }
-
-        public void OnPointerDown(PointerEventData eventData)
-        {
-            _onClickKeySubject.OnNext(_domain.Key);
-        }
-   
-        public void OnPointerUp(PointerEventData eventData)
-        {
-            _onPointerUpSubject.OnNext(_domain.Key);
-        }
-
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            _onPointerEnterSubject.OnNext(_domain.Key);
         }
 
         public void SetPlayingVisual()

@@ -113,7 +113,7 @@ namespace AsseScripts.Infrastructure
         [PunRPC]
         private void PlayKeyReciver(int index)
         {
-            PianoController.Instance.PressKeyFromRemote(new PianoNote((PianoNoteEnum)index));
+            PianoController.Instance.PressKey(new PianoNote((PianoNoteEnum)index));
         }
 
         public void SendSoundPlayState(bool isSoundPlay)
@@ -127,7 +127,7 @@ namespace AsseScripts.Infrastructure
         [PunRPC]
         private void StopKeyReciver(int index)
         {
-            PianoController.Instance.ReleaseKeyFromRemote(new PianoNote((PianoNoteEnum)index));
+            PianoController.Instance.ReleaseKey(new PianoNote((PianoNoteEnum)index));
         }
 
         [PunRPC]

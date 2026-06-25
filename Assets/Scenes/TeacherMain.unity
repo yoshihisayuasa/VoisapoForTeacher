@@ -829,8 +829,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -20, y: 0}
+  m_AnchoredPosition: {x: 5, y: 0}
+  m_SizeDelta: {x: -10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &163207030
 GameObject:
@@ -1620,7 +1620,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents: []
-  sceneViewId: 1
+  sceneViewId: 2
   InstantiationId: 0
   isRuntimeInstantiated: 0
 --- !u!4 &298719250
@@ -2386,6 +2386,7 @@ GameObject:
   - component: {fileID: 483347619}
   - component: {fileID: 483347621}
   - component: {fileID: 483347620}
+  - component: {fileID: 483347622}
   m_Layer: 0
   m_Name: PianoSection
   m_TagString: Untagged
@@ -2446,6 +2447,18 @@ MonoBehaviour:
   rightDarkOverlay: {fileID: 1859124002}
   octaveUpButton: {fileID: 1147503452}
   octaveDownButton: {fileID: 211419269}
+--- !u!114 &483347622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 483347618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01d88efd8fc74944b95415dd7f6ece54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyboardInput
 --- !u!1 &491860273
 GameObject:
   m_ObjectHideFlags: 0
@@ -10728,7 +10741,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9008306001989273675, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 618.28
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9008306001989273675, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_AnchoredPosition.y

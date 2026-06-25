@@ -89,6 +89,7 @@ GameObject:
   - component: {fileID: 3139400016712339317}
   - component: {fileID: 699263857968614619}
   - component: {fileID: 167080867392595249}
+  - component: {fileID: 885799924002352940}
   m_Layer: 0
   m_Name: PianoKeyWhite_D5
   m_TagString: Untagged
@@ -285,6 +286,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 38
   _audioSource: {fileID: 7547555554925660044}
+--- !u!114 &885799924002352940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 144257877963780313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &157721697322368845
 GameObject:
   m_ObjectHideFlags: 0
@@ -336,6 +349,7 @@ GameObject:
   - component: {fileID: 3538968543659168066}
   - component: {fileID: 3147952778365859653}
   - component: {fileID: 4787353930721430532}
+  - component: {fileID: 7265569057740563848}
   m_Layer: 0
   m_Name: PianoKeyBlack_D4Sharp
   m_TagString: Untagged
@@ -531,6 +545,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 27
   _audioSource: {fileID: 1628945868287133544}
+--- !u!114 &7265569057740563848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 201764908389923448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &230137758790193294
 GameObject:
   m_ObjectHideFlags: 0
@@ -682,6 +708,7 @@ GameObject:
   - component: {fileID: 2405867865703357127}
   - component: {fileID: 8315991101538557385}
   - component: {fileID: 8159259522866097932}
+  - component: {fileID: 1202987978220029440}
   m_Layer: 0
   m_Name: PianoKeyWhite_F6
   m_TagString: Untagged
@@ -878,6 +905,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 53
   _audioSource: {fileID: 4967491640587949224}
+--- !u!114 &1202987978220029440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 262580077539147127}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &282288036980177582
 GameObject:
   m_ObjectHideFlags: 0
@@ -892,6 +931,7 @@ GameObject:
   - component: {fileID: 2487032244210055940}
   - component: {fileID: 2204605407196305823}
   - component: {fileID: 5358992211055683665}
+  - component: {fileID: 3845308728563827130}
   m_Layer: 0
   m_Name: PianoKeyWhite_E2
   m_TagString: Untagged
@@ -1088,6 +1128,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 4
   _audioSource: {fileID: 6403695387884974745}
+--- !u!114 &3845308728563827130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 282288036980177582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &286542945424585288
 GameObject:
   m_ObjectHideFlags: 0
@@ -1139,6 +1191,7 @@ GameObject:
   - component: {fileID: 8997169553063778095}
   - component: {fileID: 848994459187996810}
   - component: {fileID: 8799688476710849672}
+  - component: {fileID: 3160500131474757310}
   m_Layer: 0
   m_Name: PianoKeyWhite_G4
   m_TagString: Untagged
@@ -1335,6 +1388,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 31
   _audioSource: {fileID: 694422092476950988}
+--- !u!114 &3160500131474757310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 307411807416633164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &354823144231011624
 GameObject:
   m_ObjectHideFlags: 0
@@ -1349,6 +1414,7 @@ GameObject:
   - component: {fileID: 8223994050597256754}
   - component: {fileID: 5018572746376712899}
   - component: {fileID: 4187517518907036256}
+  - component: {fileID: 4441858609192861008}
   m_Layer: 0
   m_Name: PianoKeyBlack_G5Sharp
   m_TagString: Untagged
@@ -1544,6 +1610,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 44
   _audioSource: {fileID: 391425725515921852}
+--- !u!114 &4441858609192861008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 354823144231011624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &356809389032382995
 GameObject:
   m_ObjectHideFlags: 0
@@ -1881,6 +1959,7 @@ GameObject:
   - component: {fileID: 2542970537773830028}
   - component: {fileID: 4846330313077350975}
   - component: {fileID: 6306613201948689752}
+  - component: {fileID: 9069466932227164287}
   m_Layer: 0
   m_Name: PianoKeyWhite_A3
   m_TagString: Untagged
@@ -2077,6 +2156,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 21
   _audioSource: {fileID: 7608295814514853527}
+--- !u!114 &9069466932227164287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 773005127479510874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &785278142978279114
 GameObject:
   m_ObjectHideFlags: 0
@@ -2228,6 +2319,7 @@ GameObject:
   - component: {fileID: 3076339827241183947}
   - component: {fileID: 3589328360793754738}
   - component: {fileID: 2855230718416857535}
+  - component: {fileID: 6953535352531995021}
   m_Layer: 0
   m_Name: PianoKeyBlack_F6Sharp
   m_TagString: Untagged
@@ -2423,6 +2515,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 54
   _audioSource: {fileID: 4306345927245297867}
+--- !u!114 &6953535352531995021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 882166652373895150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &886221913156397967
 GameObject:
   m_ObjectHideFlags: 0
@@ -2574,6 +2678,7 @@ GameObject:
   - component: {fileID: 2296642041599773772}
   - component: {fileID: 6085149768803297797}
   - component: {fileID: 240635251674017398}
+  - component: {fileID: 8207561810792465610}
   m_Layer: 0
   m_Name: PianoKeyBlack_A4Sharp
   m_TagString: Untagged
@@ -2769,6 +2874,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 34
   _audioSource: {fileID: 5596304959568896459}
+--- !u!114 &8207561810792465610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 921151556516418308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &986852084368954828
 GameObject:
   m_ObjectHideFlags: 0
@@ -3554,6 +3671,7 @@ GameObject:
   - component: {fileID: 8569455355727009404}
   - component: {fileID: 1679270377483879525}
   - component: {fileID: 5453296205736358334}
+  - component: {fileID: 7952411177675067678}
   m_Layer: 0
   m_Name: PianoKeyWhite_D2
   m_TagString: Untagged
@@ -3750,6 +3868,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 2
   _audioSource: {fileID: 1560459365727144813}
+--- !u!114 &7952411177675067678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1337372106878957686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &1361095704197886604
 GameObject:
   m_ObjectHideFlags: 0
@@ -3901,6 +4031,7 @@ GameObject:
   - component: {fileID: 2070680129559281323}
   - component: {fileID: 843620849444214506}
   - component: {fileID: 1782565801790453244}
+  - component: {fileID: 7771276083611330490}
   m_Layer: 0
   m_Name: PianoKeyBlack_C6Sharp
   m_TagString: Untagged
@@ -4096,6 +4227,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 49
   _audioSource: {fileID: 3664959252346921260}
+--- !u!114 &7771276083611330490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1477472544719514100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &1522320774305802246
 GameObject:
   m_ObjectHideFlags: 0
@@ -4184,6 +4327,7 @@ GameObject:
   - component: {fileID: 1086577012693167953}
   - component: {fileID: 3660690176587608375}
   - component: {fileID: 2674364338973996839}
+  - component: {fileID: 3198497970631565275}
   m_Layer: 0
   m_Name: PianoKeyWhite_D4
   m_TagString: Untagged
@@ -4380,6 +4524,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 26
   _audioSource: {fileID: 4541454935249725002}
+--- !u!114 &3198497970631565275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1775073447963654130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &1892736128182047205
 GameObject:
   m_ObjectHideFlags: 0
@@ -4469,6 +4625,7 @@ GameObject:
   - component: {fileID: 1032610896873561625}
   - component: {fileID: 2492272655677230956}
   - component: {fileID: 4566881350045346759}
+  - component: {fileID: 1521451354632013199}
   m_Layer: 0
   m_Name: PianoKeyBlack_F2Sharp
   m_TagString: Untagged
@@ -4664,6 +4821,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 6
   _audioSource: {fileID: 5514012646118439177}
+--- !u!114 &1521451354632013199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1919928456229610617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &2061950514443494785
 GameObject:
   m_ObjectHideFlags: 0
@@ -4715,6 +4884,7 @@ GameObject:
   - component: {fileID: 5618209060468416785}
   - component: {fileID: 7535895888391822997}
   - component: {fileID: 4752474826098167530}
+  - component: {fileID: 6083197921833524860}
   m_Layer: 0
   m_Name: PianoKeyBlack_A3Sharp
   m_TagString: Untagged
@@ -4910,6 +5080,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 22
   _audioSource: {fileID: 6039329133557161571}
+--- !u!114 &6083197921833524860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2072740263653659310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &2144719397846197928
 GameObject:
   m_ObjectHideFlags: 0
@@ -4961,6 +5143,7 @@ GameObject:
   - component: {fileID: 1950769773297451962}
   - component: {fileID: 5251451917593461601}
   - component: {fileID: 1772249933595451478}
+  - component: {fileID: 7024893368225222907}
   m_Layer: 0
   m_Name: PianoKeyWhite_B4
   m_TagString: Untagged
@@ -5157,6 +5340,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 35
   _audioSource: {fileID: 1222438121921298942}
+--- !u!114 &7024893368225222907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2167712289528750603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &2253075023697923906
 GameObject:
   m_ObjectHideFlags: 0
@@ -5458,6 +5653,7 @@ GameObject:
   - component: {fileID: 7566296079992886147}
   - component: {fileID: 4704945464432643376}
   - component: {fileID: 4136754799460572215}
+  - component: {fileID: 2494488790751809880}
   m_Layer: 0
   m_Name: PianoKeyWhite_C4
   m_TagString: Untagged
@@ -5654,6 +5850,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 24
   _audioSource: {fileID: 1798922622342507820}
+--- !u!114 &2494488790751809880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2344551124377061328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &2356766333840495959
 GameObject:
   m_ObjectHideFlags: 0
@@ -5668,6 +5876,7 @@ GameObject:
   - component: {fileID: 1773726303451784662}
   - component: {fileID: 7456589395713000056}
   - component: {fileID: 276741389906614122}
+  - component: {fileID: 4539397181217930657}
   m_Layer: 0
   m_Name: PianoKeyWhite_F5
   m_TagString: Untagged
@@ -5864,6 +6073,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 41
   _audioSource: {fileID: 1779829479195383461}
+--- !u!114 &4539397181217930657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2356766333840495959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &2440198951267903195
 GameObject:
   m_ObjectHideFlags: 0
@@ -5878,6 +6099,7 @@ GameObject:
   - component: {fileID: 1442995833866600293}
   - component: {fileID: 481730247057208067}
   - component: {fileID: 6749101107496228085}
+  - component: {fileID: 8190005997169691351}
   m_Layer: 0
   m_Name: PianoKeyBlack_G4Sharp
   m_TagString: Untagged
@@ -6073,6 +6295,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 32
   _audioSource: {fileID: 8058075563734909950}
+--- !u!114 &8190005997169691351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2440198951267903195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &2516858010649725177
 GameObject:
   m_ObjectHideFlags: 0
@@ -6162,6 +6396,7 @@ GameObject:
   - component: {fileID: 1630099835202584620}
   - component: {fileID: 9191000811626256442}
   - component: {fileID: 2811909134190076313}
+  - component: {fileID: 7132511859143153532}
   m_Layer: 0
   m_Name: PianoKeyWhite_C2
   m_TagString: Untagged
@@ -6358,6 +6593,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 0
   _audioSource: {fileID: 6854235847169357327}
+--- !u!114 &7132511859143153532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2548851117093043895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &2580996000019474556
 GameObject:
   m_ObjectHideFlags: 0
@@ -6522,6 +6769,7 @@ GameObject:
   - component: {fileID: 2450954668068233042}
   - component: {fileID: 8499631694088310625}
   - component: {fileID: 1812294341971868707}
+  - component: {fileID: 239901697390580228}
   m_Layer: 0
   m_Name: PianoKeyBlack_F3Sharp
   m_TagString: Untagged
@@ -6717,6 +6965,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 18
   _audioSource: {fileID: 167546690534104974}
+--- !u!114 &239901697390580228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2681920689296301368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &2731263837557138524
 GameObject:
   m_ObjectHideFlags: 0
@@ -6843,6 +7103,7 @@ GameObject:
   - component: {fileID: 333578644749556955}
   - component: {fileID: 2214087509352723651}
   - component: {fileID: 7265543007073906267}
+  - component: {fileID: 4990496551115834165}
   m_Layer: 0
   m_Name: PianoKeyBlack_D2Sharp
   m_TagString: Untagged
@@ -7038,6 +7299,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 3
   _audioSource: {fileID: 4437851945136598569}
+--- !u!114 &4990496551115834165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2816452455124490321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &2913679959009720050
 GameObject:
   m_ObjectHideFlags: 0
@@ -7052,6 +7325,7 @@ GameObject:
   - component: {fileID: 3004604646251930222}
   - component: {fileID: 8775522581264313847}
   - component: {fileID: 4837579221402322035}
+  - component: {fileID: 7249492417855140540}
   m_Layer: 0
   m_Name: PianoKeyBlack_G2Sharp
   m_TagString: Untagged
@@ -7247,6 +7521,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 8
   _audioSource: {fileID: 250395510915974079}
+--- !u!114 &7249492417855140540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2913679959009720050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &2926318803013796945
 GameObject:
   m_ObjectHideFlags: 0
@@ -7261,6 +7547,7 @@ GameObject:
   - component: {fileID: 3498170749985426997}
   - component: {fileID: 1526710207021318325}
   - component: {fileID: 4855609504698778593}
+  - component: {fileID: 1161884387331863022}
   m_Layer: 0
   m_Name: PianoKeyWhite_F4
   m_TagString: Untagged
@@ -7457,6 +7744,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 29
   _audioSource: {fileID: 1664871622524803778}
+--- !u!114 &1161884387331863022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2926318803013796945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &3022064250336892991
 GameObject:
   m_ObjectHideFlags: 0
@@ -8132,6 +8431,7 @@ GameObject:
   - component: {fileID: 5881985247657173031}
   - component: {fileID: 7189302782905547506}
   - component: {fileID: 298391489861726529}
+  - component: {fileID: 7545219157827516109}
   m_Layer: 0
   m_Name: PianoKeyWhite_C5
   m_TagString: Untagged
@@ -8328,6 +8628,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 36
   _audioSource: {fileID: 921125130932066826}
+--- !u!114 &7545219157827516109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3335586669102710108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &3364573230468218105
 GameObject:
   m_ObjectHideFlags: 0
@@ -8342,6 +8654,7 @@ GameObject:
   - component: {fileID: 6597362550969065407}
   - component: {fileID: 4267176529743431095}
   - component: {fileID: 3336845284158008650}
+  - component: {fileID: 3330991968370835940}
   m_Layer: 0
   m_Name: PianoKeyWhite_A2
   m_TagString: Untagged
@@ -8538,6 +8851,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 9
   _audioSource: {fileID: 3955469802501667665}
+--- !u!114 &3330991968370835940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3364573230468218105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &3408232400284657881
 GameObject:
   m_ObjectHideFlags: 0
@@ -8627,6 +8952,7 @@ GameObject:
   - component: {fileID: 2626545335567221299}
   - component: {fileID: 2636980789567636644}
   - component: {fileID: 3967701328623105949}
+  - component: {fileID: 1447218141493342245}
   m_Layer: 0
   m_Name: PianoKeyWhite_G6
   m_TagString: Untagged
@@ -8823,6 +9149,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 55
   _audioSource: {fileID: 2176748310323324953}
+--- !u!114 &1447218141493342245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3426417641367533521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &3454986509235828265
 GameObject:
   m_ObjectHideFlags: 0
@@ -8874,6 +9212,7 @@ GameObject:
   - component: {fileID: 2183036809581948233}
   - component: {fileID: 8304937736813319261}
   - component: {fileID: 564524759663377489}
+  - component: {fileID: 3478750138811364825}
   m_Layer: 0
   m_Name: PianoKeyWhite_E5
   m_TagString: Untagged
@@ -9070,6 +9409,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 40
   _audioSource: {fileID: 4618913958455892601}
+--- !u!114 &3478750138811364825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3463660490578500118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &3562255844424649800
 GameObject:
   m_ObjectHideFlags: 0
@@ -9084,6 +9435,7 @@ GameObject:
   - component: {fileID: 8673939687275870826}
   - component: {fileID: 6973624834786505680}
   - component: {fileID: 1901495611208200163}
+  - component: {fileID: 4093371513930671939}
   m_Layer: 0
   m_Name: PianoKeyBlack_C3Sharp
   m_TagString: Untagged
@@ -9279,6 +9631,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 13
   _audioSource: {fileID: 2158158647024994932}
+--- !u!114 &4093371513930671939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3562255844424649800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &3566506326398512397
 GameObject:
   m_ObjectHideFlags: 0
@@ -9579,6 +9943,7 @@ GameObject:
   - component: {fileID: 696038242114531179}
   - component: {fileID: 8249608365731027191}
   - component: {fileID: 6954215762594088104}
+  - component: {fileID: 1147352979259053286}
   m_Layer: 0
   m_Name: PianoKeyWhite_A4
   m_TagString: Untagged
@@ -9775,6 +10140,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 33
   _audioSource: {fileID: 2947089333782582548}
+--- !u!114 &1147352979259053286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3768804411833806161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &3816299464352480622
 GameObject:
   m_ObjectHideFlags: 0
@@ -10038,6 +10415,7 @@ GameObject:
   - component: {fileID: 2629077904672118942}
   - component: {fileID: 6098971384666865713}
   - component: {fileID: 6345255951678658716}
+  - component: {fileID: 1628496658791307631}
   m_Layer: 0
   m_Name: PianoKeyWhite_B5
   m_TagString: Untagged
@@ -10234,6 +10612,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 47
   _audioSource: {fileID: 7538969366615483038}
+--- !u!114 &1628496658791307631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3979500976844538894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &4021925771926621166
 GameObject:
   m_ObjectHideFlags: 0
@@ -10647,6 +11037,7 @@ GameObject:
   - component: {fileID: 7655307485383584224}
   - component: {fileID: 695014835623806668}
   - component: {fileID: 335749479297800515}
+  - component: {fileID: 100175686070440881}
   m_Layer: 0
   m_Name: PianoKeyBlack_G6Sharp
   m_TagString: Untagged
@@ -10842,6 +11233,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 56
   _audioSource: {fileID: 524615294269107857}
+--- !u!114 &100175686070440881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4385655171785857681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &4566210806311085238
 GameObject:
   m_ObjectHideFlags: 0
@@ -10931,6 +11334,7 @@ GameObject:
   - component: {fileID: 2741355400515497674}
   - component: {fileID: 1688235767870861284}
   - component: {fileID: 395149103008645400}
+  - component: {fileID: 8284992080004551940}
   m_Layer: 0
   m_Name: PianoKeyWhite_B6
   m_TagString: Untagged
@@ -11127,6 +11531,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 59
   _audioSource: {fileID: 4434102057588152855}
+--- !u!114 &8284992080004551940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4571636078186631099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &4576985373165208630
 GameObject:
   m_ObjectHideFlags: 0
@@ -11478,6 +11894,7 @@ GameObject:
   - component: {fileID: 3497242084402358073}
   - component: {fileID: 726567860963241875}
   - component: {fileID: 5515064633911976983}
+  - component: {fileID: 6933587404475299256}
   m_Layer: 0
   m_Name: PianoKeyBlack_F4Sharp
   m_TagString: Untagged
@@ -11673,6 +12090,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 30
   _audioSource: {fileID: 806406096069256243}
+--- !u!114 &6933587404475299256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4895463040909501398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &5023009287354028173
 GameObject:
   m_ObjectHideFlags: 0
@@ -11687,6 +12116,7 @@ GameObject:
   - component: {fileID: 5239680673341406597}
   - component: {fileID: 2686170320895729929}
   - component: {fileID: 3983026290664004726}
+  - component: {fileID: 1056329895402959777}
   m_Layer: 0
   m_Name: PianoKeyWhite_C3
   m_TagString: Untagged
@@ -11883,6 +12313,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 12
   _audioSource: {fileID: 7002605415493584467}
+--- !u!114 &1056329895402959777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5023009287354028173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &5096285663713577233
 GameObject:
   m_ObjectHideFlags: 0
@@ -12034,6 +12476,7 @@ GameObject:
   - component: {fileID: 4183623619262705413}
   - component: {fileID: 7995954488802338812}
   - component: {fileID: 157708755909833283}
+  - component: {fileID: 7102297453955603406}
   m_Layer: 0
   m_Name: PianoKeyWhite_F3
   m_TagString: Untagged
@@ -12230,6 +12673,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 17
   _audioSource: {fileID: 387283837890983080}
+--- !u!114 &7102297453955603406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5126492701126075799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &5140545891528348129
 GameObject:
   m_ObjectHideFlags: 0
@@ -12493,6 +12948,7 @@ GameObject:
   - component: {fileID: 5427964231482111283}
   - component: {fileID: 4112573574778272620}
   - component: {fileID: 1615611234145177544}
+  - component: {fileID: 2916871145712722988}
   m_Layer: 0
   m_Name: PianoKeyBlack_D3Sharp
   m_TagString: Untagged
@@ -12688,6 +13144,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 15
   _audioSource: {fileID: 7015739101873770702}
+--- !u!114 &2916871145712722988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5353661545264969829}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &5376265525433834582
 GameObject:
   m_ObjectHideFlags: 0
@@ -12702,6 +13170,7 @@ GameObject:
   - component: {fileID: 7318229061511035073}
   - component: {fileID: 2614847707107149472}
   - component: {fileID: 3089233735756448797}
+  - component: {fileID: 593442198895161259}
   m_Layer: 0
   m_Name: PianoKeyBlack_C5Sharp
   m_TagString: Untagged
@@ -12897,6 +13366,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 37
   _audioSource: {fileID: 3380181227783798676}
+--- !u!114 &593442198895161259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5376265525433834582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &5404076688926792515
 GameObject:
   m_ObjectHideFlags: 0
@@ -12911,6 +13392,7 @@ GameObject:
   - component: {fileID: 5710833777037175032}
   - component: {fileID: 3249354783739739072}
   - component: {fileID: 767158834667985633}
+  - component: {fileID: 1553680945831057253}
   m_Layer: 0
   m_Name: PianoKeyWhite_E4
   m_TagString: Untagged
@@ -13107,6 +13589,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 28
   _audioSource: {fileID: 6718633041262213644}
+--- !u!114 &1553680945831057253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5404076688926792515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &5427894294082502521
 GameObject:
   m_ObjectHideFlags: 0
@@ -13121,6 +13615,7 @@ GameObject:
   - component: {fileID: 6019952483602955550}
   - component: {fileID: 4494861375640310018}
   - component: {fileID: 3710113862555564314}
+  - component: {fileID: 1234053232132007477}
   m_Layer: 0
   m_Name: PianoKeyWhite_B2
   m_TagString: Untagged
@@ -13317,6 +13812,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 11
   _audioSource: {fileID: 8429023371944194026}
+--- !u!114 &1234053232132007477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5427894294082502521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &5437004052529063886
 GameObject:
   m_ObjectHideFlags: 0
@@ -14414,6 +14921,7 @@ GameObject:
   - component: {fileID: 3986904065285934299}
   - component: {fileID: 8261129709239203927}
   - component: {fileID: 1711843606787009927}
+  - component: {fileID: 4871855435991467150}
   m_Layer: 0
   m_Name: PianoKeyBlack_A5Sharp
   m_TagString: Untagged
@@ -14609,6 +15117,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 46
   _audioSource: {fileID: 6972937044792675918}
+--- !u!114 &4871855435991467150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6055942417437113410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &6069285383818664754
 GameObject:
   m_ObjectHideFlags: 0
@@ -14934,6 +15454,7 @@ GameObject:
   - component: {fileID: 4215676941439855352}
   - component: {fileID: 1054349179644721773}
   - component: {fileID: 1440921168987161222}
+  - component: {fileID: 6155291861011853891}
   m_Layer: 0
   m_Name: PianoKeyWhite_G5
   m_TagString: Untagged
@@ -15130,6 +15651,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 43
   _audioSource: {fileID: 7105354436052155356}
+--- !u!114 &6155291861011853891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6180689887622249933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &6394784908912570267
 GameObject:
   m_ObjectHideFlags: 0
@@ -15144,6 +15677,7 @@ GameObject:
   - component: {fileID: 5639703908220488471}
   - component: {fileID: 3316765702575468934}
   - component: {fileID: 944400919972501733}
+  - component: {fileID: 3141559157613468309}
   m_Layer: 0
   m_Name: PianoKeyWhite_D6
   m_TagString: Untagged
@@ -15340,6 +15874,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 50
   _audioSource: {fileID: 6471684121131724110}
+--- !u!114 &3141559157613468309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6394784908912570267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &6486050114974267986
 GameObject:
   m_ObjectHideFlags: 0
@@ -15391,6 +15937,7 @@ GameObject:
   - component: {fileID: 3381318155464718879}
   - component: {fileID: 8151785751674426333}
   - component: {fileID: 3843380077789176870}
+  - component: {fileID: 6673758752354307993}
   m_Layer: 0
   m_Name: PianoKeyBlack_C2Sharp
   m_TagString: Untagged
@@ -15586,6 +16133,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 1
   _audioSource: {fileID: 2417091349779458555}
+--- !u!114 &6673758752354307993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6518710902006080047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &6578677546658892165
 GameObject:
   m_ObjectHideFlags: 0
@@ -15600,6 +16159,7 @@ GameObject:
   - component: {fileID: 275393774265533073}
   - component: {fileID: 8591778387978307700}
   - component: {fileID: 2646068044718920146}
+  - component: {fileID: 3940799097651519652}
   m_Layer: 0
   m_Name: PianoKeyWhite_G2
   m_TagString: Untagged
@@ -15796,6 +16356,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 7
   _audioSource: {fileID: 2281641962312163893}
+--- !u!114 &3940799097651519652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6578677546658892165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &6631550172690092201
 GameObject:
   m_ObjectHideFlags: 0
@@ -15922,6 +16494,7 @@ GameObject:
   - component: {fileID: 5268232472431042406}
   - component: {fileID: 1474878429456267263}
   - component: {fileID: 2827675091861587245}
+  - component: {fileID: 8856565565315243444}
   m_Layer: 0
   m_Name: PianoKeyBlack_F5Sharp
   m_TagString: Untagged
@@ -16117,6 +16690,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 42
   _audioSource: {fileID: 8071487250748761601}
+--- !u!114 &8856565565315243444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6725167966654622809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &6744667915199800361
 GameObject:
   m_ObjectHideFlags: 0
@@ -16380,6 +16965,7 @@ GameObject:
   - component: {fileID: 7964261972981656135}
   - component: {fileID: 2733742940297171879}
   - component: {fileID: 290579431881159072}
+  - component: {fileID: 3345172886355097587}
   m_Layer: 0
   m_Name: PianoKeyBlack_D6Sharp
   m_TagString: Untagged
@@ -16575,6 +17161,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 51
   _audioSource: {fileID: 8689418213107070013}
+--- !u!114 &3345172886355097587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6829874235654078555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &6938619366338339146
 GameObject:
   m_ObjectHideFlags: 0
@@ -16838,6 +17436,7 @@ GameObject:
   - component: {fileID: 4823460764914881840}
   - component: {fileID: 7914219965917480632}
   - component: {fileID: 8025787339936742233}
+  - component: {fileID: 4189239965893892304}
   m_Layer: 0
   m_Name: PianoKeyWhite_F2
   m_TagString: Untagged
@@ -17034,6 +17633,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 5
   _audioSource: {fileID: 4698531494821179723}
+--- !u!114 &4189239965893892304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7018031713143182468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &7345287874504176851
 GameObject:
   m_ObjectHideFlags: 0
@@ -17122,6 +17733,7 @@ GameObject:
   - component: {fileID: 1555036006668337171}
   - component: {fileID: 3187914611143735340}
   - component: {fileID: 7066772101464087425}
+  - component: {fileID: 3456897117977323856}
   m_Layer: 0
   m_Name: PianoKeyBlack_A2Sharp
   m_TagString: Untagged
@@ -17317,6 +17929,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 10
   _audioSource: {fileID: 3421234569255636774}
+--- !u!114 &3456897117977323856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7373296998264532389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &7624322029632034140
 GameObject:
   m_ObjectHideFlags: 0
@@ -17443,6 +18067,7 @@ GameObject:
   - component: {fileID: 3410142931578666668}
   - component: {fileID: 3710706565956345571}
   - component: {fileID: 2087687901516419960}
+  - component: {fileID: 8818087402800022607}
   m_Layer: 0
   m_Name: PianoKeyWhite_A6
   m_TagString: Untagged
@@ -17639,6 +18264,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 57
   _audioSource: {fileID: 5911801155202097037}
+--- !u!114 &8818087402800022607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7724689996907511279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &7735212006659830360
 GameObject:
   m_ObjectHideFlags: 0
@@ -17653,6 +18290,7 @@ GameObject:
   - component: {fileID: 7469052584846442217}
   - component: {fileID: 8448862186590527734}
   - component: {fileID: 6318725305272531014}
+  - component: {fileID: 4199248687480680214}
   m_Layer: 0
   m_Name: PianoKeyWhite_G3
   m_TagString: Untagged
@@ -17849,6 +18487,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 19
   _audioSource: {fileID: 8947304860441390845}
+--- !u!114 &4199248687480680214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7735212006659830360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &7817560755369674360
 GameObject:
   m_ObjectHideFlags: 0
@@ -17938,6 +18588,7 @@ GameObject:
   - component: {fileID: 800974092449608921}
   - component: {fileID: 2506680167623626624}
   - component: {fileID: 4201627072714968867}
+  - component: {fileID: 9185775802014371182}
   m_Layer: 0
   m_Name: PianoKeyWhite_C6
   m_TagString: Untagged
@@ -18134,6 +18785,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 48
   _audioSource: {fileID: 5567061635815858572}
+--- !u!114 &9185775802014371182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7828934867605418608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &7877748856049944244
 GameObject:
   m_ObjectHideFlags: 0
@@ -18434,6 +19097,7 @@ GameObject:
   - component: {fileID: 825462609079811410}
   - component: {fileID: 2727309875558087588}
   - component: {fileID: 7771463128977150862}
+  - component: {fileID: 7172144584375673190}
   m_Layer: 0
   m_Name: PianoKeyBlack_G3Sharp
   m_TagString: Untagged
@@ -18629,6 +19293,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 20
   _audioSource: {fileID: 6326702672730907388}
+--- !u!114 &7172144584375673190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8252339277432330735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &8353853670009123381
 GameObject:
   m_ObjectHideFlags: 0
@@ -18643,6 +19319,7 @@ GameObject:
   - component: {fileID: 2544960661789834247}
   - component: {fileID: 5591885209263925575}
   - component: {fileID: 3292392198610161591}
+  - component: {fileID: 3004565791486382976}
   m_Layer: 0
   m_Name: PianoKeyWhite_D3
   m_TagString: Untagged
@@ -18839,6 +19516,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 14
   _audioSource: {fileID: 1172368135077384091}
+--- !u!114 &3004565791486382976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8353853670009123381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &8361601226723805419
 GameObject:
   m_ObjectHideFlags: 0
@@ -18853,6 +19542,7 @@ GameObject:
   - component: {fileID: 5160289852996735522}
   - component: {fileID: 3468257884113490380}
   - component: {fileID: 3168473902524302373}
+  - component: {fileID: 2820143660246651527}
   m_Layer: 0
   m_Name: PianoKeyWhite_A5
   m_TagString: Untagged
@@ -19049,6 +19739,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 45
   _audioSource: {fileID: 818047463575906451}
+--- !u!114 &2820143660246651527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8361601226723805419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &8378961706730075292
 GameObject:
   m_ObjectHideFlags: 0
@@ -19836,6 +20538,7 @@ GameObject:
   - component: {fileID: 8654966167242836997}
   - component: {fileID: 3387761956926169733}
   - component: {fileID: 7405090391448189443}
+  - component: {fileID: 1353342936329251952}
   m_Layer: 0
   m_Name: PianoKeyWhite_E6
   m_TagString: Untagged
@@ -20032,6 +20735,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 52
   _audioSource: {fileID: 3220304880952183821}
+--- !u!114 &1353342936329251952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8795067879725166919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &8809382594156380256
 GameObject:
   m_ObjectHideFlags: 0
@@ -20046,6 +20761,7 @@ GameObject:
   - component: {fileID: 197804324222013392}
   - component: {fileID: 3838080390313693196}
   - component: {fileID: 6569706412629879062}
+  - component: {fileID: 4250401621979634921}
   m_Layer: 0
   m_Name: PianoKeyBlack_C4Sharp
   m_TagString: Untagged
@@ -20241,6 +20957,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 25
   _audioSource: {fileID: 6154184905764634492}
+--- !u!114 &4250401621979634921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8809382594156380256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &8973401413150293102
 GameObject:
   m_ObjectHideFlags: 0
@@ -20255,6 +20983,7 @@ GameObject:
   - component: {fileID: 2951801779694462485}
   - component: {fileID: 5455606122603506730}
   - component: {fileID: 1410633772441789144}
+  - component: {fileID: 182480550134703050}
   m_Layer: 0
   m_Name: PianoKeyWhite_B3
   m_TagString: Untagged
@@ -20451,6 +21180,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 23
   _audioSource: {fileID: 653450670642254475}
+--- !u!114 &182480550134703050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8973401413150293102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &9023067529505755613
 GameObject:
   m_ObjectHideFlags: 0
@@ -20465,6 +21206,7 @@ GameObject:
   - component: {fileID: 6816604068499035642}
   - component: {fileID: 2061029874284877220}
   - component: {fileID: 3256648829239148866}
+  - component: {fileID: 7646732758732657139}
   m_Layer: 0
   m_Name: PianoKeyBlack_D5Sharp
   m_TagString: Untagged
@@ -20660,6 +21402,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 39
   _audioSource: {fileID: 6188120398069880983}
+--- !u!114 &7646732758732657139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9023067529505755613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &9024022306228307529
 GameObject:
   m_ObjectHideFlags: 0
@@ -20824,6 +21578,7 @@ GameObject:
   - component: {fileID: 4400501119791215811}
   - component: {fileID: 5920186561604464656}
   - component: {fileID: 43747864565197711}
+  - component: {fileID: 4256959598776292201}
   m_Layer: 0
   m_Name: PianoKeyWhite_E3
   m_TagString: Untagged
@@ -21020,6 +21775,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 16
   _audioSource: {fileID: 2151080578243296169}
+--- !u!114 &4256959598776292201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9134250020184450789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &9148272722051365635
 GameObject:
   m_ObjectHideFlags: 0
@@ -21171,6 +21938,7 @@ GameObject:
   - component: {fileID: 2148119781582704637}
   - component: {fileID: 7947451133738539892}
   - component: {fileID: 23058050355054908}
+  - component: {fileID: 7557230692882978806}
   m_Layer: 0
   m_Name: PianoKeyBlack_A6Sharp
   m_TagString: Untagged
@@ -21366,6 +22134,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _keyEnum: 58
   _audioSource: {fileID: 8979857376478594394}
+--- !u!114 &7557230692882978806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9157574676141267246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
 --- !u!1 &9181612952906132653
 GameObject:
   m_ObjectHideFlags: 0

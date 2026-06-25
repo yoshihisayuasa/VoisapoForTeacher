@@ -12,7 +12,7 @@ namespace Assets.Scripts.UI.LessonRoom
     {
         [SerializeField] private TMP_Text _roomIdText;
         [SerializeField] private Button _startButton;
-        [SerializeField] private string _nextSceneName = "Main";
+        private readonly string _nextSceneName = "TeacherMain";
         [SerializeField] private PhotonRoomCreator _photonRoomCreator;
 
         private void Start()

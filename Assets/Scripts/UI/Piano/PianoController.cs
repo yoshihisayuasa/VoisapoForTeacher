@@ -6,7 +6,6 @@ using AsseScripts.UI.Piano;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.UI.Piano
@@ -69,12 +68,17 @@ namespace Assets.Scripts.UI.Piano
             _virtualKeyEnters = new Subject<PianoNote>();
             _anyKeyClick      = new Subject<PianoNote>();
 
-            var pointerUps    = _pianoKeys.Select(k => k.OnPointerUpAsObservable).Merge();
+            // 鍵盤クリックの入力検知は先生ビルドにのみ存在する（PianoKeyInputUI参照）。
+            var keyInputs = AppMode.IsTeacher
+                ? _pianoKeys.Select(k => k.GetComponent<PianoKeyInputUI>())
+                : Enumerable.Empty<PianoKeyInputUI>();
+
+            var pointerUps = keyInputs.Select(k => k.OnPointerUpAsObservable).Merge();
 
             // 再生は「根音(SelectedKey)を確定してから」通知する。生のクリックを一旦受けて
             // SelectKey 後に _anyKeyClick へ流し直すことで、購読者の登録順に依存せず
             // すべての購読者が確定後の SelectedKey を読めるようにする。
-            var rawClicks = _pianoKeys.Select(k => k.OnClickKeyAsObservable).Merge().Merge(_keyClicks);
+            var rawClicks = keyInputs.Select(k => k.OnClickKeyAsObservable).Merge().Merge(_keyClicks);
             rawClicks.Subscribe(note =>
             {
                 SelectKey(note);
@@ -83,7 +87,7 @@ namespace Assets.Scripts.UI.Piano
 
             OnAnyKeyClickAsObservable = _anyKeyClick;
             OnAnyKeyUpAsObservable    = pointerUps.Merge(_keyUps);
-            OnAnyKeyEnterAsObservable = _pianoKeys.Select(k => k.OnPointerEnterAsObservable).Merge().Merge(_virtualKeyEnters);
+            OnAnyKeyEnterAsObservable = keyInputs.Select(k => k.OnPointerEnterAsObservable).Merge().Merge(_virtualKeyEnters);
 
             // 送信可否（先生のみ）はゲートウェイ側で判定。受信由来も同じ経路を通るが、
             // 生徒は送信が権限で弾かれるためループしない。
@@ -112,20 +116,11 @@ namespace Assets.Scripts.UI.Piano
             _anyKeyClick?.Dispose();
         }
 
-        private void Update()
-        {
-            var kb = Keyboard.current;
-            if (kb == null) return;
-
-            if (kb.sKey.wasPressedThisFrame||kb.jKey.wasPressedThisFrame) MoveSelection(-1);
-            if (kb.fKey.wasPressedThisFrame||kb.lKey.wasPressedThisFrame) MoveSelection(1);
-            if (kb.gKey.wasPressedThisFrame || kb.semicolonKey.wasPressedThisFrame) MoveSelection(-6);
-            if (kb.aKey.wasPressedThisFrame || kb.hKey.wasPressedThisFrame) MoveSelection(6);
-            if ((kb.dKey.wasPressedThisFrame||kb.kKey.wasPressedThisFrame) && _selectedKey != null) _keyClicks.OnNext(_selectedKey);
-            if ((kb.dKey.wasReleasedThisFrame||kb.kKey.wasReleasedThisFrame) && _selectedKey != null) _keyUps.OnNext(_selectedKey);
-        }
-
-        private void MoveSelection(int delta)
+        /// <summary>
+        /// 選択中の鍵盤を delta だけ移動し、移動先を仮想的な「ホバー進入」として通知する。
+        /// キーボード操作（先生専用の PianoKeyboardInput）から呼ぶ。
+        /// </summary>
+        public void MoveSelection(int delta)
         {
             Debug.Assert(_selectedKey != null, "_selectedKey is null");
             int currentIndex = _selectedKey.Index;
@@ -147,17 +142,19 @@ namespace Assets.Scripts.UI.Piano
         }
 
         /// <summary>
-        /// 受信した鍵盤押下を、自分の鍵盤がクリックされたのと同等に扱う。
+        /// ポインタクリック以外（ネットワーク受信・キーボード操作等）からの鍵盤押下を、
+        /// 自分の鍵盤がクリックされたのと同等に扱う。
         /// </summary>
-        public void PressKeyFromRemote(PianoNote note)
+        public void PressKey(PianoNote note)
         {
             _keyClicks.OnNext(note);
         }
 
         /// <summary>
-        /// 受信した鍵盤リリースを、自分の鍵盤を離したのと同等に扱う。
+        /// ポインタクリック以外（ネットワーク受信・キーボード操作等）からの鍵盤リリースを、
+        /// 自分の鍵盤を離したのと同等に扱う。
         /// </summary>
-        public void ReleaseKeyFromRemote(PianoNote note)
+        public void ReleaseKey(PianoNote note)
         {
             _keyUps.OnNext(note);
         }
