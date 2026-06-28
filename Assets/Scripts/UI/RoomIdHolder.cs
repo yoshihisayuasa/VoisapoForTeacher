@@ -8,5 +8,7 @@ namespace Assets.Scripts.UI
 
         public static void Set(RoomId roomId) => Current = roomId;
 
+        public static void Clear() => Current = null;
+
     }
 }

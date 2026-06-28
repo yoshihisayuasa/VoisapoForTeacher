@@ -1,15 +1,30 @@
-using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityScreenNavigator.Runtime.Core.Modal;
 
 namespace Assets.Scripts.UI.MelodyCreate
 {
     public sealed class MelodyNameInputPopupUI : MonoBehaviour
     {
-        public void Open(Action<string> onNameEntered)
+        [SerializeField] private TMP_InputField _nameInputField;
+        [SerializeField] private Button _okButton;
+        [SerializeField] private Button _cancelButton;
+
+        private void Start()
         {
-            InputModalWindow.Create(ignorable: true)
-                .SetInputField(onNameEntered)
-                .Show();
+            _okButton.onClick.AddListener(OnOkButtonClicked);
+            _cancelButton.onClick.AddListener(OnCancelButtonClicked);
+        }
+
+        private void OnOkButtonClicked()
+        {
+            MelodyCreateManager.Instance.SaveWithName(_nameInputField.text);
+        }
+
+        private void OnCancelButtonClicked()
+        {
+            ModalContainer.Of(transform).Pop(true);
         }
     }
 }

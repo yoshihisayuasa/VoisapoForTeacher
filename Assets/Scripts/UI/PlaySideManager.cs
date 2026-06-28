@@ -31,7 +31,7 @@ namespace Assets.Scripts.UI
         private void Start()
         {
             // 先生は毎シーン生成されるため、シーン遷移時は必ずオフから始める。
-            SoundPlayState.Instance.SetState(false);
+            SoundPlayState.Instance.SetTeacherIntent(false);
 
             _toggle.onValueChanged.AddListener(RequestState);
 
@@ -39,11 +39,12 @@ namespace Assets.Scripts.UI
                 .Subscribe(_ => RequestState(false))
                 .AddTo(this);
 
-            SoundPlayState.Instance.OnStateChanged
+            // トグルは先生の「意図」を映す。実効状態（相手がいなければ強制再生）とは分離する。
+            SoundPlayState.Instance.OnIntentChanged
                 .Subscribe(SyncToggle)
                 .AddTo(this);
 
-            SyncToggle(SoundPlayState.Instance.IsSoundPlay);
+            SyncToggle(SoundPlayState.Instance.TeacherIntent);
         }
 
         private void RequestState(bool value)
@@ -54,7 +55,7 @@ namespace Assets.Scripts.UI
                 return;
             }
 
-            SoundPlayState.Instance.SetState(value);
+            SoundPlayState.Instance.SetTeacherIntent(value);
         }
 
         private void SyncToggle(bool isOn)

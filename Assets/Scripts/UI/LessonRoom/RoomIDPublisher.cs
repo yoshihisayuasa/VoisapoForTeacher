@@ -17,6 +17,7 @@ namespace Assets.Scripts.UI.LessonRoom
 
         private void Start()
         {
+            _roomIdText.text = string.Empty;
             _startButton.onClick.AddListener(OnStartClicked);
 
             _photonRoomCreator.OnRoomCreated
@@ -30,7 +31,7 @@ namespace Assets.Scripts.UI.LessonRoom
 
         private void OnRoomCreated(RoomId roomId)
         {
-            _roomIdText.text = "Room ID : " + roomId.Value;
+            _roomIdText.text = roomId.DisplayText;
             RoomIdHolder.Set(roomId);
         }
 

@@ -1,3 +1,4 @@
+using Assets.Scripts.UI.Modal;
 using R3;
 using UnityEngine;
 
@@ -7,29 +8,19 @@ namespace Assets.Scripts.UI
     {
         [SerializeField] private ConnectionStatusObserver _observer;
 
-        [SerializeField] private string _studentLeftHeader = "Student has logged out";
-        [SerializeField] private string _studentLeftBody = "";
-        [SerializeField] private string _disconnectedHeader = "Connection lost";
-        [SerializeField] private string _disconnectedBody = "Please check your internet connection.";
+        [SerializeField] private string _studentLeftBody = "Student has logged out";
+        [SerializeField] private string _disconnectedBody = "Connection lost. Please check your internet connection.";
 
         private void Start()
         {
             _observer.OnStudentLeft
-                .Subscribe(_ => ShowPopup(_studentLeftHeader, _studentLeftBody))
+                .Subscribe(_ => ConfirmModalUI.Show(_studentLeftBody))
                 .AddTo(this);
 
             _observer.OnTeacherDisconnected
-                .Subscribe(_ => ShowPopup(_disconnectedHeader, _disconnectedBody))
+                .Subscribe(_ => ConfirmModalUI.Show(_disconnectedBody))
                 .AddTo(this);
         }
 
-        private static void ShowPopup(string header, string body)
-        {
-            SimpleModalWindow.Create(ignorable: false)
-                .SetHeader(header)
-                .SetBody(body)
-                .AddButton("OK", null, ModalButtonType.Success)
-                .Show();
-        }
     }
 }

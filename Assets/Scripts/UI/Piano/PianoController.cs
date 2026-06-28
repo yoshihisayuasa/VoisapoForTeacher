@@ -91,8 +91,12 @@ namespace Assets.Scripts.UI.Piano
 
             // 送信可否（先生のみ）はゲートウェイ側で判定。受信由来も同じ経路を通るが、
             // 生徒は送信が権限で弾かれるためループしない。
-            OnAnyKeyClickAsObservable.Subscribe(note => _network.SendKeyDown(note)).AddTo(this);
-            OnAnyKeyUpAsObservable.Subscribe(note => _network.SendKeyUp(note)).AddTo(this);
+            // メロディ作成シーンなど Photon を持たないシーンでは _network が未設定のため購読しない。
+            if (_network != null)
+            {
+                OnAnyKeyClickAsObservable.Subscribe(note => _network.SendKeyDown(note)).AddTo(this);
+                OnAnyKeyUpAsObservable.Subscribe(note => _network.SendKeyUp(note)).AddTo(this);
+            }
         }
 
         private void Start()

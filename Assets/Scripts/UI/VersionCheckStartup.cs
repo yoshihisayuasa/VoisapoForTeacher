@@ -1,16 +1,13 @@
 using AsseScripts.Domain;
 using AsseScripts.Infrastructure;
+using Assets.Scripts.UI.Modal;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityScreenNavigator.Runtime.Core.Modal;
 
 namespace Assets.Scripts.UI
 {
     public sealed class VersionCheckStartup : MonoBehaviour
     {
-        private const string ModalResourcePath =
-            "Prefab/UnityScreenNavigator/Modal/pfb_ui_modal_version_update";
-
         [SerializeField] private string _versionJsonUrl;
 
         private void Start()
@@ -29,11 +26,10 @@ namespace Assets.Scripts.UI
 
         private void ShowUpdatePopup(AppVersion latestVersion, string downloadUrl)
         {
-            ModalContainer.Find("ModalContainer").Push(ModalResourcePath, true, onLoad: x =>
-            {
-                var ui = x.modal.GetComponent<VersionUpdateUI>();
-                ui.Setup(latestVersion, downloadUrl);
-            });
+            ConfirmModalUI.Show(
+                $"Version {latestVersion} is available",
+                onConfirm: () => Application.OpenURL(downloadUrl),
+                onCancel: () => { });
         }
     }
 }

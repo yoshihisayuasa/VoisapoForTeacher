@@ -8,7 +8,6 @@ namespace Assets.Scripts.UI.Piano
     /// <summary>
     /// 鍵盤クリック・ホバーの入力検知（UI層）。先生ビルドにのみ存在し、生徒ビルドではAwakeで自身を破棄する。
     /// </summary>
-    [RequireComponent(typeof(PianoKeyUI))]
     public sealed class PianoKeyInputUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler
     {
         private readonly Subject<PianoNote> _onClickKeySubject = new();

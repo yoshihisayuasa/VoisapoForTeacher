@@ -13,7 +13,8 @@ namespace AsseScripts.Domain
 
         public static RoomId Generate() => new(Random.Range(Min, Max + 1).ToString());
 
-        public override string ToString() => Value;
+        public string DisplayText => "Room ID : " + Value;
+
 
         public override int CompareTo(RoomId other)
         {

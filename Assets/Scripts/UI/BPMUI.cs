@@ -1,5 +1,6 @@
 ﻿using AsseScripts.UI;
 using Assets.Scripts.UI;
+using R3;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -18,6 +19,12 @@ public sealed class BPMUI : MonoBehaviour
     {
         _plusButton.onClick.AddListener(OnPlusClicked);
         _minusButton.onClick.AddListener(OnMinusClicked);
+
+        // 先生からの同期受信を含むBPM変更をテキストへ反映する。
+        BPMManager.Instance.BpmChanged
+            .Subscribe(_ => RefreshBpmText())
+            .AddTo(this);
+
         RefreshBpmText();
     }
 
@@ -30,14 +37,12 @@ public sealed class BPMUI : MonoBehaviour
     private void OnPlusClicked()
     {
         BPMManager.Instance.Increment();
-        RefreshBpmText();
         StartBlink();
     }
 
     private void OnMinusClicked()
     {
         BPMManager.Instance.Decrement();
-        RefreshBpmText();
         StartBlink();
     }
 

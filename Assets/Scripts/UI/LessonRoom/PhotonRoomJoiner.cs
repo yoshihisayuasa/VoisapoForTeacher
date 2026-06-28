@@ -11,6 +11,7 @@ namespace Assets.Scripts.UI.LessonRoom
         private const string _gameVersion = "0.1";
 
         private string _input;
+        private bool _wantsToJoin;
 
         private readonly Subject<Unit> _onRoomJoined = new();
         public Observable<Unit> OnRoomJoined => _onRoomJoined;
@@ -40,6 +41,7 @@ namespace Assets.Scripts.UI.LessonRoom
         public void Join(string input)
         {
             _input = input;
+            _wantsToJoin = true;
 
             var props = new Hashtable
             {
@@ -59,11 +61,15 @@ namespace Assets.Scripts.UI.LessonRoom
 
         public void Leave()
         {
+            _wantsToJoin = false;
             PhotonNetwork.LeaveRoom();
         }
 
         public override void OnConnectedToMaster()
         {
+            // LeaveRoom後のマスター再接続でも本コールバックは発火するため、
+            // 明示的に入室を要求しているときだけ入室する（自動再入室を防ぐ）。
+            if (!_wantsToJoin) return;
             PhotonNetwork.JoinRoom(_input);
         }
 

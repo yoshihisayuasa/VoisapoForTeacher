@@ -2,6 +2,7 @@ using Assets.Scripts.Domain.Entities;
 using Assets.Scripts.Domain.Modules;
 using Assets.Scripts.Domain.ValueObjects;
 using Assets.Scripts.UI.MelodyUI;
+using Assets.Scripts.UI.Modal;
 using R3;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace Assets.Scripts.UI.MelodyCreate
     {
         public static MelodyCreateManager Instance { get; private set; }
 
-        [SerializeField] private string _mainSceneName = "Main";
+        [SerializeField] private string _mainSceneName = "TeacherMain";
         [SerializeField] private DraftMelodyPlayer _draftMelodyPlayer;
 
         public MelodyDraft Draft { get; private set; }
@@ -146,11 +147,7 @@ namespace Assets.Scripts.UI.MelodyCreate
 
             if (MelodyManager.Instance.ContainsMelodyWithName(name))
             {
-                SimpleModalWindow.Create(ignorable: false)
-                    .SetHeader("Error")
-                    .SetBody($"A melody named \"{name}\" already exists.")
-                    .AddButton("OK", () => { }, ModalButtonType.Success)
-                    .Show();
+                ConfirmModalUI.Show($"A melody named \"{name}\" already exists.");
                 return;
             }
 

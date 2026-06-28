@@ -3022,7 +3022,6 @@ GameObject:
   - component: {fileID: 693122848065358376}
   - component: {fileID: 7837180706157788290}
   - component: {fileID: 4993470444775762338}
-  - component: {fileID: 6752945001931520619}
   - component: {fileID: 6554682127359599235}
   m_Layer: 0
   m_Name: pfb_ui_modal_settings
@@ -3106,18 +3105,6 @@ MonoBehaviour:
   _animationContainer:
     _enterAnimations: []
     _exitAnimations: []
---- !u!114 &6752945001931520619
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5687472065562744594}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad51087f89c51904faf09da7b1f5ae27, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.MelodyCreate.MelodyNameInputPopupUI
 --- !u!114 &6554682127359599235
 MonoBehaviour:
   m_ObjectHideFlags: 0

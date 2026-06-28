@@ -1,5 +1,6 @@
 
 using Assets.Scripts.UI.MelodyUI;
+using Assets.Scripts.UI.Modal;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -13,6 +14,7 @@ namespace Assets.Scripts.UI
         {
             _builder = builder;
         }
+
         public void OnDrop(PointerEventData eventData)
         {
             if (!eventData.pointerDrag.TryGetComponent<DraggableMelodyButton>(out var item))
@@ -23,24 +25,14 @@ namespace Assets.Scripts.UI
             if (!MelodyPlayer.Instance.CanDeleteMelody(item.Entry.Melody))
             {
                 item.ResetToDragStart();
-                SimpleModalWindow.Create(ignorable: false)
-                    .SetHeader("Error")
-                    .SetBody("This melody cannot be deleted")
-                    .AddButton("OK", () => { }, ModalButtonType.Success)
-                    .Show();
+                ConfirmModalUI.Show("You cannot delete this melody.");
                 return;
             }
 
-            SimpleModalWindow.Create(ignorable: false)
-               .SetHeader("Confirm Deletion")
-               .SetBody("Are you sure you want to delete this melody?")
-               .AddButton("OK", () => {
-                   _builder.HandleTrashDrop(item); // Execute only when OK is pressed
-               }, ModalButtonType.Danger)
-               .AddButton("Cancel", () => {
-                   item.ResetToDragStart();
-               }, ModalButtonType.Success)
-               .Show();
+            ConfirmModalUI.Show(
+                "May I delete this melody?",
+                onConfirm: () => _builder.HandleTrashDrop(item),
+                onCancel: () => item.ResetToDragStart());
         }
     }
 }

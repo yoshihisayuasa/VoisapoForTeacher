@@ -1621,7 +1621,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents: []
-  sceneViewId: 1
+  sceneViewId: 2
   InstantiationId: 0
   isRuntimeInstantiated: 0
 --- !u!4 &298719250
@@ -2387,6 +2387,7 @@ GameObject:
   - component: {fileID: 483347619}
   - component: {fileID: 483347621}
   - component: {fileID: 483347620}
+  - component: {fileID: 483347622}
   m_Layer: 0
   m_Name: PianoSection
   m_TagString: Untagged
@@ -2447,6 +2448,18 @@ MonoBehaviour:
   rightDarkOverlay: {fileID: 1859124002}
   octaveUpButton: {fileID: 1147503452}
   octaveDownButton: {fileID: 211419269}
+--- !u!114 &483347622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 483347618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01d88efd8fc74944b95415dd7f6ece54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyboardInput
 --- !u!1 &491860273
 GameObject:
   m_ObjectHideFlags: 0
@@ -3444,7 +3457,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Room ID:'
+  m_text: Room ID:1111
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 39af8d954768e1e45979c40c6bba403b, type: 2}
   m_sharedMaterial: {fileID: 449121999275897781, guid: 39af8d954768e1e45979c40c6bba403b, type: 2}
@@ -4657,7 +4670,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.DisconnectionPopupUI
   _observer: {fileID: 930194747}
+  _studentLeftHeader: Information
   _studentLeftBody: Student has logged out
+  _disconnectedHeader: Information
   _disconnectedBody: Connection lost.Please check your internet connection.
 --- !u!114 &930194749
 MonoBehaviour:
@@ -5890,63 +5905,6 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1192708374}
-  m_CullTransparentMesh: 1
---- !u!1 &1226294178
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1226294179}
-  - component: {fileID: 1226294183}
-  - component: {fileID: 1226294180}
-  m_Layer: 0
-  m_Name: PianoKeyInputUI
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1226294179
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1226294178}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 960, y: 540}
-  m_SizeDelta: {x: 100, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1226294180
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1226294178}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1d8fd1e991a10045be414bd7544596c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyInputUI
---- !u!222 &1226294183
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1226294178}
   m_CullTransparentMesh: 1
 --- !u!1 &1258802739
 GameObject:
@@ -9176,7 +9134,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.StopManager
   _stopButton: {fileID: 1914908286}
-  _network: {fileID: 298719248}
 --- !u!1 &1915265092
 GameObject:
   m_ObjectHideFlags: 0
@@ -10966,7 +10923,6 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1044453750}
-  - {fileID: 1226294179}
   - {fileID: 733772013}
   - {fileID: 352536847}
   - {fileID: 398015907}

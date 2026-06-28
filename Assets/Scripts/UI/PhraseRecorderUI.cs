@@ -1,3 +1,4 @@
+using Assets.Scripts.UI.Modal;
 using R3;
 using UnityEngine;
 using UnityEngine.UI;
@@ -44,11 +45,8 @@ namespace Assets.Scripts.UI
 
         private void OnMicAccessFailed()
         {
-            SimpleModalWindow.Create(ignorable: false)
-                .SetHeader("Microphone Access Denied")
-                .SetBody("Microphone access is not allowed. Please check your OS privacy settings.")
-                .AddButton("OK", () => { }, ModalButtonType.Success)
-                .Show();
+            ConfirmModalUI.Show(
+                "Microphone access is not allowed. Please check your OS privacy settings.");
         }
     }
 }

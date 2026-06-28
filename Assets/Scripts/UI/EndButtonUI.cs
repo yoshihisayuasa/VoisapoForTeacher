@@ -16,6 +16,7 @@ namespace Assets.Scripts.UI
 
         private void OnClicked()
         {
+            RoomIdHolder.Clear();
             PersistentRegistry.DestroyAll();
             SceneManager.LoadScene(_roomIdSceneName);
         }

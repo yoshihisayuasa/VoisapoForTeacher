@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using AsseScripts.UI.Piano;
 using Assets.Scripts.UI.MelodyUI;
+using AsseScripts.Infrastructure;
 
 namespace Assets.Scripts.UI
 {
@@ -11,6 +12,11 @@ namespace Assets.Scripts.UI
     public sealed class StopManager : MonoBehaviour
     {
         [SerializeField] private Button _stopButton;
+
+        [SerializeField]
+        [Tooltip("停止を生徒へ送るPhotonゲートウェイ。先生シーンで割り当てる")]
+        private PianoNetworkGateway _network;
+
         private void OnEnable()
         {
             if (_stopButton != null)
@@ -35,6 +41,9 @@ namespace Assets.Scripts.UI
                 return;
             }
             player.StopMelody(false, shouldDelayRecordStop: true);
+
+            // 先生のみ送信。生徒側は受信してローカル停止する（送信は権限で弾かれる）。
+            _network.SendStop();
         }
     }
 }

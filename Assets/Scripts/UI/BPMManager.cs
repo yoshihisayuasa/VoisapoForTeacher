@@ -26,5 +26,14 @@ namespace AsseScripts.UI
             _bpmChanged.OnNext(_bpm.Value);
         }
 
+        /// <summary>
+        /// 絶対値でBPMを設定する。先生からの同期受信に使う。
+        /// </summary>
+        public void SetValue(int value)
+        {
+            _bpm = new BPM(value);
+            _bpmChanged.OnNext(_bpm.Value);
+        }
+
     }
 }
