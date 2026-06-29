@@ -72,9 +72,11 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 *.DS_Store
 
+# Third-party SDKs
+/[Aa]ssets/Photon/
+
 *.asset
 *.ttf
 *.otf
-*.png
 *.bytes
 Assets/TextMesh Pro/Fonts/

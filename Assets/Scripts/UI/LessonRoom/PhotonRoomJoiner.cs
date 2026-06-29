@@ -45,7 +45,7 @@ namespace Assets.Scripts.UI.LessonRoom
 
             var props = new Hashtable
             {
-                { StudentVersionObserver.StudentVersionKey, Application.version }
+                { VersionObserver.VersionKey, Application.version }
             };
             PhotonNetwork.LocalPlayer.SetCustomProperties(props);
 

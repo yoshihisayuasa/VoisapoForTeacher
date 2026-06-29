@@ -25,7 +25,7 @@ namespace AsseScripts.Infrastructure
         {
             if (!AppMode.IsTeacher) return;
 
-            SoundPlayState.Instance.OnStateChanged
+            SoundPlayManager.Instance.OnStateChanged
                 .Subscribe(SendSoundPlayState)
                 .AddTo(this);
 
@@ -45,7 +45,7 @@ namespace AsseScripts.Infrastructure
             }
 
             // シーン再生成時、既に生徒が居れば接続ありとして初期化する。
-            SoundPlayState.Instance.SetStudentConnected(HasConnectedStudent());
+            SoundPlayManager.Instance.SetStudentConnected(HasConnectedStudent());
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace AsseScripts.Infrastructure
             if (!AppMode.IsTeacher) return;
 
             // 生徒ありに切り替える。これで実効状態が先生の意図（トグル）に戻る。
-            SoundPlayState.Instance.SetStudentConnected(true);
+            SoundPlayManager.Instance.SetStudentConnected(true);
 
             var melody = MelodyManager.Instance.CurrentMelody;
             if (melody != null)
@@ -73,7 +73,7 @@ namespace AsseScripts.Infrastructure
             }
 
             // 送信側で反転（先生がfalseならば生徒はtrue）
-            _photonView.RPC("SoundPlayStateReciver", newPlayer, !SoundPlayState.Instance.IsSoundPlay);
+            _photonView.RPC("SoundPlayStateReciver", newPlayer, !SoundPlayManager.Instance.IsSoundPlay);
 
             _photonView.RPC("BpmReciver", newPlayer, BPMManager.Instance.Value);
 
@@ -90,7 +90,7 @@ namespace AsseScripts.Infrastructure
         {
             if (!AppMode.IsTeacher) return;
 
-            SoundPlayState.Instance.SetStudentConnected(HasConnectedStudent());
+            SoundPlayManager.Instance.SetStudentConnected(HasConnectedStudent());
         }
 
         public void SendMelodySelection(Melody melody)
@@ -190,7 +190,7 @@ namespace AsseScripts.Infrastructure
         [PunRPC]
         private void SoundPlayStateReciver(bool isSoundPlay)
         {
-            SoundPlayState.Instance.SetState(isSoundPlay);
+            SoundPlayManager.Instance.SetState(isSoundPlay);
         }
     }
 }

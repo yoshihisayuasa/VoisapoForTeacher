@@ -1,9 +1,11 @@
 using System;
 using AsseScripts.Domain;
+using Assets.Scripts.UI;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using R3;
+using UnityEngine;
 
 namespace Assets.Scripts.UI.LessonRoom
 {
@@ -22,6 +24,12 @@ namespace Assets.Scripts.UI.LessonRoom
         private void Start()
         {
             PhotonNetwork.GameVersion = _gameVersion;
+
+            // 生徒が入室時に確認できるよう、先生のアプリバージョンを公開する。
+            PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable
+            {
+                { VersionObserver.VersionKey, Application.version }
+            });
 
             if (PhotonNetwork.IsConnected)
             {

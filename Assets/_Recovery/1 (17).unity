@@ -659,6 +659,145 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &118271100
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 118271101}
+  - component: {fileID: 118271103}
+  - component: {fileID: 118271102}
+  m_Layer: 0
+  m_Name: Text (TMP)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &118271101
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118271100}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1066162831}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: -40}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &118271102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118271100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: "\u751F\u5F92\u7528\u30A2\u30D7\u30EA\u306E\u30D0\u30FC\u30B8\u30E7\u30F3\u304C\u53E4\u3044\u305F\u3081\u901A\u4FE1\u304C\u3067\u304D\u307E\u305B\u3093\u3002\n\u751F\u5F92\u306B\u30A2\u30C3\u30D7\u30C7\u30FC\u30C8\u3092\u6307\u793A\u3057\u3066\u304F\u3060\u3055\u3044\u3002\n\nThe
+    student's version is outdated and cannot communicate. Please instruct the student
+    to update."
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
+  m_sharedMaterial: {fileID: 1779099136830915230, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4278190335
+  m_fontColor: {r: 1, g: 0, b: 0, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 36
+  m_fontSizeBase: 36
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &118271103
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118271100}
+  m_CullTransparentMesh: 1
 --- !u!1 &126972550
 GameObject:
   m_ObjectHideFlags: 0
@@ -1482,7 +1621,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents: []
-  sceneViewId: 2
+  sceneViewId: 1
   InstantiationId: 0
   isRuntimeInstantiated: 0
 --- !u!4 &298719250
@@ -2589,118 +2728,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.MelodyDropSlot
   _slotIndex: 24
---- !u!1001 &582352852
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 733772013}
-    m_Modifications:
-    - target: {fileID: -8847363666710944674, guid: ef9a3c34d4b90754b811b12fca1a5174, type: 3}
-      propertyPath: _message
-      value: "\u751F\u5F92\u7528\u30A2\u30D7\u30EA\u306E\u30D0\u30FC\u30B8\u30E7\u30F3\u304C\u53E4\u3044\u305F\u3081\u901A\u4FE1\u304C\u3067\u304D\u307E\u305B\u3093\u3002\n\u751F\u5F92\u306B\u30A2\u30C3\u30D7\u30C7\u30FC\u30C8\u3092\u6307\u793A\u3057\u3066\u304F\u3060\u3055\u3044\u3002\n\nThe
-        student's version is outdated and cannot communicate. Please instruct the
-        student to update."
-      objectReference: {fileID: 0}
-    - target: {fileID: -8847363666710944674, guid: ef9a3c34d4b90754b811b12fca1a5174, type: 3}
-      propertyPath: _observer
-      value: 
-      objectReference: {fileID: 2004464757}
-    - target: {fileID: 2382024260014244572, guid: ef9a3c34d4b90754b811b12fca1a5174, type: 3}
-      propertyPath: m_Pivot.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2382024260014244572, guid: ef9a3c34d4b90754b811b12fca1a5174, type: 3}
-      propertyPath: m_Pivot.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2382024260014244572, guid: ef9a3c34d4b90754b811b12fca1a5174, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2382024260014244572, guid: ef9a3c34d4b90754b811b12fca1a5174, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2382024260014244572, guid: ef9a3c34d4b90754b811b12fca1a5174, type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2382024260014244572, guid: ef9a3c34d4b90754b811b12fca1a5174, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2382024260014244572, guid: ef9a3c34d4b90754b811b12fca1a5174, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 1100
-      objectReference: {fileID: 0}
-    - target: {fileID: 2382024260014244572, guid: ef9a3c34d4b90754b811b12fca1a5174, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 400
-      objectReference: {fileID: 0}
-    - target: {fileID: 2382024260014244572, guid: ef9a3c34d4b90754b811b12fca1a5174, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2382024260014244572, guid: ef9a3c34d4b90754b811b12fca1a5174, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2382024260014244572, guid: ef9a3c34d4b90754b811b12fca1a5174, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2382024260014244572, guid: ef9a3c34d4b90754b811b12fca1a5174, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2382024260014244572, guid: ef9a3c34d4b90754b811b12fca1a5174, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2382024260014244572, guid: ef9a3c34d4b90754b811b12fca1a5174, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2382024260014244572, guid: ef9a3c34d4b90754b811b12fca1a5174, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2382024260014244572, guid: ef9a3c34d4b90754b811b12fca1a5174, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 1120.2789
-      objectReference: {fileID: 0}
-    - target: {fileID: 2382024260014244572, guid: ef9a3c34d4b90754b811b12fca1a5174, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 1075.556
-      objectReference: {fileID: 0}
-    - target: {fileID: 2382024260014244572, guid: ef9a3c34d4b90754b811b12fca1a5174, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2382024260014244572, guid: ef9a3c34d4b90754b811b12fca1a5174, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2382024260014244572, guid: ef9a3c34d4b90754b811b12fca1a5174, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8036383177246884414, guid: ef9a3c34d4b90754b811b12fca1a5174, type: 3}
-      propertyPath: m_Name
-      value: UpdateBanner
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: ef9a3c34d4b90754b811b12fca1a5174, type: 3}
---- !u!224 &582352853 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 2382024260014244572, guid: ef9a3c34d4b90754b811b12fca1a5174, type: 3}
-  m_PrefabInstance: {fileID: 582352852}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &594230675
 GameObject:
   m_ObjectHideFlags: 0
@@ -3756,7 +3783,7 @@ RectTransform:
   m_Children:
   - {fileID: 1458625782}
   - {fileID: 1266704273}
-  - {fileID: 582352853}
+  - {fileID: 1066162831}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -5138,6 +5165,82 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1045055457}
+  m_CullTransparentMesh: 1
+--- !u!1 &1066162830
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1066162831}
+  - component: {fileID: 1066162833}
+  - component: {fileID: 1066162832}
+  m_Layer: 0
+  m_Name: StudentUpdateBannerRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1066162831
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1066162830}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 118271101}
+  m_Father: {fileID: 733772013}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1100, y: 400}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1066162832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1066162830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1066162833
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1066162830}
   m_CullTransparentMesh: 1
 --- !u!1 &1069302013
 GameObject:
@@ -7902,7 +8005,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6b1b7621b8bd407439e5dfe7f565ef62, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.TeacherSideManager
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.SoundPlayUI
   _toggle: {fileID: 1637814619}
   _image: {fileID: 1637814617}
 --- !u!1 &1651182630
@@ -9071,7 +9174,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fcec9d7f87c494f4a9176ef538475086, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.StopManager
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.StopUI
   _stopButton: {fileID: 1914908286}
   _network: {fileID: 298719248}
 --- !u!1 &1915265092
@@ -9510,8 +9613,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2004464755}
   - component: {fileID: 2004464757}
+  - component: {fileID: 2004464756}
   m_Layer: 0
-  m_Name: VersionObserver
+  m_Name: StudentVersionObserver
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9532,6 +9636,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2004464756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2004464754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33db5b9aa2da4d846906ae2fc6584a4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.StudentVersionBannerUI
+  _bannerRoot: {fileID: 1066162830}
+  _observer: {fileID: 2004464757}
 --- !u!114 &2004464757
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10805,7 +10923,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9008306001989273675, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1009.0001
+      value: 754
       objectReference: {fileID: 0}
     - target: {fileID: 9008306001989273675, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_AnchoredPosition.y
