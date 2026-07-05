@@ -103,7 +103,7 @@ namespace Assets.Scripts.UI.MelodyCreate
                 StopCoroutine(_previewSoundCoroutine);
                 if (_previewingNote != null)
                 {
-                    PianoController.Instance.Stop(_previewingNote, false);
+                    PianoController.Instance.Stop(_previewingNote);
                 }
             }
 
@@ -115,7 +115,7 @@ namespace Assets.Scripts.UI.MelodyCreate
         private IEnumerator StopPreviewSoundAfterDelay(DomainPianoNote key)
         {
             yield return new WaitForSeconds(PreviewSoundDuration);
-            PianoController.Instance.Stop(key, false);
+            PianoController.Instance.Stop(key);
             _previewSoundCoroutine = null;
             _previewingNote = null;
         }

@@ -1,4 +1,5 @@
 using Assets.Scripts.Domain.ValueObjects;
+using AsseScripts.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,8 +49,8 @@ namespace Assets.Scripts.Domain.Entities
 
         public IReadOnlyList<Note> Notes { get; }
         public readonly int Length;
-        public readonly Interval MinInterval;
-        public readonly Interval MaxInterval;
+        private readonly Interval _minInterval;
+        private readonly Interval _maxInterval;
 
 
         public Melody(string name, Chord chord, List<Note> notes)
@@ -57,7 +58,7 @@ namespace Assets.Scripts.Domain.Entities
             Name = name;
             Chord = chord;
             Notes = notes;
-            (MinInterval, MaxInterval) = CalculateIntervalRange();
+            (_minInterval, _maxInterval) = CalculateIntervalRange();
         }
         private (Interval min, Interval max) CalculateIntervalRange()
         {
@@ -66,6 +67,22 @@ namespace Assets.Scripts.Domain.Entities
             var all = chordValues.Concat(noteValues);
 
             return (new Interval(all.Min()), new Interval(all.Max()));
+        }
+
+        /// <summary>
+        /// 根音を与えたとき、このメロディが使う鍵盤範囲（音域）を返す。
+        /// </summary>
+        public PianoKeyRange KeyRangeAt(PianoNote rootKey)
+        {
+            return new PianoKeyRange(rootKey + _minInterval, rootKey + _maxInterval);
+        }
+
+        /// <summary>
+        /// 根音を rootKey にしたとき、このメロディが keyCount 鍵の鍵盤内で演奏可能か。
+        /// </summary>
+        public bool IsPlayableAt(PianoNote rootKey, int keyCount)
+        {
+            return KeyRangeAt(rootKey).IsWithinKeyboard(keyCount);
         }
     }
 }

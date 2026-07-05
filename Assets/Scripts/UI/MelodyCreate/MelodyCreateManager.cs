@@ -165,7 +165,7 @@ namespace Assets.Scripts.UI.MelodyCreate
 
         private void LoadMainScene()
         {
-            MelodyPlayer.Instance.StopMelody(true, shouldDelayRecordStop: false);
+            MelodyPlayer.Instance.StopMelodyAndReset();
             SceneManager.LoadScene(_mainSceneName);
         }
     }

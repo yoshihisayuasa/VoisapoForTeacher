@@ -19,10 +19,8 @@ namespace Assets.Scripts.UI.Piano
         [Tooltip("鍵盤一覧")] private List<PianoKeyUI>
             _pianoKeys;
 
-        private (PianoNote Min, PianoNote Max)? _highlightedKeys;
-        private PianoNote _selectedKey;
-        private readonly HashSet<PianoNote> _playingKeys = new();
-        private readonly HashSet<PianoNote> _coloredKeys = new();
+        private PianoKeyHighlighter _highlighter;
+        private PianoKeyPlayback _playback;
         private Dictionary<PianoNoteEnum, PianoKeyUI> _keyDict;
 
         // キーボード操作・受信など、ポインタ以外からの押下／離鍵を注入するストリーム。
@@ -41,8 +39,6 @@ namespace Assets.Scripts.UI.Piano
         [SerializeField]
         [Tooltip("ピアノ鍵盤を含む ScrollRect (水平スクロール)")] private ScrollRect _scrollRect;
 
-        [SerializeField]
-        [Tooltip("鍵盤入力のPhoton通信ゲートウェイ")] private PianoNetworkGateway _network;
         public void ApplySoundSet(PianoSoundSet soundSet)
         {
             foreach (var keyUI in _pianoKeys)
@@ -67,6 +63,8 @@ namespace Assets.Scripts.UI.Piano
             {
                 _keyDict[key.NoteEnum] = key;
             }
+            _highlighter = new PianoKeyHighlighter(_keyDict);
+            _playback = new PianoKeyPlayback(_keyDict);
 
             _keyClicks        = new Subject<PianoNote>();
             _keyUps           = new Subject<PianoNote>();
@@ -106,14 +104,8 @@ namespace Assets.Scripts.UI.Piano
                 pointerUps.Subscribe(StopKeySound).AddTo(this);
             }
 
-            // 送信可否（先生のみ）はゲートウェイ側で判定。受信由来も同じ経路を通るが、
-            // 生徒は送信が権限で弾かれるためループしない。
-            // メロディ作成シーンなど Photon を持たないシーンでは _network が未設定のため購読しない。
-            if (_network != null)
-            {
-                OnRootKeyPressedAsObservable.Subscribe(note => _network.SendKeyDown(note)).AddTo(this);
-                OnAnyKeyUpAsObservable.Subscribe(note => _network.SendKeyUp(note)).AddTo(this);
-            }
+            // ネットワーク送信はインフラ層（PianoNetworkGateway）が公開ストリームを購読して行う。
+            // このクラスはネットワークの存在を知らない。
         }
 
         private void Start()
@@ -121,9 +113,12 @@ namespace Assets.Scripts.UI.Piano
             SelectKey(new PianoNote(PianoNoteEnum.C4));
         }
 
+        /// <summary>
+        /// シングルトン重複検知で Awake を早期 return した場合、_highlighter が未初期化のため nullチェックが必要
+        /// </summary>
         private void OnDisable()
         {
-            Deselect();
+            _highlighter?.Deselect();
         }
 
         /// <summary>
@@ -143,16 +138,11 @@ namespace Assets.Scripts.UI.Piano
         /// </summary>
         public void MoveSelection(int delta)
         {
-            Debug.Assert(_selectedKey != null, "_selectedKey is null");
-            int currentIndex = _selectedKey.Index;
-            int nextIndex = Mathf.Clamp(currentIndex + delta, 0, KeyCount - 1);
-            var nextKey = new PianoNote((PianoNoteEnum)nextIndex);
-
-            SelectKey(nextKey);
+            var nextKey = _highlighter.MoveSelection(delta);
             _virtualKeyEnters.OnNext(nextKey);
         }
 
-        public PianoNote SelectedKey => _selectedKey;
+        public PianoNote SelectedKey => _highlighter.SelectedKey;
 
         /// <summary>
         /// ポインタクリック以外（ネットワーク受信・キーボード操作等）からの鍵盤押下を、
@@ -179,13 +169,7 @@ namespace Assets.Scripts.UI.Piano
         /// </summary>
         public void Play(PianoNote pressedKey, bool isPlaySound, float volume)
         {
-            _playingKeys.Add(pressedKey);
-            var key = GetKeyUI(pressedKey);
-            key.SetPlayingVisual();
-            if (isPlaySound)
-            {
-                key.PlaySound(volume * SoundSourceSwitcher.Instance.CurrentVolumeMultiplier);
-            }
+            _playback.Play(pressedKey, isPlaySound, volume);
         }
 
         /// <summary>
@@ -193,7 +177,7 @@ namespace Assets.Scripts.UI.Piano
         /// </summary>
         public void PlayKeySound(PianoNote note)
         {
-            GetKeyUI(note).PlaySound(VolumeManager.Instance.Volume * SoundSourceSwitcher.Instance.CurrentVolumeMultiplier);
+            _playback.PlayKeySound(note);
         }
 
         /// <summary>
@@ -201,66 +185,42 @@ namespace Assets.Scripts.UI.Piano
         /// </summary>
         public void StopKeySound(PianoNote note)
         {
-            GetKeyUI(note).StopSound(BPMManager.Instance.KeyFadeOutSeconds);
+            _playback.StopKeySound(note);
         }
 
-        public void Stop(PianoNote key, bool setPlayedColor)
+        /// <summary>
+        /// 鍵盤を停止し、視覚をデフォルト色に戻す。
+        /// </summary>
+        public void Stop(PianoNote key)
         {
-            _playingKeys.Remove(key);
-            if (setPlayedColor)
-            {
-                _coloredKeys.Add(key);
-            }
-            else
-            {
-                _coloredKeys.Remove(key);
-            }
-            var keyUI = GetKeyUI(key);
-            keyUI.StopSound(BPMManager.Instance.KeyFadeOutSeconds);
-            keyUI.SetKeyVisual(setPlayedColor);
+            _playback.Stop(key);
+        }
+
+        /// <summary>
+        /// 鍵盤を停止し、「演奏済み」色を付けて残す。
+        /// </summary>
+        public void StopAndMarkPlayed(PianoNote key)
+        {
+            _playback.StopAndMarkPlayed(key);
         }
 
         public void StopAllKeys(bool setKeyVisual)
         {
-            float fadeOut = BPMManager.Instance.KeyFadeOutSeconds;
-            foreach (var key in _playingKeys)
-            {
-                var keyUI = GetKeyUI(key);
-                keyUI.StopSound(fadeOut);
-                if(setKeyVisual)
-                {
-                    keyUI.SetKeyVisual(false);
-                }
-                else
-                {
-                    _coloredKeys.Add(key);
-                }
-            }
-            _playingKeys.Clear();
-
-            if (setKeyVisual)
-            {
-                foreach (var key in _coloredKeys)
-                {
-                    var keyUI = GetKeyUI(key);
-                    keyUI.SetKeyVisual(false);
-                }
-                _coloredKeys.Clear();
-            }
+            _playback.StopAllKeys(setKeyVisual);
         }
 
         /// <summary>
         /// 指定したキー範囲が viewport に収まるよう ScrollRect をスクロールする。
         /// </summary>
-        public void EnsureRangeVisible(PianoNote minKey, PianoNote maxKey)
+        public void EnsureRangeVisible(PianoKeyRange range)
         {
-            if (minKey.Index < 0 || maxKey.Index >= KeyCount)
+            if (!range.IsWithinKeyboard(KeyCount))
             {
                 return;
             }
 
-            var minRT = GetKeyUI(minKey).transform as RectTransform;
-            var maxRT = GetKeyUI(maxKey).transform as RectTransform;
+            var minRT = GetKeyUI(range.Min).transform as RectTransform;
+            var maxRT = GetKeyUI(range.Max).transform as RectTransform;
             if (minRT == null || maxRT == null)
             {
                 return;
@@ -274,50 +234,25 @@ namespace Assets.Scripts.UI.Piano
                     maxRT,
                     _scrollRect.horizontalNormalizedPosition);
         }
-        public PianoKeyUI GetKeyUI(PianoNote pressedKey)
+
+        private PianoKeyUI GetKeyUI(PianoNote pressedKey)
         {
             return _keyDict[pressedKey.Note];
         }
 
         public void SelectKey(PianoNote key)
         {
-            if (_selectedKey != null)
-            {
-                GetKeyUI(_selectedKey).ResetAccentColor();
-                RestoreHighlightIfNeeded(_selectedKey);
-            }
-            _selectedKey = key;
-            GetKeyUI(_selectedKey).SetAccentColor();
+            _highlighter.SelectKey(key);
         }
 
         public void Deselect()
         {
-            if (_selectedKey == null) return;
-            GetKeyUI(_selectedKey).ResetAccentColor();
-            RestoreHighlightIfNeeded(_selectedKey);
-            _selectedKey = null;
+            _highlighter.Deselect();
         }
 
-        private void RestoreHighlightIfNeeded(PianoNote key)
+        public void SetHighlight(PianoKeyRange range)
         {
-            if (!_highlightedKeys.HasValue) return;
-            if (key == _highlightedKeys.Value.Min)
-                GetKeyUI(key).SetMinHighlightColor();
-            else if (key == _highlightedKeys.Value.Max)
-                GetKeyUI(key).SetMaxHighlightColor();
-        }
-
-        public void SetHighlight(PianoNote key1, PianoNote key2)
-        {
-            var minKey = key1.Index <= key2.Index ? key1 : key2;
-            var maxKey = key1.Index <= key2.Index ? key2 : key1;
-
-            ClearHighlight();
-
-            _highlightedKeys = (minKey, maxKey);
-
-            if (minKey != _selectedKey) GetKeyUI(minKey).SetMinHighlightColor();
-            if (maxKey != _selectedKey) GetKeyUI(maxKey).SetMaxHighlightColor();
+            _highlighter.SetHighlight(range);
         }
 
         /// <summary>
@@ -325,14 +260,7 @@ namespace Assets.Scripts.UI.Piano
         /// </summary>
         public void ClearHighlight()
         {
-            if (!_highlightedKeys.HasValue) return;
-
-            var oldMin = _highlightedKeys.Value.Min;
-            var oldMax = _highlightedKeys.Value.Max;
-            if (oldMin != _selectedKey) GetKeyUI(oldMin).ResetHighlightedColor();
-            if (oldMax != _selectedKey) GetKeyUI(oldMax).ResetHighlightedColor();
-
-            _highlightedKeys = null;
+            _highlighter.ClearHighlight();
         }
 
     }

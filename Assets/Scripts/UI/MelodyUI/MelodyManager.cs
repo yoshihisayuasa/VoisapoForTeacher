@@ -97,7 +97,7 @@ namespace Assets.Scripts.UI.MelodyUI
 
         public void NavigateToMelodyCreate(string sceneName)
         {
-            MelodyPlayer.Instance.StopMelody(true, shouldDelayRecordStop: false);
+            MelodyPlayer.Instance.StopMelodyAndReset();
             ClearCurrentMelody();
             AutoKeyChangeManager.Instance.SetState(AutoKeyChangeState.None);
             EarphoneModeManager.Instance.SetMode(false);

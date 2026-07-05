@@ -97,7 +97,7 @@ namespace Assets.Scripts.UI.MelodyUI
 
         public void PlayMelody(Melody melody, PlayModeSettings settings)
         {
-            StopMelody(true, shouldDelayRecordStop: false);
+            StopMelodyAndReset();
 
             var piano = PianoController.Instance;
             _currentMelody = melody;
@@ -105,7 +105,25 @@ namespace Assets.Scripts.UI.MelodyUI
             StartCoroutine(PlayMelodyLoopCoroutine(piano, melody));
         }
 
-        public void StopMelody(bool setKeyVisual, bool shouldDelayRecordStop)
+        /// <summary>
+        /// 再生を中断し、鍵盤の色をすべてリセットして録音も即時停止する。
+        /// メロディ切替・新規再生の前処理・移調による再スタートに使う。
+        /// </summary>
+        public void StopMelodyAndReset()
+        {
+            StopMelodyCore(setKeyVisual: true, shouldDelayRecordStop: false);
+        }
+
+        /// <summary>
+        /// 演奏として終了する。演奏済み色を保持し、録音停止は余韻のため遅延させる。
+        /// 停止ボタン・離鍵・ネットワーク停止受信から使う。
+        /// </summary>
+        public void FinishMelody()
+        {
+            StopMelodyCore(setKeyVisual: false, shouldDelayRecordStop: true);
+        }
+
+        private void StopMelodyCore(bool setKeyVisual, bool shouldDelayRecordStop)
         {
             var piano = PianoController.Instance;
             piano.StopAllKeys(setKeyVisual);
@@ -184,7 +202,7 @@ namespace Assets.Scripts.UI.MelodyUI
 
                 foreach (var key in chordKeys)
                 {
-                    piano.Stop(key, false);
+                    piano.Stop(key);
                 }
 
                 _player._onMelodyBegan.OnNext(SoundPlayManager.Instance.IsSoundPlay);
@@ -238,7 +256,7 @@ namespace Assets.Scripts.UI.MelodyUI
 
                 foreach (var key in chordKeys)
                 {
-                    piano.Stop(key, false);
+                    piano.Stop(key);
                 }
             }
         }
@@ -284,7 +302,7 @@ namespace Assets.Scripts.UI.MelodyUI
 
                 foreach (var key in chordKeys)
                 {
-                    piano.Stop(key, false);
+                    piano.Stop(key);
                 }
                 _player._isPlayingChord = false;
 
@@ -295,7 +313,7 @@ namespace Assets.Scripts.UI.MelodyUI
                     var key = pressedKey + note.Interval;
                     piano.Play(key, settings.PlayPiano, VolumeManager.Instance.Volume);
                     yield return new WaitForSeconds(BPMManager.Instance.SecondPerBeat * note.Beats);
-                    piano.Stop(key, true);
+                    piano.StopAndMarkPlayed(key);
                 }
             }
         }
@@ -331,7 +349,7 @@ namespace Assets.Scripts.UI.MelodyUI
         private IEnumerator PlayMelodyLoopCoroutine(PianoController piano, Melody melody)
         {
             var rootKey = piano.SelectedKey;
-            if (!IsMelodyPlayableWithinRange(melody, rootKey, piano.KeyCount))
+            if (!melody.IsPlayableAt(rootKey, piano.KeyCount))
             {
                 yield break;
             }
@@ -353,9 +371,9 @@ namespace Assets.Scripts.UI.MelodyUI
                 if (!playSideChanged)
                 {
                     var nextKey = GetNextRoot(piano.SelectedKey, _autoKeyChangeState);
-                    piano.SelectedKey = nextKey;
+                    piano.SelectKey(nextKey);
 
-                    if (!IsMelodyPlayableWithinRange(melody, nextKey, piano.KeyCount))
+                    if (!melody.IsPlayableAt(nextKey, piano.KeyCount))
                     {
                         break;
                     }
@@ -365,7 +383,7 @@ namespace Assets.Scripts.UI.MelodyUI
                 yield return StartCoroutine(PlayMelodyAtKeyOnce(piano, melody, piano.SelectedKey, _currentSettings));
             }
 
-            StopMelody(false, shouldDelayRecordStop: true);
+            FinishMelody();
         }
 
         private DomainPianoNote GetNextRoot(DomainPianoNote current, AutoKeyChangeState direction)
@@ -385,26 +403,19 @@ namespace Assets.Scripts.UI.MelodyUI
         private void HighlightMelodyRange(PianoController piano, Melody melody)
         {
             var rootKey = piano.SelectedKey;
-            if (rootKey == null || !IsMelodyPlayableWithinRange(melody, rootKey, piano.KeyCount))
+            if (rootKey == null || !melody.IsPlayableAt(rootKey, piano.KeyCount))
             {
                 piano.ClearHighlight();
                 return;
             }
-            piano.SetHighlight(rootKey + melody.MinInterval, rootKey + melody.MaxInterval);
+            piano.SetHighlight(melody.KeyRangeAt(rootKey));
         }
 
         private void EnsureKeyRangeVisible(PianoController piano, Melody melody)
         {
             var rootKey = piano.SelectedKey;
-            if (rootKey == null || !IsMelodyPlayableWithinRange(melody, rootKey, piano.KeyCount)) return;
-            piano.EnsureRangeVisible(rootKey + melody.MinInterval, rootKey + melody.MaxInterval);
-        }
-
-        private bool IsMelodyPlayableWithinRange(Melody melody, DomainPianoNote rootKey, int keyCount)
-        {
-            var minKey = rootKey + melody.MinInterval;
-            var maxKey = rootKey + melody.MaxInterval;
-            return (0 <= minKey.Index) && (maxKey.Index < keyCount);
+            if (rootKey == null || !melody.IsPlayableAt(rootKey, piano.KeyCount)) return;
+            piano.EnsureRangeVisible(melody.KeyRangeAt(rootKey));
         }
         private void HandleAutoKeyChangeState(AutoKeyChangeState newState)
         {
@@ -434,16 +445,16 @@ namespace Assets.Scripts.UI.MelodyUI
             var piano = PianoController.Instance;
             var transposed = piano.SelectedKey + new Interval(step);
 
-            if (!IsMelodyPlayableWithinRange(_currentMelody, transposed, piano.KeyCount))
+            if (!_currentMelody.IsPlayableAt(transposed, piano.KeyCount))
             {
                 return; // 範囲外
             }
 
-            // 現在コード停止（色は保持）
-            StopMelody(true, shouldDelayRecordStop: false);
+            // 現在の再生を中断（色はリセット）
+            StopMelodyAndReset();
 
             // 新ルート設定・再開
-            piano.SelectedKey = transposed;
+            piano.SelectKey(transposed);
             StartCoroutine(PlayMelodyLoopCoroutine(piano, _currentMelody));
         }
 
@@ -496,7 +507,7 @@ namespace Assets.Scripts.UI.MelodyUI
                     if (melody == null) return;
                     if (GetStrategy(melody).StopOnKeyUp)
                     {
-                        StopMelody(false, shouldDelayRecordStop: true);
+                        FinishMelody();
                     }
                 })
                 .AddTo(_pianoDisposable);

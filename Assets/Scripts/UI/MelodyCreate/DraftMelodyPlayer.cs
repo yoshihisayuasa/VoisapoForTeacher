@@ -15,14 +15,14 @@ namespace Assets.Scripts.UI.MelodyCreate
         {
             if (melody == null || root == null) return;
 
-            PianoController.Instance.SelectedKey = root;
+            PianoController.Instance.SelectKey(root);
             var settings = MelodyPlayer.PlayModeSettings.FromFlags(isTeacherSide: true, earphoneOn: false);
             MelodyPlayer.Instance.PlayMelody(melody, settings);
         }
 
         public void Stop()
         {
-            MelodyPlayer.Instance.StopMelody(true, shouldDelayRecordStop: false);
+            MelodyPlayer.Instance.StopMelodyAndReset();
         }
     }
 }

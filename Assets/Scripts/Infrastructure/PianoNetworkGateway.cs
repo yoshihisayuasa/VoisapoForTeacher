@@ -25,6 +25,18 @@ namespace AsseScripts.Infrastructure
         {
             if (!AppMode.IsTeacher) return;
 
+            // 鍵盤イベントはインフラ側（ここ）から購読しに行く。UI層にネットワークの存在を知らせないため。
+            // 生徒は上のガードで購読しないため、受信由来の PressKey がここへ戻ってループすることもない。
+            // PianoController.Instance は Awake で初期化済み（Start はすべての Awake の後に走る）。
+            var piano = PianoController.Instance;
+            piano.OnRootKeyPressedAsObservable
+                .Subscribe(SendKeyDown)
+                .AddTo(this);
+
+            piano.OnAnyKeyUpAsObservable
+                .Subscribe(SendKeyUp)
+                .AddTo(this);
+
             SoundPlayManager.Instance.OnStateChanged
                 .Subscribe(SendSoundPlayState)
                 .AddTo(this);
@@ -134,7 +146,7 @@ namespace AsseScripts.Infrastructure
         [PunRPC]
         private void StopMelodyReciver()
         {
-            MelodyPlayer.Instance.StopMelody(false, shouldDelayRecordStop: true);
+            MelodyPlayer.Instance.FinishMelody();
         }
 
         public void SendSoundSetSelection(int index)
