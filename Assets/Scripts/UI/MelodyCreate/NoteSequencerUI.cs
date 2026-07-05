@@ -48,7 +48,7 @@ namespace Assets.Scripts.UI.MelodyCreate
             _deleteButton.onClick.AddListener(OnDeleteClicked);
             _clearButton.onClick.AddListener(OnClearClicked);
 
-            PianoController.Instance.OnAnyKeyClickAsObservable
+            PianoController.Instance.OnRootKeyPressedAsObservable
                 .Subscribe(OnPianoKeyClicked)
                 .AddTo(this);
 

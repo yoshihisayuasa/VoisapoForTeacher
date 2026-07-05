@@ -12,6 +12,7 @@ namespace AsseScripts.UI
         public Observable<int> BpmChanged => _bpmChanged;
 
         public float SecondPerBeat => _bpm.SecondPerBeat;
+        public float KeyFadeOutSeconds => _bpm.KeyFadeOutSeconds;
         public int Value => _bpm.Value;
 
 

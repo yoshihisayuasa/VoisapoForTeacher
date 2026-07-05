@@ -28,6 +28,11 @@ namespace Assets.Scripts.UI
 
         private void InitializeRecordingDeviceDropdown()
         {
+            //生徒の場合はnull
+            if (_recordingDeviceDropdown == null)
+            {
+                return;
+            }
             _recordingDeviceDropdown.ClearOptions();
 
             var devices = PhraseRecorder.Instance.AvailableDevices;
@@ -47,6 +52,10 @@ namespace Assets.Scripts.UI
 
         private void InitializeSoundSourceDropdown()
         {
+            if (_soundSourceDropdown == null)
+            {
+                return;
+            }
             _soundSourceDropdown.ClearOptions();
 
             foreach (var name in SoundSourceSwitcher.Instance.SoundSetNames)

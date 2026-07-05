@@ -5,12 +5,12 @@ namespace Assets.Scripts.UI
 {
     public sealed class SettingsButton : MonoBehaviour
     {
-        private const string SettingsModalResourcePath =
-            "Prefab/UnityScreenNavigator/Modal/pfb_ui_modal_settings";
+        [SerializeField]
+        private string _settingsModalResourcePath;
 
         public void OnClick()
         {
-            ModalContainer.Find("ModalContainer").Push(SettingsModalResourcePath, true);
+            ModalContainer.Find("ModalContainer").Push(_settingsModalResourcePath, true);
         }
     }
 }

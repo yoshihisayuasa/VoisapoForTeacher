@@ -6,7 +6,8 @@ using UnityEngine.EventSystems;
 namespace Assets.Scripts.UI.Piano
 {
     /// <summary>
-    /// 鍵盤クリック・ホバーの入力検知（UI層）。先生ビルドにのみ存在し、生徒ビルドではAwakeで自身を破棄する。
+    /// 鍵盤クリック・ホバーの入力検知（UI層）。先生・生徒どちらのビルドにも存在する。
+    /// 検知結果の使われ方はビルドで異なる（PianoController参照）。
     /// </summary>
     public sealed class PianoKeyInputUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler
     {
@@ -22,11 +23,6 @@ namespace Assets.Scripts.UI.Piano
 
         private void Awake()
         {
-            if (!AppMode.IsTeacher)
-            {
-                Destroy(this);
-                return;
-            }
             _keyUI = GetComponent<PianoKeyUI>();
         }
 

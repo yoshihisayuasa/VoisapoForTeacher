@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Domain.Entities;
+﻿using Assets.Scripts;
+using Assets.Scripts.Domain.Entities;
 using Assets.Scripts.Domain.ValueObjects;
 using Assets.Scripts.UI.Piano;
 using R3;
@@ -14,13 +15,13 @@ namespace Assets.Scripts.UI.MelodyUI
 {
     public sealed class MelodyPlayer : MonoBehaviour
     {
-        private readonly Subject<bool> _onPlayBegan = new();
         private readonly Subject<bool> _onPlayEnded = new();
         private readonly Subject<bool> _onMelodyBegan = new();
+        private readonly Subject<bool> _onTeacherPlayStatus = new();
 
-        public Observable<bool> OnPlayBegan => _onPlayBegan;
         public Observable<bool> OnPlayEnded => _onPlayEnded;
         public Observable<bool> OnMelodyBegan => _onMelodyBegan;
+        public Observable<bool> OnTeacherPlayStatus => _onTeacherPlayStatus;
 
         public readonly struct PlayModeSettings
         {
@@ -56,7 +57,6 @@ namespace Assets.Scripts.UI.MelodyUI
             }
         }
 
-        private bool _isTeacherSide = false;
         private Melody _currentMelody;
         public static MelodyPlayer Instance { get; private set; }
 
@@ -95,17 +95,9 @@ namespace Assets.Scripts.UI.MelodyUI
             _metronomePlayer = new MetronomePlayer(_metronomeAudioSource, _metronomeClip);
         }
 
-        public void SetTeacherSide(bool value)
-        {
-            _isTeacherSide = value;
-            RefreshCurrentSettings();
-        }
-
         public void PlayMelody(Melody melody, PlayModeSettings settings)
         {
             StopMelody(true, shouldDelayRecordStop: false);
-
-            _onPlayBegan.OnNext(_isTeacherSide);
 
             var piano = PianoController.Instance;
             _currentMelody = melody;
@@ -116,7 +108,7 @@ namespace Assets.Scripts.UI.MelodyUI
         public void StopMelody(bool setKeyVisual, bool shouldDelayRecordStop)
         {
             var piano = PianoController.Instance;
-            piano.StopMelody(setKeyVisual);
+            piano.StopAllKeys(setKeyVisual);
 
             StopAllCoroutines();
             _isPlayingChord = false;
@@ -145,7 +137,7 @@ namespace Assets.Scripts.UI.MelodyUI
             public IEnumerator Execute(PianoController piano, Melody melody,
                                        DomainPianoNote pressedKey, PlayModeSettings settings)
             {
-                _player._onMelodyBegan.OnNext(_player._isTeacherSide);
+                _player._onMelodyBegan.OnNext(SoundPlayManager.Instance.IsSoundPlay);
                 piano.Play(pressedKey, settings.PlayPiano, VolumeManager.Instance.Volume);
                 yield break;
             }
@@ -195,7 +187,7 @@ namespace Assets.Scripts.UI.MelodyUI
                     piano.Stop(key, false);
                 }
 
-                _player._onMelodyBegan.OnNext(_player._isTeacherSide);
+                _player._onMelodyBegan.OnNext(SoundPlayManager.Instance.IsSoundPlay);
                 while (true)
                 {
                     if (settings.PlayMetronome)
@@ -322,7 +314,18 @@ namespace Assets.Scripts.UI.MelodyUI
         private IEnumerator PlayMelodyAtKeyOnce(PianoController piano, Melody melody,
                                                 DomainPianoNote pressedKey, PlayModeSettings settings)
         {
+            NotifyTeacherPlayStatus();
             yield return StartCoroutine(GetStrategy(melody).Execute(piano, melody, pressedKey, settings));
+        }
+
+        // 「先生側で鳴っているか」は端末ごとに視点が異なる。先生は自分が音源側なら true、
+        // 生徒は状態が反転同期されるため自分が音源側でない（false）ときが先生側再生。
+        // ループ再生中に音源側が切り替わっても表示へ追従できるよう、再生のたびに現在状態を通知する。
+        private void NotifyTeacherPlayStatus()
+        {
+            bool isSoundPlay = SoundPlayManager.Instance.IsSoundPlay;
+            bool isTeacherSidePlaying = AppMode.IsTeacher ? isSoundPlay : !isSoundPlay;
+            _onTeacherPlayStatus.OnNext(isTeacherSidePlaying);
         }
 
         private IEnumerator PlayMelodyLoopCoroutine(PianoController piano, Melody melody)
@@ -344,7 +347,7 @@ namespace Assets.Scripts.UI.MelodyUI
 
             while (_autoKeyChangeState != AutoKeyChangeState.None)
             {
-                piano.StopMelody(true);
+                piano.StopAllKeys(true);
 
                 bool playSideChanged = _currentSettings.PlayPiano != prevPlaySide;
                 if (!playSideChanged)
@@ -475,7 +478,7 @@ namespace Assets.Scripts.UI.MelodyUI
             var piano = PianoController.Instance;
             if (piano == null) return;
 
-            piano.OnAnyKeyClickAsObservable
+            piano.OnRootKeyPressedAsObservable
                 .Subscribe(key =>
                 {
                     var melody = MelodyManager.Instance.CurrentMelody;

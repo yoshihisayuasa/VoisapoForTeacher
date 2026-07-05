@@ -13,13 +13,15 @@ namespace Assets.Scripts.UI
         {
             _statusText.gameObject.SetActive(false);
 
-            MelodyPlayer.Instance.OnPlayBegan
-                .Subscribe(isTeacherSide =>
+            MelodyPlayer.Instance.OnTeacherPlayStatus
+                .Subscribe(isTeacherSidePlaying =>
                 {
-                    if (!isTeacherSide) return;
-                    _statusText.text = "Playing on teacher side";
-                    _statusText.color = AppColors.TeacherSide;
-                    _statusText.gameObject.SetActive(true);
+                    if (isTeacherSidePlaying)
+                    {
+                        _statusText.text = "Playing on teacher side";
+                        _statusText.color = AppColors.TeacherSide;
+                    }
+                    _statusText.gameObject.SetActive(isTeacherSidePlaying);
                 })
                 .AddTo(this);
 

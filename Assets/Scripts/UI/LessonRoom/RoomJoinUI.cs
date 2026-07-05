@@ -1,3 +1,4 @@
+using Assets.Scripts.UI.Modal;
 using R3;
 using TMPro;
 using UnityEngine;
@@ -15,6 +16,8 @@ namespace Assets.Scripts.UI.LessonRoom
         [SerializeField] private Button _joinButton;
         [SerializeField] private TMP_Text _buttonLabel;
         [SerializeField] private PhotonRoomJoiner _photonRoomJoiner;
+
+        [SerializeField] private string _roomNotFoundBody = "Login failed. Please check the ID.";
 
         private bool _isJoined;
         private bool _isBusy = false;
@@ -37,7 +40,7 @@ namespace Assets.Scripts.UI.LessonRoom
                 .AddTo(this);
 
             _photonRoomJoiner.OnRoomNotFound
-                .Subscribe(_ => OnFinishedBusy())
+                .Subscribe(_ => OnRoomNotFound())
                 .AddTo(this);
 
             _photonRoomJoiner.OnConnectionError
@@ -61,6 +64,7 @@ namespace Assets.Scripts.UI.LessonRoom
         {
             _joinButton.interactable = CanInteract();
             _buttonLabel.text = _isJoined ? _logoutLabel : _loginLabel;
+            _inputField.interactable = !_isJoined;
         }
 
         private void OnButtonClicked()
@@ -97,10 +101,11 @@ namespace Assets.Scripts.UI.LessonRoom
             RefreshButton();
         }
 
-        private void OnFinishedBusy()
+        private void OnRoomNotFound()
         {
             _isBusy = false;
             RefreshButton();
+            ConfirmModalUI.Show(_roomNotFoundBody);
         }
 
         private void OnDisconnected()

@@ -30,8 +30,13 @@ namespace Assets.Scripts.UI.Piano
         private Subject<PianoNote> _keyUps;
         private Subject<PianoNote> _virtualKeyEnters;
 
-        // 選択確定後にクリックを外部へ通知するストリーム。
-        private Subject<PianoNote> _anyKeyClick;
+        // 根音(SelectedKey)として確定した押下を外部へ通知するストリーム。
+        private Subject<PianoNote> _rootKeyPressed;
+
+        // 外部公開する鍵盤イベント（押下確定・離鍵・ホバー進入）。Awake で組み立てる。
+        public Observable<PianoNote> OnRootKeyPressedAsObservable { get; private set; }
+        public Observable<PianoNote> OnAnyKeyUpAsObservable { get; private set; }
+        public Observable<PianoNote> OnAnyKeyEnterAsObservable { get; private set; }
 
         [SerializeField]
         [Tooltip("ピアノ鍵盤を含む ScrollRect (水平スクロール)")] private ScrollRect _scrollRect;
@@ -66,35 +71,47 @@ namespace Assets.Scripts.UI.Piano
             _keyClicks        = new Subject<PianoNote>();
             _keyUps           = new Subject<PianoNote>();
             _virtualKeyEnters = new Subject<PianoNote>();
-            _anyKeyClick      = new Subject<PianoNote>();
+            _rootKeyPressed      = new Subject<PianoNote>();
 
-            // 鍵盤クリックの入力検知は先生ビルドにのみ存在する（PianoKeyInputUI参照）。
-            var keyInputs = AppMode.IsTeacher
-                ? _pianoKeys.Select(k => k.GetComponent<PianoKeyInputUI>())
-                : Enumerable.Empty<PianoKeyInputUI>();
+            // 鍵盤のポインタ入力検知（PianoKeyInputUI）は先生・生徒どちらのビルドにも存在する。
+            var keyInputs = _pianoKeys
+                .Select(k => k.GetComponent<PianoKeyInputUI>())
+                .Where(k => k != null)
+                .ToList();
 
-            var pointerUps = keyInputs.Select(k => k.OnPointerUpAsObservable).Merge();
+            Observable<PianoNote> pointerDowns  = keyInputs.Select(k => k.OnClickKeyAsObservable).Merge();
+            Observable<PianoNote> pointerUps    = keyInputs.Select(k => k.OnPointerUpAsObservable).Merge();
+            Observable<PianoNote> pointerEnters = keyInputs.Select(k => k.OnPointerEnterAsObservable).Merge();
 
-            // 再生は「根音(SelectedKey)を確定してから」通知する。生のクリックを一旦受けて
-            // SelectKey 後に _anyKeyClick へ流し直すことで、購読者の登録順に依存せず
+            // 再生は「根音(SelectedKey)を確定してから」通知する。生の押下入力を一旦受けて
+            // SelectKey 後に _rootKeyPressed へ流し直すことで、購読者の登録順に依存せず
             // すべての購読者が確定後の SelectedKey を読めるようにする。
-            var rawClicks = keyInputs.Select(k => k.OnClickKeyAsObservable).Merge().Merge(_keyClicks);
-            rawClicks.Subscribe(note =>
+            // 先生はポインタ押下も起点になるが、生徒のポインタ押下はメロディ・選択・ハイライトへは流さず、
+            // 下の単音ローカル再生だけに使う（生徒がこのパイプラインへ流すのはネットワーク受信＝_keyClicksのみ）。
+            Observable<PianoNote> rootKeyPresses = AppMode.IsTeacher? pointerDowns.Merge(_keyClicks) : _keyClicks;
+            rootKeyPresses.Subscribe(note =>
             {
                 SelectKey(note);
-                _anyKeyClick.OnNext(note);
+                _rootKeyPressed.OnNext(note);
             }).AddTo(this);
 
-            OnAnyKeyClickAsObservable = _anyKeyClick;
-            OnAnyKeyUpAsObservable    = pointerUps.Merge(_keyUps);
-            OnAnyKeyEnterAsObservable = keyInputs.Select(k => k.OnPointerEnterAsObservable).Merge().Merge(_virtualKeyEnters);
+            OnRootKeyPressedAsObservable = _rootKeyPressed;
+            OnAnyKeyUpAsObservable    = AppMode.IsTeacher ? pointerUps.Merge(_keyUps) : _keyUps;
+            OnAnyKeyEnterAsObservable = AppMode.IsTeacher ? pointerEnters.Merge(_virtualKeyEnters) : _virtualKeyEnters;
+
+            // 生徒は鍵盤を押している間だけ、その鍵盤の音をローカルで鳴らす（ハイライト無し）。
+            if (!AppMode.IsTeacher)
+            {
+                pointerDowns.Subscribe(PlayKeySound).AddTo(this);
+                pointerUps.Subscribe(StopKeySound).AddTo(this);
+            }
 
             // 送信可否（先生のみ）はゲートウェイ側で判定。受信由来も同じ経路を通るが、
             // 生徒は送信が権限で弾かれるためループしない。
             // メロディ作成シーンなど Photon を持たないシーンでは _network が未設定のため購読しない。
             if (_network != null)
             {
-                OnAnyKeyClickAsObservable.Subscribe(note => _network.SendKeyDown(note)).AddTo(this);
+                OnRootKeyPressedAsObservable.Subscribe(note => _network.SendKeyDown(note)).AddTo(this);
                 OnAnyKeyUpAsObservable.Subscribe(note => _network.SendKeyUp(note)).AddTo(this);
             }
         }
@@ -117,7 +134,7 @@ namespace Assets.Scripts.UI.Piano
             _keyClicks?.Dispose();
             _keyUps?.Dispose();
             _virtualKeyEnters?.Dispose();
-            _anyKeyClick?.Dispose();
+            _rootKeyPressed?.Dispose();
         }
 
         /// <summary>
@@ -135,15 +152,7 @@ namespace Assets.Scripts.UI.Piano
             _virtualKeyEnters.OnNext(nextKey);
         }
 
-        public Observable<PianoNote> OnAnyKeyUpAsObservable { get; private set; }
-        public Observable<PianoNote> OnAnyKeyClickAsObservable { get; private set; }
-        public Observable<PianoNote> OnAnyKeyEnterAsObservable { get; private set; }
-
-        public PianoNote SelectedKey
-        {
-            get => _selectedKey;
-            set => SelectKey(value);
-        }
+        public PianoNote SelectedKey => _selectedKey;
 
         /// <summary>
         /// ポインタクリック以外（ネットワーク受信・キーボード操作等）からの鍵盤押下を、
@@ -179,6 +188,22 @@ namespace Assets.Scripts.UI.Piano
             }
         }
 
+        /// <summary>
+        /// 指定鍵盤の音だけを鳴らす（視覚変化なし）。生徒が鍵盤を押している間の単音演奏用。
+        /// </summary>
+        public void PlayKeySound(PianoNote note)
+        {
+            GetKeyUI(note).PlaySound(VolumeManager.Instance.Volume * SoundSourceSwitcher.Instance.CurrentVolumeMultiplier);
+        }
+
+        /// <summary>
+        /// 指定鍵盤の音だけをフェードアウト停止する（視覚変化なし）。生徒が鍵盤を離したとき用。
+        /// </summary>
+        public void StopKeySound(PianoNote note)
+        {
+            GetKeyUI(note).StopSound(BPMManager.Instance.KeyFadeOutSeconds);
+        }
+
         public void Stop(PianoNote key, bool setPlayedColor)
         {
             _playingKeys.Remove(key);
@@ -191,13 +216,13 @@ namespace Assets.Scripts.UI.Piano
                 _coloredKeys.Remove(key);
             }
             var keyUI = GetKeyUI(key);
-            keyUI.StopSound(BPMManager.Instance.SecondPerBeat * 0.6f);
+            keyUI.StopSound(BPMManager.Instance.KeyFadeOutSeconds);
             keyUI.SetKeyVisual(setPlayedColor);
         }
 
-        public void StopMelody(bool setKeyVisual)
+        public void StopAllKeys(bool setKeyVisual)
         {
-            float fadeOut = BPMManager.Instance.SecondPerBeat * 0.6f;
+            float fadeOut = BPMManager.Instance.KeyFadeOutSeconds;
             foreach (var key in _playingKeys)
             {
                 var keyUI = GetKeyUI(key);
@@ -249,10 +274,6 @@ namespace Assets.Scripts.UI.Piano
                     maxRT,
                     _scrollRect.horizontalNormalizedPosition);
         }
-        /// <summary>
-        /// インデックスが鍵盤配列の範囲内か判定します。
-        /// </summary>
-
         public PianoKeyUI GetKeyUI(PianoNote pressedKey)
         {
             return _keyDict[pressedKey.Note];

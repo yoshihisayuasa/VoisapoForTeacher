@@ -36,5 +36,12 @@ namespace AsseScripts.Domain
         }
 
         public float SecondPerBeat => 60f / Value;
+
+        /// <summary>
+        /// 鍵盤音のフェードアウトは1拍の0.6倍の長さで行う。
+        /// </summary>
+        private const float KeyFadeOutBeatRatio = 0.6f;
+
+        public float KeyFadeOutSeconds => SecondPerBeat * KeyFadeOutBeatRatio;
     }
 }
