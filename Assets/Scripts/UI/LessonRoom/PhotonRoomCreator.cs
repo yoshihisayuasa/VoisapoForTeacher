@@ -82,7 +82,10 @@ namespace Assets.Scripts.UI.LessonRoom
         private void CreateRoom()
         {
             _pendingRoomId = RoomId.Generate();
-            PhotonNetwork.CreateRoom(_pendingRoomId.Value);
+
+            // レッスンは先生1人＋生徒1人の前提。運用ルールではなく Photon 自体に上限を守らせる。
+            var options = new RoomOptions { MaxPlayers = 2 };
+            PhotonNetwork.CreateRoom(_pendingRoomId.Value, options);
         }
     }
 }

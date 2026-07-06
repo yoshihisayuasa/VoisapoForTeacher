@@ -1441,8 +1441,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 298719250}
-  - component: {fileID: 298719249}
   - component: {fileID: 298719248}
+  - component: {fileID: 298719251}
   m_Layer: 0
   m_Name: PhotonManager
   m_TagString: Untagged
@@ -1462,29 +1462,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e42650bf2b46024cad001863f3282f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AsseScripts.Infrastructure.PianoNetworkGateway
-  _photonView: {fileID: 298719249}
---- !u!114 &298719249
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 298719247}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 1
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!4 &298719250
 Transform:
   m_ObjectHideFlags: 0
@@ -1500,6 +1477,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &298719251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 298719247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26759fcb3b1eaec4eabb48769eea154c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.NetworkEventRouter
+  _gateway: {fileID: 298719248}
 --- !u!1 &342695081
 GameObject:
   m_ObjectHideFlags: 0
@@ -10861,7 +10851,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9008306001989273675, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 747.99994
+      value: -528.73785
       objectReference: {fileID: 0}
     - target: {fileID: 9008306001989273675, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_AnchoredPosition.y

@@ -130,30 +130,31 @@ namespace Assets.Scripts.UI
                 .AddTo(this);
 
             _gateway.StudentJoined
-                .Subscribe(ResendCurrentStateTo)
+                .Subscribe(_ => ResendCurrentState())
                 .AddTo(this);
         }
 
         /// <summary>
         /// 後から入室した生徒に、先生の現在の状態（選択メロディ・音再生状態・BPM・音源）を再送する。
+        /// 生徒は1人前提（ルームは MaxPlayers=2）のため、全員向け送信＝入室した生徒向けになる。
         /// 音再生状態は、新規起動の生徒なら既定値（鳴らさない）と一致するため冗長だが、
         /// 古い状態を保持したまま再入室した生徒（例：切断→再接続）を訂正できるのはこの再送だけ。
         /// 削除すると先生・生徒の両方で音が鳴る穴が開く。
         /// </summary>
-        private void ResendCurrentStateTo(RemotePeer student)
+        private void ResendCurrentState()
         {
             var melody = MelodyManager.Instance.CurrentMelody;
             if (melody != null)
             {
-                _gateway.SendMelodySelectionTo(student, melody);
+                _gateway.SendMelodySelection(melody);
             }
 
-            _gateway.SendSoundPlayStateTo(student, SoundPlayManager.Instance.IsSoundPlay);
-            _gateway.SendBpmTo(student, BPMManager.Instance.Value);
+            _gateway.SendSoundPlayState(SoundPlayManager.Instance.IsSoundPlay);
+            _gateway.SendBpm(BPMManager.Instance.Value);
 
             if (SoundSourceSwitcher.Instance != null)
             {
-                _gateway.SendSoundSetSelectionTo(student, SoundSourceSwitcher.Instance.CurrentIndex);
+                _gateway.SendSoundSetSelection(SoundSourceSwitcher.Instance.CurrentIndex);
             }
         }
     }

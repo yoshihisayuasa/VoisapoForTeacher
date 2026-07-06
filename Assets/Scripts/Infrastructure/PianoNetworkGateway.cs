@@ -1,36 +1,41 @@
 using Assets.Scripts;
 using Assets.Scripts.Domain.Entities;
 using AsseScripts.Domain;
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using R3;
-using UnityEngine;
 
 namespace AsseScripts.Infrastructure
 {
-    /// <summary>
-    /// 送信先の生徒を表す不透明トークン。Photon の Player 型を UI 層へ漏らさないための包み。
-    /// </summary>
-    public readonly struct RemotePeer
-    {
-        internal Player Player { get; }
-
-        internal RemotePeer(Player player)
-        {
-            Player = player;
-        }
-    }
-
     /// <summary>
     /// 鍵盤入力・先生状態のPhoton通信を1箇所に集約するゲートウェイ（インフラ層）。
     /// 送信メソッドと受信ストリーム（ドメイン型）を公開するだけで、
     /// 受信が誰にどう影響するかは知らない（采配は UI 層の NetworkEventRouter が行う）。
     /// 送信可否（先生のみ・入室中のみ）の判定はここで行う。
+    ///
+    /// 通信は RaiseEvent（イベントコード方式）を使う。PhotonView / ViewID には依存しないため、
+    /// 先生・生徒シーン間で ViewID を一致させる必要がなく、エディタの ID 振り直しの影響を受けない。
+    ///
+    /// ルームは先生1人＋生徒1人の前提（PhotonRoomCreator が MaxPlayers=2 で強制）。
+    /// そのため宛先は常に「自分以外の全員」で足り、個別指定の送信は持たない。
     /// </summary>
-    public sealed class PianoNetworkGateway : MonoBehaviourPunCallbacks
+    public sealed class PianoNetworkGateway : MonoBehaviourPunCallbacks, IOnEventCallback
     {
-        [SerializeField]
-        [Tooltip("このGameObjectに付与したPhotonView")] private PhotonView _photonView;
+        /// <summary>
+        /// 先生・生徒ビルド間の通信プロトコル（イベントコード）。
+        /// Photon の予約領域（200以降）を避け、1〜199 の範囲で定義する。
+        /// </summary>
+        private static class EventCode
+        {
+            public const byte KeyDown = 1;
+            public const byte KeyUp = 2;
+            public const byte MelodySelection = 3;
+            public const byte Bpm = 4;
+            public const byte Stop = 5;
+            public const byte SoundSetSelection = 6;
+            public const byte SoundPlayState = 7;
+        }
 
         private readonly Subject<PianoNote> _keyDownReceived = new();
         private readonly Subject<PianoNote> _keyUpReceived = new();
@@ -39,7 +44,7 @@ namespace AsseScripts.Infrastructure
         private readonly Subject<Unit> _stopReceived = new();
         private readonly Subject<int> _soundSetReceived = new();
         private readonly Subject<bool> _soundPlayStateReceived = new();
-        private readonly Subject<RemotePeer> _studentJoined = new();
+        private readonly Subject<Unit> _studentJoined = new();
         private readonly Subject<bool> _studentPresenceChanged = new();
 
         public Observable<PianoNote> KeyDownReceived => _keyDownReceived;
@@ -50,8 +55,8 @@ namespace AsseScripts.Infrastructure
         public Observable<int> SoundSetReceived => _soundSetReceived;
         public Observable<bool> SoundPlayStateReceived => _soundPlayStateReceived;
 
-        /// <summary>後から入室した生徒。状態の再送先として通知する。</summary>
-        public Observable<RemotePeer> StudentJoined => _studentJoined;
+        /// <summary>生徒が後から入室した（状態の再送が必要になった）ことを通知する。</summary>
+        public Observable<Unit> StudentJoined => _studentJoined;
 
         /// <summary>生徒の在室状態の変化（入室で true、退室時は残員から判定）。</summary>
         public Observable<bool> StudentPresenceChanged => _studentPresenceChanged;
@@ -67,7 +72,7 @@ namespace AsseScripts.Infrastructure
             if (!AppMode.IsTeacher) return;
 
             _studentPresenceChanged.OnNext(true);
-            _studentJoined.OnNext(new RemotePeer(newPlayer));
+            _studentJoined.OnNext(Unit.Default);
         }
 
         public override void OnPlayerLeftRoom(Player otherPlayer)
@@ -82,69 +87,44 @@ namespace AsseScripts.Infrastructure
         public void SendMelodySelection(Melody melody)
         {
             if (!CanSend() || melody == null) return;
-            _photonView.RPC("SelectMelodyReciver", RpcTarget.Others, MelodyJsonLoader.SerializeMelody(melody));
-        }
-
-        public void SendMelodySelectionTo(RemotePeer peer, Melody melody)
-        {
-            if (!CanSend() || melody == null) return;
-            _photonView.RPC("SelectMelodyReciver", peer.Player, MelodyJsonLoader.SerializeMelody(melody));
+            RaiseToOthers(EventCode.MelodySelection, MelodyJsonLoader.SerializeMelody(melody));
         }
 
         public void SendBpm(int bpm)
         {
             if (!CanSend()) return;
-            _photonView.RPC("BpmReciver", RpcTarget.Others, bpm);
-        }
-
-        public void SendBpmTo(RemotePeer peer, int bpm)
-        {
-            if (!CanSend()) return;
-            _photonView.RPC("BpmReciver", peer.Player, bpm);
+            RaiseToOthers(EventCode.Bpm, bpm);
         }
 
         public void SendStop()
         {
             if (!CanSend()) return;
-            _photonView.RPC("StopMelodyReciver", RpcTarget.Others);
+            RaiseToOthers(EventCode.Stop, null);
         }
 
         public void SendSoundSetSelection(int index)
         {
             if (!CanSend()) return;
-            _photonView.RPC("SelectSoundSetReciver", RpcTarget.Others, index);
-        }
-
-        public void SendSoundSetSelectionTo(RemotePeer peer, int index)
-        {
-            if (!CanSend()) return;
-            _photonView.RPC("SelectSoundSetReciver", peer.Player, index);
+            RaiseToOthers(EventCode.SoundSetSelection, index);
         }
 
         public void SendKeyDown(PianoNote note)
         {
             if (!CanSend()) return;
-            _photonView.RPC("PlayKeyReciver", RpcTarget.Others, note.Index);
+            RaiseToOthers(EventCode.KeyDown, note.Index);
         }
 
         public void SendKeyUp(PianoNote note)
         {
             if (!CanSend()) return;
-            _photonView.RPC("StopKeyReciver", RpcTarget.Others, note.Index);
+            RaiseToOthers(EventCode.KeyUp, note.Index);
         }
 
         public void SendSoundPlayState(bool isSoundPlay)
         {
             if (!CanSend()) return;
             // 先生がfalseならば生徒はtrue、先生がtrueならば生徒はfalse（反転して送信）
-            _photonView.RPC("SoundPlayStateReciver", RpcTarget.Others, !isSoundPlay);
-        }
-
-        public void SendSoundPlayStateTo(RemotePeer peer, bool isSoundPlay)
-        {
-            if (!CanSend()) return;
-            // 送信側で反転（先生がfalseならば生徒はtrue）
-            _photonView.RPC("SoundPlayStateReciver", peer.Player, !isSoundPlay);
+            RaiseToOthers(EventCode.SoundPlayState, !isSoundPlay);
         }
 
         private static bool CanSend()
@@ -152,52 +132,61 @@ namespace AsseScripts.Infrastructure
             return AppMode.IsTeacher && PhotonNetwork.InRoom;
         }
 
-        // ── 受信（RPC をドメイン型のストリームへ流すだけ） ──
-
-        [PunRPC]
-        private void SelectMelodyReciver(string json)
+        private static void RaiseToOthers(byte code, object payload)
         {
-            var melody = MelodyJsonLoader.DeserializeMelody(json);
-            if (melody != null)
+            var options = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
+            PhotonNetwork.RaiseEvent(code, payload, options, SendOptions.SendReliable);
+        }
+
+        // ── 受信（イベントをドメイン型のストリームへ流すだけ） ──
+        // MonoBehaviourPunCallbacks の OnEnable が AddCallbackTarget を呼ぶため、
+        // IOnEventCallback を実装するだけで OnEvent が届く。
+
+        public void OnEvent(EventData photonEvent)
+        {
+            switch (photonEvent.Code)
             {
-                _melodyReceived.OnNext(melody);
+                case EventCode.KeyDown:
+                    _keyDownReceived.OnNext(ToNote(photonEvent.CustomData));
+                    break;
+
+                case EventCode.KeyUp:
+                    _keyUpReceived.OnNext(ToNote(photonEvent.CustomData));
+                    break;
+
+                case EventCode.MelodySelection:
+                    var melody = MelodyJsonLoader.DeserializeMelody((string)photonEvent.CustomData);
+                    if (melody != null)
+                    {
+                        _melodyReceived.OnNext(melody);
+                    }
+                    break;
+
+                case EventCode.Bpm:
+                    _bpmReceived.OnNext((int)photonEvent.CustomData);
+                    break;
+
+                case EventCode.Stop:
+                    _stopReceived.OnNext(Unit.Default);
+                    break;
+
+                case EventCode.SoundSetSelection:
+                    _soundSetReceived.OnNext((int)photonEvent.CustomData);
+                    break;
+
+                case EventCode.SoundPlayState:
+                    _soundPlayStateReceived.OnNext((bool)photonEvent.CustomData);
+                    break;
+
+                // Photon 内部イベント（コード200以降）等は対象外なので無視する。
+                default:
+                    break;
             }
         }
 
-        [PunRPC]
-        private void BpmReciver(int bpm)
+        private static PianoNote ToNote(object payload)
         {
-            _bpmReceived.OnNext(bpm);
-        }
-
-        [PunRPC]
-        private void StopMelodyReciver()
-        {
-            _stopReceived.OnNext(Unit.Default);
-        }
-
-        [PunRPC]
-        private void SelectSoundSetReciver(int index)
-        {
-            _soundSetReceived.OnNext(index);
-        }
-
-        [PunRPC]
-        private void PlayKeyReciver(int index)
-        {
-            _keyDownReceived.OnNext(new PianoNote((PianoNoteEnum)index));
-        }
-
-        [PunRPC]
-        private void StopKeyReciver(int index)
-        {
-            _keyUpReceived.OnNext(new PianoNote((PianoNoteEnum)index));
-        }
-
-        [PunRPC]
-        private void SoundPlayStateReciver(bool isSoundPlay)
-        {
-            _soundPlayStateReceived.OnNext(isSoundPlay);
+            return new PianoNote((PianoNoteEnum)(int)payload);
         }
 
         private void OnDestroy()

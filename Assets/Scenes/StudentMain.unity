@@ -845,11 +845,11 @@ Transform:
   m_GameObject: {fileID: 550012850}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -530.6087, y: -540, z: 0}
-  m_LocalScale: {x: 1.5652174, y: 1.5652174, z: 1.5652174}
+  m_LocalPosition: {x: 181, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1777360669}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &582352852
 PrefabInstance:
@@ -1677,7 +1677,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 167546690534104974, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_Volume
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 208126446521991310, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_LocalScale.y
@@ -1905,7 +1905,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1172368135077384091, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_Volume
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1180374314421045671, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_Enabled
@@ -2981,7 +2981,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5567061635815858572, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_Volume
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5567383887418335628, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_Enabled
@@ -3037,7 +3037,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6188120398069880983, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_Volume
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6194439370300822893, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_LocalScale.y
@@ -3349,7 +3349,7 @@ PrefabInstance:
       objectReference: {fileID: 1015609880}
     - target: {fileID: 7608295814514853527, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_Volume
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7680679502363787158, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_Enabled
@@ -3453,7 +3453,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8071487250748761601, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_Volume
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8071650968428922305, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_AnchorMax.x
@@ -3869,7 +3869,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9008306001989273675, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 753.99994
+      value: 0.0009765625
       objectReference: {fileID: 0}
     - target: {fileID: 9008306001989273675, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -4165,6 +4165,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1015609879}
   - component: {fileID: 1015609880}
+  - component: {fileID: 1015609881}
   m_Layer: 5
   m_Name: PianoScrollRect
   m_TagString: Untagged
@@ -4222,6 +4223,19 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1015609881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1015609878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06a67f6139f800f4089bf981d2c1622d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoZoomController
+  _scrollRect: {fileID: 1015609880}
 --- !u!1 &1034282833
 GameObject:
   m_ObjectHideFlags: 0
@@ -4800,8 +4814,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1503278406}
   - component: {fileID: 1503278405}
-  - component: {fileID: 1503278408}
   - component: {fileID: 1503278407}
+  - component: {fileID: 1503278409}
   m_Layer: 0
   m_Name: PhotonManager
   m_TagString: Untagged
@@ -4848,8 +4862,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e42650bf2b46024cad001863f3282f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AsseScripts.Infrastructure.PianoNetworkGateway
-  _photonView: {fileID: 1503278408}
---- !u!114 &1503278408
+--- !u!114 &1503278409
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4858,19 +4871,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1503278404}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Script: {fileID: 11500000, guid: 26759fcb3b1eaec4eabb48769eea154c, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 1
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.NetworkEventRouter
+  _gateway: {fileID: 1503278407}
 --- !u!1 &1523791404
 GameObject:
   m_ObjectHideFlags: 0
@@ -5207,7 +5211,6 @@ RectTransform:
   - {fileID: 582352853}
   - {fileID: 660572357}
   - {fileID: 1820779833}
-  - {fileID: 550012854}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -5423,6 +5426,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1523791407}
+  - {fileID: 550012854}
   - {fileID: 1777360669}
   - {fileID: 1481061795}
   - {fileID: 1731833572}
