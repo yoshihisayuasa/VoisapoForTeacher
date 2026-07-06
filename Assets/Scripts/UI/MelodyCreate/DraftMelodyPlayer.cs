@@ -16,7 +16,7 @@ namespace Assets.Scripts.UI.MelodyCreate
             if (melody == null || root == null) return;
 
             PianoController.Instance.SelectKey(root);
-            var settings = MelodyPlayer.PlayModeSettings.FromFlags(isTeacherSide: true, earphoneOn: false);
+            var settings = PlayModeSettings.FromFlags(isTeacherSide: true, earphoneOn: false);
             MelodyPlayer.Instance.PlayMelody(melody, settings);
         }
 

@@ -1,11 +1,11 @@
-﻿using Assets.Scripts;
+using Assets.Scripts;
 using Assets.Scripts.Domain.Entities;
 using Assets.Scripts.Domain.ValueObjects;
+using Assets.Scripts.UI.MelodyUI.PlayStrategies;
 using Assets.Scripts.UI.Piano;
 using R3;
 using AsseScripts.UI;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static Assets.Scripts.UI.AutoKeyChangeManager;
@@ -13,7 +13,7 @@ using DomainPianoNote = AsseScripts.Domain.PianoNote;
 
 namespace Assets.Scripts.UI.MelodyUI
 {
-    public sealed class MelodyPlayer : MonoBehaviour
+    public sealed class MelodyPlayer : MonoBehaviour, IMelodyPlaybackContext
     {
         private readonly Subject<bool> _onPlayEnded = new();
         private readonly Subject<bool> _onMelodyBegan = new();
@@ -22,40 +22,6 @@ namespace Assets.Scripts.UI.MelodyUI
         public Observable<bool> OnPlayEnded => _onPlayEnded;
         public Observable<bool> OnMelodyBegan => _onMelodyBegan;
         public Observable<bool> OnTeacherPlayStatus => _onTeacherPlayStatus;
-
-        public readonly struct PlayModeSettings
-        {
-            public bool PlayCode { get; }
-            public bool PlayPiano { get; }
-            public bool PlayMetronome { get; }
-            private PlayModeSettings(bool playCode, bool playMetronome, bool playPiano)
-            {
-                PlayCode = playCode;
-                PlayPiano = playPiano;
-                PlayMetronome = playMetronome;
-            }
-
-            // 生徒ビルドには EarphoneModeManager が存在しないため、
-            // earphoneOn の欠如（null）を「オフ」として扱えるよう nullable で受ける。
-            public static PlayModeSettings FromFlags(bool isTeacherSide, bool? earphoneOn)
-            {
-                if (isTeacherSide)
-                {
-                    // 先生側: コード＋メトロノーム＋ピアノ
-                    return new PlayModeSettings(true, true, true);
-                }
-                else if (earphoneOn ?? false)
-                {
-                    // イヤホンモード: コード＋メトロノーム（ピアノなし）
-                    return new PlayModeSettings(true, true, false);
-                }
-                else
-                {
-                    // 生徒側: すべてオフ
-                    return new PlayModeSettings(false, false, false);
-                }
-            }
-        }
 
         private Melody _currentMelody;
         public static MelodyPlayer Instance { get; private set; }
@@ -135,197 +101,37 @@ namespace Assets.Scripts.UI.MelodyUI
 
             _onPlayEnded.OnNext(shouldDelayRecordStop);
         }
-        private interface IMelodyPlayStrategy
-        {
-            bool SupportAutoKeyChange { get; }
-            bool CanDelete { get; }
-            bool StopOnKeyUp { get; }
-            IEnumerator Execute(PianoController piano, Melody melody,
-                                DomainPianoNote pressedKey, PlayModeSettings settings);
-        }
-
-        private sealed class SinglePlayStrategy : IMelodyPlayStrategy
-        {
-            private readonly MelodyPlayer _player;
-            public SinglePlayStrategy(MelodyPlayer player) => _player = player;
-
-            public bool SupportAutoKeyChange => false;
-            public bool CanDelete => false;
-            public bool StopOnKeyUp => true;
-            public IEnumerator Execute(PianoController piano, Melody melody,
-                                       DomainPianoNote pressedKey, PlayModeSettings settings)
-            {
-                _player._onMelodyBegan.OnNext(SoundPlayManager.Instance.IsSoundPlay);
-                piano.Play(pressedKey, settings.PlayPiano, VolumeManager.Instance.Volume);
-                yield break;
-            }
-        }
-
-        private sealed class MajorWithMetronomePlayStrategy : IMelodyPlayStrategy
-        {
-            private readonly MelodyPlayer _player;
-            public MajorWithMetronomePlayStrategy(MelodyPlayer player) => _player = player;
-
-            public bool SupportAutoKeyChange => false;
-            public bool CanDelete => false;
-            public bool StopOnKeyUp => false;
-
-            public IEnumerator Execute(PianoController piano, Melody melody,
-                                       DomainPianoNote pressedKey, PlayModeSettings settings)
-            {
-                var chordKeys = new List<DomainPianoNote>();
-                foreach (var interval in melody.Chord.Intervals)
-                {
-                    var key = pressedKey + interval;
-                    if (0 <= key.Index && key.Index < piano.KeyCount)
-                    {
-                        chordKeys.Add(key);
-                    }
-                }
-
-                foreach (var key in chordKeys)
-                {
-                    piano.Play(key, settings.PlayCode, VolumeManager.Instance.Volume);
-                }
-
-                _player._isPlayingChord = true;
-
-                float beatSec = BPMManager.Instance.SecondPerBeat;
-                for (int b = 0; b < melody.Chord.Beats; b++)
-                {
-                    if (settings.PlayMetronome)
-                    {
-                        _player._metronomePlayer.PlayOneShot(VolumeManager.Instance.Volume);
-                    }
-                    yield return new WaitForSeconds(beatSec);
-                }
-
-                foreach (var key in chordKeys)
-                {
-                    piano.Stop(key);
-                }
-
-                _player._onMelodyBegan.OnNext(SoundPlayManager.Instance.IsSoundPlay);
-                while (true)
-                {
-                    if (settings.PlayMetronome)
-                    {
-                        _player._metronomePlayer.PlayOneShot(VolumeManager.Instance.Volume);
-                    }
-                    yield return new WaitForSeconds(beatSec);
-                }
-            }
-        }
-
-        private sealed class MajorPlayStrategy : IMelodyPlayStrategy
-        {
-            private readonly MelodyPlayer _player;
-            public MajorPlayStrategy(MelodyPlayer player) => _player = player;
-            public bool SupportAutoKeyChange => false;
-            public bool CanDelete => false;
-            public bool StopOnKeyUp => false;
-            public IEnumerator Execute(PianoController piano, Melody melody,
-                                       DomainPianoNote pressedKey, PlayModeSettings settings)
-            {
-                _player._isPlayingChord = false;
-
-                var chordKeys = new List<DomainPianoNote>();
-                foreach (var interval in melody.Chord.Intervals)
-                {
-                    var key = pressedKey + interval;
-                    if (0 <= key.Index && key.Index < piano.KeyCount)
-                    {
-                        chordKeys.Add(key);
-                    }
-                }
-
-                foreach (var key in chordKeys)
-                {
-                    piano.Play(key, settings.PlayCode, VolumeManager.Instance.Volume);
-                }
-
-                float beatSec = BPMManager.Instance.SecondPerBeat;
-                for (int b = 0; b < melody.Chord.Beats; b++)
-                {
-                    if (settings.PlayMetronome)
-                    {
-                        _player._metronomePlayer.PlayOneShot(VolumeManager.Instance.Volume);
-                    }
-                    yield return new WaitForSeconds(beatSec);
-                }
-
-                foreach (var key in chordKeys)
-                {
-                    piano.Stop(key);
-                }
-            }
-        }
-
-        private sealed class DefaultPlayStrategy : IMelodyPlayStrategy
-        {
-            private readonly MelodyPlayer _player;
-            public DefaultPlayStrategy(MelodyPlayer player) => _player = player;
-
-            public bool SupportAutoKeyChange => true;
-            public bool CanDelete => true;
-            public bool StopOnKeyUp => false;
-
-            public IEnumerator Execute(PianoController piano, Melody melody,
-                                       DomainPianoNote pressedKey, PlayModeSettings settings)
-            {
-                // ── 和音パート ──
-                var chordKeys = new List<DomainPianoNote>();
-                foreach (var interval in melody.Chord.Intervals)
-                {
-                    var key = pressedKey + interval;
-                    if (0 <= key.Index && key.Index < piano.KeyCount)
-                    {
-                        chordKeys.Add(key);
-                    }
-                }
-
-                foreach (var key in chordKeys)
-                {
-                    piano.Play(key, settings.PlayCode, VolumeManager.Instance.Volume);
-                }
-                _player._isPlayingChord = true;
-
-                float beatSec = BPMManager.Instance.SecondPerBeat;
-                for (int b = 0; b < melody.Chord.Beats; b++)
-                {
-                    if (settings.PlayMetronome)
-                    {
-                        _player._metronomePlayer.PlayOneShot(VolumeManager.Instance.Volume);
-                    }
-                    yield return new WaitForSeconds(beatSec);
-                }
-
-                foreach (var key in chordKeys)
-                {
-                    piano.Stop(key);
-                }
-                _player._isPlayingChord = false;
-
-                // ── メロディパート ──
-                _player._onMelodyBegan.OnNext(SoundPlayManager.Instance.IsSoundPlay);
-                foreach (var note in melody.Notes)
-                {
-                    var key = pressedKey + note.Interval;
-                    piano.Play(key, settings.PlayPiano, VolumeManager.Instance.Volume);
-                    yield return new WaitForSeconds(BPMManager.Instance.SecondPerBeat * note.Beats);
-                    piano.StopAndMarkPlayed(key);
-                }
-            }
-        }
 
         private IMelodyPlayStrategy GetStrategy(Melody melody) =>
-            melody.Name switch
+            melody.Kind switch
             {
-                "Single"           => new SinglePlayStrategy(this),
-                "Major& Metronome" => new MajorWithMetronomePlayStrategy(this),
-                "Major Code"       => new MajorPlayStrategy(this),
-                _                  => new DefaultPlayStrategy(this),
+                MelodyKind.Single             => new SinglePlayStrategy(this),
+                MelodyKind.MajorWithMetronome => new MajorWithMetronomePlayStrategy(this),
+                MelodyKind.MajorChord         => new MajorChordPlayStrategy(this),
+                _                             => new StandardPlayStrategy(this),
             };
+
+        // ── IMelodyPlaybackContext（再生戦略からの通知窓口） ──
+
+        void IMelodyPlaybackContext.NotifyMelodyBegan()
+        {
+            _onMelodyBegan.OnNext(SoundPlayManager.Instance.IsSoundPlay);
+        }
+
+        void IMelodyPlaybackContext.BeginChordSection()
+        {
+            _isPlayingChord = true;
+        }
+
+        void IMelodyPlaybackContext.EndChordSection()
+        {
+            _isPlayingChord = false;
+        }
+
+        void IMelodyPlaybackContext.PlayMetronomeBeat()
+        {
+            _metronomePlayer.PlayOneShot(VolumeManager.Instance.Volume);
+        }
 
         public bool CanDeleteMelody(Melody melody) => GetStrategy(melody).CanDelete;
 
@@ -398,8 +204,6 @@ namespace Assets.Scripts.UI.MelodyUI
             return current + interval;
         }
 
-
-
         private void HighlightMelodyRange(PianoController piano, Melody melody)
         {
             var rootKey = piano.SelectedKey;
@@ -417,6 +221,7 @@ namespace Assets.Scripts.UI.MelodyUI
             if (rootKey == null || !melody.IsPlayableAt(rootKey, piano.KeyCount)) return;
             piano.EnsureRangeVisible(melody.KeyRangeAt(rootKey));
         }
+
         private void HandleAutoKeyChangeState(AutoKeyChangeState newState)
         {
             _autoKeyChangeState = newState;

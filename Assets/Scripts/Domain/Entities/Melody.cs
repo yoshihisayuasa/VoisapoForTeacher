@@ -45,6 +45,7 @@ namespace Assets.Scripts.Domain.Entities
     public class Melody
     {
         public string Name { get; }
+        public MelodyKind Kind { get; }
         public Chord Chord { get; }
 
         public IReadOnlyList<Note> Notes { get; }
@@ -56,10 +57,22 @@ namespace Assets.Scripts.Domain.Entities
         public Melody(string name, Chord chord, List<Note> notes)
         {
             Name = name;
+            Kind = ResolveKind(name);
             Chord = chord;
             Notes = notes;
             (_minInterval, _maxInterval) = CalculateIntervalRange();
         }
+
+        /// <summary>
+        /// 表示名から再生種別を解決する。名前と種別の対応はここ1箇所だけが知る。
+        /// </summary>
+        private static MelodyKind ResolveKind(string name) => name switch
+        {
+            "Single"           => MelodyKind.Single,
+            "Major& Metronome" => MelodyKind.MajorWithMetronome,
+            "Major Code"       => MelodyKind.MajorChord,
+            _                  => MelodyKind.Standard,
+        };
         private (Interval min, Interval max) CalculateIntervalRange()
         {
             var chordValues = Chord.Intervals.Select(i => i.Value);
@@ -84,6 +97,18 @@ namespace Assets.Scripts.Domain.Entities
         {
             return KeyRangeAt(rootKey).IsWithinKeyboard(keyCount);
         }
+        /// <summary>
+        /// 根音を与えたとき、和音が使う鍵盤を返す。
+        /// 鍵盤範囲内であることは再生前の IsPlayableAt（音域は和音も含む）が保証するため、ここでは検証しない。
+        /// </summary>
         public IReadOnlyList<PianoNote> ChordKeysAt(PianoNote rootKey)
+        {
+            var keys = new List<PianoNote>(Chord.Intervals.Count);
+            foreach (var interval in Chord.Intervals)
+            {
+                keys.Add(rootKey + interval);
+            }
+            return keys;
+        }
     }
 }
