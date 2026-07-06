@@ -30,7 +30,9 @@
       "Bash(git *)",
       "Read(//c/Users/yuasa/source/repos/VoisapoForTeacher/**)",
       "Bash(find Assets -iname \"PhotonServerSettings*\")",
-      "Bash(dotnet build *)"
+      "Bash(dotnet build *)",
+      "Bash(grep -v \"protected override\\\\|private IEnumerator\\\\|public\\\\|//\")",
+      "PowerShell(Set-Content *)"
     ]
   }
 }
