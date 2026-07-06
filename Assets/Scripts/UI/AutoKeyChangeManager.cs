@@ -1,4 +1,5 @@
-﻿using R3;
+using Assets.Scripts.Domain.ValueObjects;
+using R3;
 
 namespace Assets.Scripts.UI
 {
@@ -20,12 +21,5 @@ namespace Assets.Scripts.UI
                 SetState(target);
             }
         }
-        public enum AutoKeyChangeState
-        {
-            None,
-            Up,
-            Down,
-        }
     }
-
 }

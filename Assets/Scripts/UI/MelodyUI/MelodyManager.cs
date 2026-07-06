@@ -1,10 +1,10 @@
 using Assets.Scripts.Infrastructure;
 using Assets.Scripts.Domain.Entities;
+using Assets.Scripts.Domain.ValueObjects;
 using R3;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static Assets.Scripts.UI.AutoKeyChangeManager;
 
 namespace Assets.Scripts.UI.MelodyUI
 {

@@ -6,9 +6,9 @@ using Assets.Scripts.UI.Piano;
 using R3;
 using Assets.Scripts.UI;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static Assets.Scripts.UI.AutoKeyChangeManager;
 
 namespace Assets.Scripts.UI.MelodyUI
 {
@@ -33,6 +33,8 @@ namespace Assets.Scripts.UI.MelodyUI
         private AudioSource _metronomeAudioSource;
 
         private MetronomePlayer _metronomePlayer;
+        private Dictionary<MelodyKind, IMelodyPlayStrategy> _strategies;
+        private readonly MelodyRangePresenter _rangePresenter = new();
 
         private AutoKeyChangeState _autoKeyChangeState = AutoKeyChangeState.None;
         private AutoKeyChangeState _prevAutoKeyChangeState = AutoKeyChangeState.None;
@@ -58,6 +60,15 @@ namespace Assets.Scripts.UI.MelodyUI
                 _metronomeAudioSource.playOnAwake = false;
             }
             _metronomePlayer = new MetronomePlayer(_metronomeAudioSource, _metronomeClip);
+
+            // 戦略は状態を持たないため、種別ごとに1インスタンスを使い回す。
+            _strategies = new Dictionary<MelodyKind, IMelodyPlayStrategy>
+            {
+                [MelodyKind.Standard]           = new StandardPlayStrategy(this),
+                [MelodyKind.Single]             = new SinglePlayStrategy(this),
+                [MelodyKind.MajorWithMetronome] = new MajorWithMetronomePlayStrategy(this),
+                [MelodyKind.MajorChord]         = new MajorChordPlayStrategy(this),
+            };
         }
 
         public void PlayMelody(Melody melody, PlayModeSettings settings)
@@ -102,13 +113,9 @@ namespace Assets.Scripts.UI.MelodyUI
         }
 
         private IMelodyPlayStrategy GetStrategy(Melody melody) =>
-            melody.Kind switch
-            {
-                MelodyKind.Single             => new SinglePlayStrategy(this),
-                MelodyKind.MajorWithMetronome => new MajorWithMetronomePlayStrategy(this),
-                MelodyKind.MajorChord         => new MajorChordPlayStrategy(this),
-                _                             => new StandardPlayStrategy(this),
-            };
+            _strategies.TryGetValue(melody.Kind, out var strategy)
+                ? strategy
+                : _strategies[MelodyKind.Standard];
 
         // ── IMelodyPlaybackContext（再生戦略からの通知窓口） ──
 
@@ -168,14 +175,14 @@ namespace Assets.Scripts.UI.MelodyUI
                 yield break;
             }
 
-            while (_autoKeyChangeState != AutoKeyChangeState.None)
+            while (_autoKeyChangeState.IsActive())
             {
                 piano.StopAllKeys(true);
 
                 bool playSideChanged = _currentSettings.PlayPiano != prevPlaySide;
                 if (!playSideChanged)
                 {
-                    var nextKey = GetNextRoot(piano.SelectedKey, _autoKeyChangeState);
+                    var nextKey = piano.SelectedKey + _autoKeyChangeState.NextRootStep();
                     piano.SelectKey(nextKey);
 
                     if (!melody.IsPlayableAt(nextKey, piano.KeyCount))
@@ -189,36 +196,6 @@ namespace Assets.Scripts.UI.MelodyUI
             }
 
             FinishMelody();
-        }
-
-        private PianoNote GetNextRoot(PianoNote current, AutoKeyChangeState direction)
-        {
-            int step = direction switch
-            {
-                AutoKeyChangeState.Up   => 1,
-                AutoKeyChangeState.Down => -1,
-                _                       => 0,
-            };
-            var interval = new Interval(step);
-            return current + interval;
-        }
-
-        private void HighlightMelodyRange(PianoController piano, Melody melody)
-        {
-            var rootKey = piano.SelectedKey;
-            if (rootKey == null || !melody.IsPlayableAt(rootKey, piano.KeyCount))
-            {
-                piano.ClearHighlight();
-                return;
-            }
-            piano.SetHighlight(melody.KeyRangeAt(rootKey));
-        }
-
-        private void EnsureKeyRangeVisible(PianoController piano, Melody melody)
-        {
-            var rootKey = piano.SelectedKey;
-            if (rootKey == null || !melody.IsPlayableAt(rootKey, piano.KeyCount)) return;
-            piano.EnsureRangeVisible(melody.KeyRangeAt(rootKey));
         }
 
         private void HandleAutoKeyChangeState(AutoKeyChangeState newState)
@@ -236,18 +213,13 @@ namespace Assets.Scripts.UI.MelodyUI
                 return;
             }
 
-            bool isOpposite =
-                (previous == AutoKeyChangeState.Up && current == AutoKeyChangeState.Down) ||
-                (previous == AutoKeyChangeState.Down && current == AutoKeyChangeState.Up);
-
-            if (!isOpposite)
+            if (!current.IsOppositeOf(previous))
             {
                 return;
             }
 
-            int step = current == AutoKeyChangeState.Up ? +2 : -2;
             var piano = PianoController.Instance;
-            var transposed = piano.SelectedKey + new Interval(step);
+            var transposed = piano.SelectedKey + current.DirectionSwapStep();
 
             if (!_currentMelody.IsPlayableAt(transposed, piano.KeyCount))
             {
@@ -298,9 +270,9 @@ namespace Assets.Scripts.UI.MelodyUI
                 {
                     var melody = MelodyManager.Instance.CurrentMelody;
                     if (melody == null) return;
-                    HighlightMelodyRange(piano, melody);
+                    _rangePresenter.RefreshHighlight(piano, melody);
                     PlayMelody(melody, _currentSettings);
-                    EnsureKeyRangeVisible(piano, melody);
+                    _rangePresenter.EnsureVisible(piano, melody);
                 })
                 .AddTo(_pianoDisposable);
 
@@ -321,7 +293,7 @@ namespace Assets.Scripts.UI.MelodyUI
                 {
                     var melody = MelodyManager.Instance.CurrentMelody;
                     if (melody == null) return;
-                    HighlightMelodyRange(piano, melody);
+                    _rangePresenter.RefreshHighlight(piano, melody);
                 })
                 .AddTo(_pianoDisposable);
         }
@@ -338,7 +310,7 @@ namespace Assets.Scripts.UI.MelodyUI
         {
             if (melody == null) return;
             var piano = PianoController.Instance;
-            HighlightMelodyRange(piano, melody);
+            _rangePresenter.RefreshHighlight(piano, melody);
         }
 
         private void OnDestroy()

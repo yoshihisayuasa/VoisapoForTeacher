@@ -1,4 +1,5 @@
-﻿using R3;
+using Assets.Scripts.Domain.ValueObjects;
+using R3;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,18 +27,18 @@ namespace Assets.Scripts.UI
 
         private void OnUpClicked()
         {
-            AutoKeyChangeManager.Instance.Toggle(AutoKeyChangeManager.AutoKeyChangeState.Up);
+            AutoKeyChangeManager.Instance.Toggle(AutoKeyChangeState.Up);
         }
 
         private void OnDownClicked()
         {
-            AutoKeyChangeManager.Instance.Toggle(AutoKeyChangeManager.AutoKeyChangeState.Down);
+            AutoKeyChangeManager.Instance.Toggle(AutoKeyChangeState.Down);
         }
 
-        private void HandleStateChanged(AutoKeyChangeManager.AutoKeyChangeState state)
+        private void HandleStateChanged(AutoKeyChangeState state)
         {
-            _upImage.color = state == AutoKeyChangeManager.AutoKeyChangeState.Up ? _activeColor : _normalColor;
-            _downImage.color = state == AutoKeyChangeManager.AutoKeyChangeState.Down ? _activeColor : _normalColor;
+            _upImage.color = state == AutoKeyChangeState.Up ? _activeColor : _normalColor;
+            _downImage.color = state == AutoKeyChangeState.Down ? _activeColor : _normalColor;
         }
     }
 }
