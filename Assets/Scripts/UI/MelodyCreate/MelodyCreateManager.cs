@@ -1,6 +1,8 @@
 using Assets.Scripts.Domain.Entities;
 using Assets.Scripts.Domain.Modules;
+using Assets.Scripts.Domain.StaticValues;
 using Assets.Scripts.Domain.ValueObjects;
+using Assets.Scripts.Infrastructure;
 using Assets.Scripts.UI.MelodyUI;
 using Assets.Scripts.UI.Modal;
 using R3;
@@ -55,7 +57,7 @@ namespace Assets.Scripts.UI.MelodyCreate
             Instance = this;
             _draft = new MelodyDraft();
 
-
+            MelodyTemplateLibrary.Initialize(MelodyTemplateLoader.LoadTemplates());
         }
 
         /// <summary>

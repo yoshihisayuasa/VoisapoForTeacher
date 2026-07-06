@@ -8,12 +8,14 @@ namespace Assets.Scripts.Infrastructure
 {
     public static class MelodyTemplateLoader
     {
-        public static IReadOnlyList<Melody> LoadFromResource(string fileName)
+        private const string ResourceFileName = "MelodyCreateTemplate";
+
+        public static IReadOnlyList<Melody> LoadTemplates()
         {
-            var asset = Resources.Load<TextAsset>(fileName);
+            var asset = Resources.Load<TextAsset>(ResourceFileName);
             if (asset == null)
             {
-                Debug.LogError($"テンプレートJSONのロードに失敗: {fileName}");
+                Debug.LogError($"テンプレートJSONのロードに失敗: {ResourceFileName}");
                 return new List<Melody>();
             }
 
