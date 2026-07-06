@@ -8,11 +8,14 @@ namespace Assets.Scripts.Domain.Modules
 {
     /// <summary>
     /// メロディ作成中の可変下書き。
-    /// コード音・コード拍数・メロディ音列を個別に管理する。
+    /// コード音（入力順）・コード拍数・メロディ音列を管理する。
     /// 保存時、メロディ1音目をルートとしてインターバルに変換する。
     /// </summary>
     public sealed class MelodyDraft
     {
+        // コード音は「取り消しは入力の逆順」のため入力順で保持し、
+        // 表示用スロット（高い音から順・不足分は null）は別途組み立てる。
+        private readonly List<PianoNote> _chordEntries = new();
         private readonly DraftNote[] _chordNotes = new DraftNote[Chord.Length];
         private int _chordBeats = 1;
         private readonly List<DraftNote> _melodyNotes = new();
@@ -22,39 +25,62 @@ namespace Assets.Scripts.Domain.Modules
         public int ChordBeats => _chordBeats;
 
         public const int MaxMelodySteps = 26;
-        public int MelodyStepCount => _melodyNotes.Count;
-        public bool CanAddMelodyNote => MelodyStepCount < MaxMelodySteps;
+
+        /// <summary>
+        /// 使用済みステップ数。コード延長分の矢印と、メロディ音符（延長の矢印含む）を合算する。
+        /// </summary>
+        public int UsedSteps => (_chordBeats - 1) + _melodyNotes.Sum(n => n.Beats);
+
+        public bool CanAddMelodyNote => UsedSteps < MaxMelodySteps;
 
         private PianoNote _root;
         public PianoNote Root => _root;
 
+        // ── 入力操作 ─────────────────────────────────────────────────────────
+
+        /// <summary>
+        /// 鍵盤入力を1音追加する。コードが未完成ならコード音、完成済みならメロディ音として扱う。
+        /// </summary>
+        public void AddNote(PianoNote key)
+        {
+            if (!IsChordComplete)
+            {
+                AddChordEntry(key);
+            }
+            else
+            {
+                AddMelodyNote(new DraftNote(key));
+            }
+        }
+
+        /// <summary>
+        /// 直近の入力を1つ取り消す。メロディ → コード拍 → コード音の順に遡る。
+        /// </summary>
+        public void DeleteLast()
+        {
+            if (_melodyNotes.Count > 0)
+            {
+                ShrinkLastStep();
+            }
+            else if (_chordBeats > 1)
+            {
+                ShrinkChord();
+            }
+            else
+            {
+                RemoveLastChordEntry();
+            }
+        }
+
         // ── コード操作 ──────────────────────────────────────────────────────
 
-        public void AddChordNote(int index, PianoNote key)
-        {
-            if (index < 0 || index >= Chord.Length)
-            {
-                throw new ArgumentOutOfRangeException(nameof(index));
-            }
-            _chordNotes[index] = new DraftNote(key);
-        }
-
-        public void ClearChordNote(int index)
-        {
-            if (index < 0 || index >= Chord.Length)
-            {
-                throw new ArgumentOutOfRangeException(nameof(index));
-            }
-            _chordNotes[index] = null;
-        }
+        public bool HasAnyInput => _chordEntries.Count > 0;
 
         public void SetChordNotes(IEnumerable<PianoNote> notes)
         {
-            var sorted = notes.OrderByDescending(n => n.Index).ToList();
-            for (int i = 0; i < Chord.Length; i++)
-            {
-                _chordNotes[i] = i < sorted.Count ? new DraftNote(sorted[i]) : null;
-            }
+            _chordEntries.Clear();
+            _chordEntries.AddRange(notes.OrderByDescending(n => n.Index));
+            RebuildChordSlots();
         }
 
         public void ExtendChord()
@@ -65,6 +91,31 @@ namespace Assets.Scripts.Domain.Modules
         public void ShrinkChord()
         {
             _chordBeats = Math.Max(1, _chordBeats - 1);
+        }
+
+        private void AddChordEntry(PianoNote key)
+        {
+            _chordEntries.Add(key);
+            RebuildChordSlots();
+        }
+
+        private void RemoveLastChordEntry()
+        {
+            if (_chordEntries.Count == 0)
+            {
+                return;
+            }
+            _chordEntries.RemoveAt(_chordEntries.Count - 1);
+            RebuildChordSlots();
+        }
+
+        private void RebuildChordSlots()
+        {
+            var sorted = _chordEntries.OrderByDescending(n => n.Index).ToList();
+            for (int i = 0; i < Chord.Length; i++)
+            {
+                _chordNotes[i] = i < sorted.Count ? new DraftNote(sorted[i]) : null;
+            }
         }
 
         // ── メロディ操作 ─────────────────────────────────────────────────────
@@ -103,6 +154,7 @@ namespace Assets.Scripts.Domain.Modules
 
         public void ClearAll()
         {
+            _chordEntries.Clear();
             for (int i = 0; i < Chord.Length; i++)
             {
                 _chordNotes[i] = null;
@@ -114,8 +166,14 @@ namespace Assets.Scripts.Domain.Modules
 
         // ── 複合操作 ─────────────────────────────────────────────────────────
 
+        public bool CanExtend => IsChordComplete && UsedSteps < MaxMelodySteps;
+
         public void Extend()
         {
+            if (!CanExtend)
+            {
+                return;
+            }
             if (_melodyNotes.Count == 0) ExtendChord();
             else ExtendLastMelodyNote();
         }

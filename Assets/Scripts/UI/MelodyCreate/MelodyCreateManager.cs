@@ -29,11 +29,10 @@ namespace Assets.Scripts.UI.MelodyCreate
         private readonly Subject<Unit> _draftChanged = new();
         public Observable<Unit> DraftChanged => _draftChanged;
 
-        private readonly Subject<Melody> _templateLoaded = new();
-        public Observable<Melody> TemplateLoaded => _templateLoaded;
-
         public bool IsChordComplete => _draft.IsChordComplete;
         public bool CanPreview => _draft.CanPreview;
+        public bool HasAnyInput => _draft.HasAnyInput;
+        public bool CanExtend => _draft.CanExtend;
         public IReadOnlyList<DraftNote> ChordNotes => _draft.ChordNotes;
         public IReadOnlyList<DraftNote> MelodyNotes => _draft.MelodyNotes;
         public int ChordBeats => _draft.ChordBeats;
@@ -59,16 +58,12 @@ namespace Assets.Scripts.UI.MelodyCreate
 
         }
 
-        public void AddChordNotes(IReadOnlyList<PianoNote> notes)
+        /// <summary>
+        /// 鍵盤入力を1音追加する。コード音かメロディ音かの振り分けは下書きが判断する。
+        /// </summary>
+        public void AddNote(PianoNote key)
         {
-            _draft.SetChordNotes(notes);
-            RebuildCurrentMelody();
-            _draftChanged.OnNext(Unit.Default);
-        }
-
-        public void AddMelodyNote(DraftNote note)
-        {
-            _draft.AddMelodyNote(note);
+            _draft.AddNote(key);
             RebuildCurrentMelody();
             _draftChanged.OnNext(Unit.Default);
         }
@@ -87,9 +82,12 @@ namespace Assets.Scripts.UI.MelodyCreate
             _draftChanged.OnNext(Unit.Default);
         }
 
-        public void ShrinkLastStep()
+        /// <summary>
+        /// 直近の入力を1つ取り消す。
+        /// </summary>
+        public void DeleteLast()
         {
-            _draft.ShrinkLastStep();
+            _draft.DeleteLast();
             RebuildCurrentMelody();
             _draftChanged.OnNext(Unit.Default);
         }
@@ -123,7 +121,6 @@ namespace Assets.Scripts.UI.MelodyCreate
 
             RebuildCurrentMelody();
             _draftChanged.OnNext(Unit.Default);
-            _templateLoaded.OnNext(template);
         }
 
         public void Preview()
