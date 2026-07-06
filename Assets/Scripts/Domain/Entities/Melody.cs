@@ -84,5 +84,6 @@ namespace Assets.Scripts.Domain.Entities
         {
             return KeyRangeAt(rootKey).IsWithinKeyboard(keyCount);
         }
+        public IReadOnlyList<PianoNote> ChordKeysAt(PianoNote rootKey)
     }
 }
