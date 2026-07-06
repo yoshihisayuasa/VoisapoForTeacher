@@ -22,7 +22,7 @@ namespace Assets.Scripts.UI.MelodyCreate
         [SerializeField] private string _mainSceneName = "TeacherMain";
         [SerializeField] private DraftMelodyPlayer _draftMelodyPlayer;
 
-        public MelodyDraft Draft { get; private set; }
+        private MelodyDraft _draft;
 
         public Melody CurrentMelody { get; private set; }
 
@@ -32,17 +32,17 @@ namespace Assets.Scripts.UI.MelodyCreate
         private readonly Subject<Melody> _templateLoaded = new();
         public Observable<Melody> TemplateLoaded => _templateLoaded;
 
-        public bool IsChordComplete => Draft.IsChordComplete;
-        public bool CanPreview => Draft.CanPreview;
-        public IReadOnlyList<DraftNote> ChordNotes => Draft.ChordNotes;
-        public IReadOnlyList<DraftNote> MelodyNotes => Draft.MelodyNotes;
-        public int ChordBeats => Draft.ChordBeats;
+        public bool IsChordComplete => _draft.IsChordComplete;
+        public bool CanPreview => _draft.CanPreview;
+        public IReadOnlyList<DraftNote> ChordNotes => _draft.ChordNotes;
+        public IReadOnlyList<DraftNote> MelodyNotes => _draft.MelodyNotes;
+        public int ChordBeats => _draft.ChordBeats;
 
         private void RebuildCurrentMelody()
         {
-            if (Draft.CanPreview)
+            if (_draft.CanPreview)
             {
-                CurrentMelody = Draft.Build(string.Empty);
+                CurrentMelody = _draft.Build(string.Empty);
             }
         }
 
@@ -54,49 +54,49 @@ namespace Assets.Scripts.UI.MelodyCreate
                 return;
             }
             Instance = this;
-            Draft = new MelodyDraft();
+            _draft = new MelodyDraft();
 
 
         }
 
         public void AddChordNotes(IReadOnlyList<PianoNote> notes)
         {
-            Draft.SetChordNotes(notes);
+            _draft.SetChordNotes(notes);
             RebuildCurrentMelody();
             _draftChanged.OnNext(Unit.Default);
         }
 
         public void AddMelodyNote(DraftNote note)
         {
-            Draft.AddMelodyNote(note);
+            _draft.AddMelodyNote(note);
             RebuildCurrentMelody();
             _draftChanged.OnNext(Unit.Default);
         }
 
         public void ClearAll()
         {
-            Draft.ClearAll();
+            _draft.ClearAll();
             CurrentMelody = null;
             _draftChanged.OnNext(Unit.Default);
         }
 
         public void Extend()
         {
-            Draft.Extend();
+            _draft.Extend();
             RebuildCurrentMelody();
             _draftChanged.OnNext(Unit.Default);
         }
 
         public void ShrinkLastStep()
         {
-            Draft.ShrinkLastStep();
+            _draft.ShrinkLastStep();
             RebuildCurrentMelody();
             _draftChanged.OnNext(Unit.Default);
         }
 
         public void LoadTemplate(Melody template)
         {
-            Draft.ClearAll();
+            _draft.ClearAll();
             CurrentMelody = null;
 
             var root = new PianoNote(PianoNoteEnum.C4);
@@ -104,20 +104,20 @@ namespace Assets.Scripts.UI.MelodyCreate
             var chordNotes = template.Chord.Intervals
                 .Select(interval => root + interval);
 
-            Draft.SetChordNotes(chordNotes);
+            _draft.SetChordNotes(chordNotes);
 
             for (int b = 1; b < template.Chord.Beats; b++)
             {
-                Draft.ExtendChord();
+                _draft.ExtendChord();
             }
 
             foreach (var note in template.Notes)
             {
                 var draftNote = new DraftNote(root + note.Interval);
-                Draft.AddMelodyNote(draftNote);
+                _draft.AddMelodyNote(draftNote);
                 for (int b = 1; b < note.Beats; b++)
                 { 
-                    Draft.ExtendLastMelodyNote();
+                    _draft.ExtendLastMelodyNote();
                 }
             }
 
@@ -128,16 +128,16 @@ namespace Assets.Scripts.UI.MelodyCreate
 
         public void Preview()
         {
-            if (CurrentMelody == null || Draft.Root == null)
+            if (CurrentMelody == null || _draft.Root == null)
             {
                 return;
             }
-            _draftMelodyPlayer.Play(CurrentMelody, Draft.Root);
+            _draftMelodyPlayer.Play(CurrentMelody, _draft.Root);
         }
 
         public void SaveWithName(string name)
         {
-            if (!Draft.CanPreview)
+            if (!_draft.CanPreview)
             {
                 Debug.LogWarning("メロディが無効です: 和音3音・メロディ1音以上が必要です");
                 return;
@@ -150,7 +150,7 @@ namespace Assets.Scripts.UI.MelodyCreate
             }
 
             int position = MelodyManager.Instance.MelodyCount;
-            Melody melody = Draft.Build(name);
+            Melody melody = _draft.Build(name);
             MelodyManager.Instance.AddMelody(new SavedMelody(melody, position));
 
             LoadMainScene();
