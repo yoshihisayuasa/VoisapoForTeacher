@@ -1,4 +1,4 @@
-using AsseScripts.Domain;
+using Assets.Scripts.Domain.ValueObjects;
 using R3;
 using UnityEngine;
 using UnityEngine.EventSystems;

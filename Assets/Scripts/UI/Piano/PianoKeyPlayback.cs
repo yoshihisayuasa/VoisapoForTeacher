@@ -1,5 +1,5 @@
-using AsseScripts.Domain;
-using AsseScripts.UI;
+using Assets.Scripts.Domain.ValueObjects;
+using Assets.Scripts.UI;
 using System.Collections.Generic;
 
 namespace Assets.Scripts.UI.Piano

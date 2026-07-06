@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using AsseScripts.Domain;
+using Assets.Scripts.Domain.ValueObjects;
 using UnityEngine;
 
-namespace AsseScripts.Infrastructure
+namespace Assets.Scripts.Infrastructure
 {
     [System.Serializable]
     public class PianoSoundEntry

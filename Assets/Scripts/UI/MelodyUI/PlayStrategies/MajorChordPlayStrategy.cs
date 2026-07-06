@@ -1,4 +1,4 @@
-using AsseScripts.Domain;
+using Assets.Scripts.Domain.ValueObjects;
 using Assets.Scripts.Domain.Entities;
 using Assets.Scripts.UI.Piano;
 using System.Collections;

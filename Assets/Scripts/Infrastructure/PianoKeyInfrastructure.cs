@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Cysharp.Threading.Tasks;
 
-namespace AsseScripts.Infrastructure
+namespace Assets.Scripts.Infrastructure
 {
     /// <summary>
     /// 音源再生（インフラ層）

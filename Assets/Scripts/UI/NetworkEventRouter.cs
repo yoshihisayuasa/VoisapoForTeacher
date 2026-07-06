@@ -1,7 +1,6 @@
 using Assets.Scripts.UI.MelodyUI;
 using Assets.Scripts.UI.Piano;
-using AsseScripts.Infrastructure;
-using AsseScripts.UI;
+using Assets.Scripts.Infrastructure;
 using R3;
 using UnityEngine;
 

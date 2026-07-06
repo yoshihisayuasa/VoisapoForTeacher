@@ -1,8 +1,8 @@
-﻿using AsseScripts.UI;
+﻿using Assets.Scripts.UI;
 using UnityEngine;
 using UnityEngine.UI;
-using AsseScripts.Domain;
-using AsseScripts.Infrastructure;
+using Assets.Scripts.Domain.ValueObjects;
+using Assets.Scripts.Infrastructure;
 
 namespace Assets.Scripts.UI.Piano
 {

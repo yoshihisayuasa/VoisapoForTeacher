@@ -1,4 +1,4 @@
-using AsseScripts.Domain;
+using Assets.Scripts.Domain.ValueObjects;
 using Photon.Pun;
 using Photon.Realtime;
 using R3;

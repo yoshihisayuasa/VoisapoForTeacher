@@ -7,7 +7,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using DomainPianoNote = AsseScripts.Domain.PianoNote;
 
 namespace Assets.Scripts.UI.MelodyCreate
 {
@@ -30,13 +29,13 @@ namespace Assets.Scripts.UI.MelodyCreate
 
         private readonly List<NoteBoxUI> _chordBoxes = new();
         private readonly List<NoteBoxUI> _melodyBoxes = new();
-        private readonly List<DomainPianoNote> _enteredChordNotes = new();
+        private readonly List<PianoNote> _enteredChordNotes = new();
 
         // 次に入力されるメロディボックスのインデックス
         private int _cursorIndex = 0;
 
         private Coroutine _previewSoundCoroutine;
-        private DomainPianoNote _previewingNote;
+        private PianoNote _previewingNote;
         private const float PreviewSoundDuration = 0.5F;
 
         private void Start()
@@ -81,7 +80,7 @@ namespace Assets.Scripts.UI.MelodyCreate
 
         // ── ピアノ入力 ───────────────────────────────────────────────────
 
-        private void OnPianoKeyClicked(DomainPianoNote key)
+        private void OnPianoKeyClicked(PianoNote key)
         {
             if (!MelodyCreateManager.Instance.IsChordComplete)
             {
@@ -96,7 +95,7 @@ namespace Assets.Scripts.UI.MelodyCreate
             StartPreviewSound(key);
         }
 
-        private void StartPreviewSound(DomainPianoNote key)
+        private void StartPreviewSound(PianoNote key)
         {
             if (_previewSoundCoroutine != null)
             {
@@ -112,7 +111,7 @@ namespace Assets.Scripts.UI.MelodyCreate
             _previewSoundCoroutine = StartCoroutine(StopPreviewSoundAfterDelay(key));
         }
 
-        private IEnumerator StopPreviewSoundAfterDelay(DomainPianoNote key)
+        private IEnumerator StopPreviewSoundAfterDelay(PianoNote key)
         {
             yield return new WaitForSeconds(PreviewSoundDuration);
             PianoController.Instance.Stop(key);
@@ -120,7 +119,7 @@ namespace Assets.Scripts.UI.MelodyCreate
             _previewingNote = null;
         }
 
-        private void AddCordNote(DomainPianoNote key)
+        private void AddCordNote(PianoNote key)
         {
             _enteredChordNotes.Add(key);
             SortAndApplyChordNotes();
@@ -137,7 +136,7 @@ namespace Assets.Scripts.UI.MelodyCreate
             }
         }
 
-        private void AddMelodyNote(DomainPianoNote key)
+        private void AddMelodyNote(PianoNote key)
         {
             if (_cursorIndex >= MelodyBoxCount) return;
 

@@ -1,4 +1,3 @@
-using AsseScripts.Domain;
 
 namespace Assets.Scripts.Domain.ValueObjects
 {

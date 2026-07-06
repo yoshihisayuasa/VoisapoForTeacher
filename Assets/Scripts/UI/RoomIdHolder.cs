@@ -1,4 +1,4 @@
-using AsseScripts.Domain;
+using Assets.Scripts.Domain.ValueObjects;
 
 namespace Assets.Scripts.UI
 {

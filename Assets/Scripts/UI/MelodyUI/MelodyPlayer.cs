@@ -4,12 +4,11 @@ using Assets.Scripts.Domain.ValueObjects;
 using Assets.Scripts.UI.MelodyUI.PlayStrategies;
 using Assets.Scripts.UI.Piano;
 using R3;
-using AsseScripts.UI;
+using Assets.Scripts.UI;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static Assets.Scripts.UI.AutoKeyChangeManager;
-using DomainPianoNote = AsseScripts.Domain.PianoNote;
 
 namespace Assets.Scripts.UI.MelodyUI
 {
@@ -136,7 +135,7 @@ namespace Assets.Scripts.UI.MelodyUI
         public bool CanDeleteMelody(Melody melody) => GetStrategy(melody).CanDelete;
 
         private IEnumerator PlayMelodyAtKeyOnce(PianoController piano, Melody melody,
-                                                DomainPianoNote pressedKey, PlayModeSettings settings)
+                                                PianoNote pressedKey, PlayModeSettings settings)
         {
             NotifyTeacherPlayStatus();
             yield return StartCoroutine(GetStrategy(melody).Execute(piano, melody, pressedKey, settings));
@@ -192,7 +191,7 @@ namespace Assets.Scripts.UI.MelodyUI
             FinishMelody();
         }
 
-        private DomainPianoNote GetNextRoot(DomainPianoNote current, AutoKeyChangeState direction)
+        private PianoNote GetNextRoot(PianoNote current, AutoKeyChangeState direction)
         {
             int step = direction switch
             {

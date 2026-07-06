@@ -1,5 +1,4 @@
 using Assets.Scripts.Domain.ValueObjects;
-using AsseScripts.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;

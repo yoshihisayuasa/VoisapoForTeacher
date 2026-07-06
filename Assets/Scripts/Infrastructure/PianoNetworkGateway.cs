@@ -1,12 +1,12 @@
 using Assets.Scripts;
 using Assets.Scripts.Domain.Entities;
-using AsseScripts.Domain;
+using Assets.Scripts.Domain.ValueObjects;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using R3;
 
-namespace AsseScripts.Infrastructure
+namespace Assets.Scripts.Infrastructure
 {
     /// <summary>
     /// 鍵盤入力・先生状態のPhoton通信を1箇所に集約するゲートウェイ（インフラ層）。

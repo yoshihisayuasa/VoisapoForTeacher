@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using AsseScripts.UI.Piano;
+using Assets.Scripts.UI.Piano;
 using Assets.Scripts.UI.MelodyUI;
-using AsseScripts.Infrastructure;
+using Assets.Scripts.Infrastructure;
 
 namespace Assets.Scripts.UI
 {

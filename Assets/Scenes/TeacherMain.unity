@@ -1461,7 +1461,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5e42650bf2b46024cad001863f3282f9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AsseScripts.Infrastructure.PianoNetworkGateway
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.Infrastructure.PianoNetworkGateway
 --- !u!4 &298719250
 Transform:
   m_ObjectHideFlags: 0

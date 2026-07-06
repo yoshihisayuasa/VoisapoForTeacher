@@ -8,8 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using DomainPianoNote = AsseScripts.Domain.PianoNote;
-using DomainPianoNoteEnum = AsseScripts.Domain.PianoNoteEnum;
 
 namespace Assets.Scripts.UI.MelodyCreate
 {
@@ -61,7 +59,7 @@ namespace Assets.Scripts.UI.MelodyCreate
 
         }
 
-        public void AddChordNotes(IReadOnlyList<DomainPianoNote> notes)
+        public void AddChordNotes(IReadOnlyList<PianoNote> notes)
         {
             Draft.SetChordNotes(notes);
             RebuildCurrentMelody();
@@ -101,7 +99,7 @@ namespace Assets.Scripts.UI.MelodyCreate
             Draft.ClearAll();
             CurrentMelody = null;
 
-            var root = new DomainPianoNote(DomainPianoNoteEnum.C4);
+            var root = new PianoNote(PianoNoteEnum.C4);
 
             var chordNotes = template.Chord.Intervals
                 .Select(interval => root + interval);

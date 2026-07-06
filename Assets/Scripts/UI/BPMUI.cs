@@ -1,5 +1,4 @@
-﻿using AsseScripts.UI;
-using Assets.Scripts.UI;
+﻿using Assets.Scripts.UI;
 using R3;
 using System.Collections;
 using TMPro;

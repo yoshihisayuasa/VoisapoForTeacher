@@ -1,6 +1,6 @@
 using System;
 
-namespace AsseScripts.Domain
+namespace Assets.Scripts.Domain.ValueObjects
 {
     /// <summary>
     /// 鍵盤の範囲（Min ≦ Max）。

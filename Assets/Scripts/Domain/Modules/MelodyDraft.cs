@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AsseScripts.Domain;
-using Assets.Scripts.Domain.Entities;
 using Assets.Scripts.Domain.ValueObjects;
+using Assets.Scripts.Domain.Entities;
 
 namespace Assets.Scripts.Domain.Modules
 {

@@ -1,6 +1,5 @@
-﻿namespace AsseScripts.Domain
+﻿namespace Assets.Scripts.Domain.ValueObjects
 {
-    using Assets.Scripts.Domain.ValueObjects;
     using System;
     using System.Linq.Expressions;
     using System.Reflection;

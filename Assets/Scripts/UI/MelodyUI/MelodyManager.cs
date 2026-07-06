@@ -1,4 +1,4 @@
-using AsseScripts.Infrastructure;
+using Assets.Scripts.Infrastructure;
 using Assets.Scripts.Domain.Entities;
 using R3;
 using System.Collections.Generic;

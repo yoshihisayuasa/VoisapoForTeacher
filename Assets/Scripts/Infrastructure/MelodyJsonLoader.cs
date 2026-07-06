@@ -1,9 +1,10 @@
 using Assets.Scripts.Domain.Entities;
+using Assets.Scripts.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AsseScripts.Infrastructure
+namespace Assets.Scripts.Infrastructure
 {
     /// <summary>
     /// メロディJSON ローダー／セーバー（純粋I/O・曲数制限なし）
@@ -208,10 +209,10 @@ namespace AsseScripts.Infrastructure
 
         private static Chord ParseChordData(ChordData chordData)
         {
-            var intervals = new List<Assets.Scripts.Domain.ValueObjects.Interval>();
+            var intervals = new List<Interval>();
             foreach (var v in chordData.Intervals)
             {
-                intervals.Add(new Assets.Scripts.Domain.ValueObjects.Interval(v));
+                intervals.Add(new Interval(v));
             }
             return new Chord(intervals, chordData.Beats);
         }
@@ -244,7 +245,7 @@ namespace AsseScripts.Infrastructure
                 int len = noteArr.Length;
 
                 int legacyCordLength = Chord.Length;
-                var chordIntervals = new List<Assets.Scripts.Domain.ValueObjects.Interval>();
+                var chordIntervals = new List<Interval>();
                 var notes = new List<Note>();
 
                 for (int j = 0; j < len; j++)
@@ -254,7 +255,7 @@ namespace AsseScripts.Infrastructure
 
                     if (j < legacyCordLength)
                     {
-                        chordIntervals.Add(new Assets.Scripts.Domain.ValueObjects.Interval(interval));
+                        chordIntervals.Add(new Interval(interval));
                     }
                     else
                     {
@@ -265,7 +266,7 @@ namespace AsseScripts.Infrastructure
 
                 while (chordIntervals.Count < legacyCordLength)
                 {
-                    chordIntervals.Add(new Assets.Scripts.Domain.ValueObjects.Interval(0));
+                    chordIntervals.Add(new Interval(0));
                 }
 
                 var chord = new Chord(chordIntervals, legacyCordLength);

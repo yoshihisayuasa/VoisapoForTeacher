@@ -2,7 +2,7 @@ using Assets.Scripts.Domain.Entities;
 using Assets.Scripts.UI.MelodyUI;
 using Assets.Scripts.UI.Piano;
 using UnityEngine;
-using DomainPianoNote = AsseScripts.Domain.PianoNote;
+using Assets.Scripts.Domain.ValueObjects;
 
 namespace Assets.Scripts.UI.MelodyCreate
 {
@@ -11,7 +11,7 @@ namespace Assets.Scripts.UI.MelodyCreate
     /// </summary>
     public sealed class DraftMelodyPlayer : MonoBehaviour
     {
-        public void Play(Melody melody, DomainPianoNote root)
+        public void Play(Melody melody, PianoNote root)
         {
             if (melody == null || root == null) return;
 

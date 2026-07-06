@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AsseScripts.Domain
+namespace Assets.Scripts.Domain.ValueObjects
 {
     /// <summary>
     /// 音量値オブジェクト（0.0〜1.0のみ許容）

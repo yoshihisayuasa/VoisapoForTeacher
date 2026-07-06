@@ -1,8 +1,7 @@
 using R3;
-using AsseScripts.Domain;
-using AsseScripts.Infrastructure;
-using AsseScripts.UI;
-using AsseScripts.UI.Piano;
+using Assets.Scripts.Domain.ValueObjects;
+using Assets.Scripts.Infrastructure;
+using Assets.Scripts.UI;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;

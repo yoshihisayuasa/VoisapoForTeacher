@@ -1,7 +1,7 @@
-using AsseScripts.Domain;
+using Assets.Scripts.Domain.ValueObjects;
 using R3;
 
-namespace AsseScripts.UI
+namespace Assets.Scripts.UI
 {
     public sealed class BPMManager
     {

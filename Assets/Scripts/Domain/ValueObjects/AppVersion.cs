@@ -1,6 +1,6 @@
 using System;
 
-namespace AsseScripts.Domain
+namespace Assets.Scripts.Domain.ValueObjects
 {
     public sealed class AppVersion : ValueObject<AppVersion>
     {

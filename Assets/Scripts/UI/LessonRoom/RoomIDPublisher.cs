@@ -1,4 +1,4 @@
-using AsseScripts.Domain;
+using Assets.Scripts.Domain.ValueObjects;
 using Assets.Scripts.UI;
 using R3;
 using TMPro;

@@ -1,5 +1,5 @@
-using AsseScripts.Domain;
-using AsseScripts.UI;
+using Assets.Scripts.Domain.ValueObjects;
+using Assets.Scripts.UI;
 using Assets.Scripts.Domain.Entities;
 using Assets.Scripts.UI.Piano;
 using System.Collections;

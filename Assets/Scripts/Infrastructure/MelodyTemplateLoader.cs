@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AsseScripts.Infrastructure
+namespace Assets.Scripts.Infrastructure
 {
     public static class MelodyTemplateLoader
     {

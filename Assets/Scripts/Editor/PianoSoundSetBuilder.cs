@@ -1,5 +1,5 @@
-using AsseScripts.Domain;
-using AsseScripts.Infrastructure;
+using Assets.Scripts.Domain.ValueObjects;
+using Assets.Scripts.Infrastructure;
 using System;
 using UnityEditor;
 using UnityEngine;

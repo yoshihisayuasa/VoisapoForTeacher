@@ -1,5 +1,5 @@
-using AsseScripts.Domain;
-using AsseScripts.Infrastructure;
+using Assets.Scripts.Domain.ValueObjects;
+using Assets.Scripts.Infrastructure;
 using Assets.Scripts.UI.Modal;
 using Cysharp.Threading.Tasks;
 using UnityEngine;

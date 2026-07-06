@@ -1,10 +1,10 @@
-using AsseScripts.Domain;
+using Assets.Scripts.Domain.ValueObjects;
 using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace AsseScripts.Infrastructure
+namespace Assets.Scripts.Infrastructure
 {
     public sealed class JsonVersionFetcher
     {

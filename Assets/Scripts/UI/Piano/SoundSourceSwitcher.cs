@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using AsseScripts.Infrastructure;
+using Assets.Scripts.Infrastructure;
 using R3;
 using UnityEngine;
 using UnityEngine.SceneManagement;

@@ -1,5 +1,5 @@
 using System;
-using AsseScripts.Domain;
+using Assets.Scripts.Domain.ValueObjects;
 using Assets.Scripts.UI;
 using ExitGames.Client.Photon;
 using Photon.Pun;

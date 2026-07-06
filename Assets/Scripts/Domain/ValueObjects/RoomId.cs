@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace AsseScripts.Domain
+namespace Assets.Scripts.Domain.ValueObjects
 {
     public sealed class RoomId : ValueObject<RoomId>
     {
