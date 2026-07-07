@@ -1,8 +1,6 @@
-﻿namespace Assets.Scripts.Domain.ValueObjects
+namespace Assets.Scripts.Domain.ValueObjects
 {
     using System;
-    using System.Linq.Expressions;
-    using System.Reflection;
 
     public sealed class PianoNote : ValueObject<PianoNote>
     {
@@ -25,6 +23,17 @@
             return new PianoNote((PianoNoteEnum)idx);
         }
 
+        /// <summary>
+        /// interval だけ離れた音を返す。鍵盤外の音もあえて表現できる。
+        /// 音域チェック（PianoKeyRange.IsWithinKeyboard）は根音＋インターバルの結果が
+        /// 鍵盤に収まるかで演奏可否を判定するため、ここで端に丸めたり例外にしたりすると
+        /// チェック自体が成立しなくなる。
+        /// </summary>
+        public static PianoNote operator +(PianoNote baseNote, Interval interval)
+        {
+            return new PianoNote((PianoNoteEnum)(baseNote.Index + interval.Value));
+        }
+
         protected override bool EqualsCore(PianoNote other)
         {
             return Index == other.Index;
@@ -40,37 +49,5 @@
         {
             return Index.GetHashCode();
         }
-
-        public static PianoNote operator +(PianoNote baseNote, PianoNote intervalNote)
-        {
-
-            int idx = baseNote.Index + intervalNote.Index;
-
-            return new PianoNote((PianoNoteEnum)idx);
-        }
-
-        public static PianoNote operator -(PianoNote baseNote, PianoNote intervalNote)
-        {
-
-            int idx = baseNote.Index - intervalNote.Index;
-
-            return new PianoNote((PianoNoteEnum)idx);
-        }
-
-        public static PianoNote operator +(PianoNote baseNote, Interval interval)
-        {
-            int idx = baseNote.Index + interval.Value;
-
-            return new PianoNote((PianoNoteEnum)idx);
-        }
-        public static PianoNote operator -(PianoNote baseNote, Interval interval)
-        {
-            int idx = baseNote.Index - interval.Value;
-
-            return new PianoNote((PianoNoteEnum)idx);
-        }
-
-
-
     }
 }

@@ -1,44 +1,28 @@
+using Assets.Scripts.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
-
 
 public class NonDraggableScrollRect : ScrollRect
 {
     public override void OnBeginDrag(PointerEventData eventData) { }
     public override void OnDrag(PointerEventData eventData) { }
     public override void OnEndDrag(PointerEventData eventData) { }
+
     private const float _wheelSensitivity = 0.03f;
 
-
     /// <summary>
-    /// UIŠO‚Å‚àƒXƒNƒ[ƒ‹ƒzƒC[ƒ‹‚Å“®‚©‚¹‚é‚æ‚¤‚É‚·‚é
-    /// ƒhƒ‰ƒbƒO‚É‚æ‚éƒXƒNƒ[ƒ‹‚Í–³Œø‰»
+    /// UIå¤–ã§ã‚‚ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒ›ã‚¤ãƒ¼ãƒ«ã§å‹•ã‹ã›ã‚‹ã‚ˆã†ã«ã™ã‚‹ã€‚
+    /// ãƒ‰ãƒ©ãƒƒã‚°ã«ã‚ˆã‚‹ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ã¯ç„¡åŠ¹åŒ–ã€‚
+    /// Ctrl+ãƒ›ã‚¤ãƒ¼ãƒ«ã¯ã‚ºãƒ¼ãƒ ï¼ˆPianoZoomControllerï¼‰ã«è­²ã‚‹ãŸã‚åå¿œã—ãªã„ã€‚
     /// </summary>
-    void Update()
+    private void Update()
     {
-        float scroll = 0f;
+        float delta = ScrollWheelInput.ReadScroll() * _wheelSensitivity;
 
-        if (Mouse.current != null)
+        if (Mathf.Abs(delta) > 0f && !ScrollWheelInput.IsCtrlOrCommandPressed())
         {
-            scroll = Mouse.current.scroll.ReadValue().y;
-        }
-        // ƒ}ƒEƒXƒzƒC[ƒ‹‚Ì“ü—Í‚ğæ“¾
-        var kb = Keyboard.current;
-        bool ctrl =
-             kb != null &&
-            (kb.leftCtrlKey.isPressed ||
-            kb.rightCtrlKey.isPressed ||
-            kb.leftCommandKey.isPressed ||
-            kb.rightCommandKey.isPressed);
-
-        var delta = scroll * _wheelSensitivity;
-
-        if (Mathf.Abs(delta) > 0f && !ctrl)
-        {
-                horizontalNormalizedPosition += delta;
-                horizontalNormalizedPosition = Mathf.Clamp01(horizontalNormalizedPosition);
+            horizontalNormalizedPosition = Mathf.Clamp01(horizontalNormalizedPosition + delta);
         }
     }
 

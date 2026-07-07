@@ -1,6 +1,6 @@
 ﻿
+using Assets.Scripts.UI;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.UI.Piano
@@ -34,24 +34,11 @@ namespace Assets.Scripts.UI.Piano
 
         private void Update()
         {
-            var kb = Keyboard.current;
-            var mouse = Mouse.current;
-            if (kb == null || mouse == null)
+            float wheel = ScrollWheelInput.ReadScroll() * _wheelSensitivity; // 係数は要調整
+
+            if (ScrollWheelInput.IsCtrlOrCommandPressed() && Mathf.Abs(wheel) > 0.0f)
             {
-                return; 
-            }
-
-            // Ctrl / Command が押されているか（GetKey 相当）
-            bool ctrl =
-                kb.leftCtrlKey.isPressed || kb.rightCtrlKey.isPressed ||
-                kb.leftCommandKey.isPressed || kb.rightCommandKey.isPressed;
-
-            float wheel = mouse.scroll.ReadValue().y * _wheelSensitivity; // 係数は要調整
-
-            if (ctrl && Mathf.Abs(wheel) > 0.0f)
-            {
-                float current = CurrentScale;
-                float target = Mathf.Clamp(current + wheel, _minScale, _maxScale);
+                float target = Mathf.Clamp(CurrentScale + wheel, _minScale, _maxScale);
                 SetScale(target, 0.5f);
             }
         }

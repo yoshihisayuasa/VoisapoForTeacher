@@ -129,7 +129,7 @@ namespace Assets.Scripts.Infrastructure
         /// </summary>
         public static string SerializeMelody(Melody melody)
         {
-            return JsonUtility.ToJson(ToData(melody, 0));
+            return JsonUtility.ToJson(MelodyJsonConverter.ToData(melody, 0));
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace Assets.Scripts.Infrastructure
             {
                 var data = JsonUtility.FromJson<MelodyData>(json);
                 if (data == null || string.IsNullOrEmpty(data.Name)) return null;
-                return ToMelody(data);
+                return MelodyJsonConverter.ToMelody(data);
             }
             catch (Exception ex)
             {
@@ -156,65 +156,14 @@ namespace Assets.Scripts.Infrastructure
         private static string GetPersistentPath(string fileName)
             => System.IO.Path.Combine(Application.persistentDataPath, fileName + ".json");
 
-        private static MelodyData ToData(Melody melody, int position)
-        {
-            var chordData = new ChordData
-            {
-                Intervals = new List<int>(),
-                Beats = melody.Chord.Beats
-            };
-            foreach (var interval in melody.Chord.Intervals)
-            {
-                chordData.Intervals.Add(interval.Value);
-            }
-
-            var data = new MelodyData
-            {
-                Name = melody.Name,
-                Position = position,
-                Chord = chordData,
-                Notes = new List<NoteData>()
-            };
-            foreach (var note in melody.Notes)
-            {
-                data.Notes.Add(new NoteData { Interval = note.Interval.Value, Beats = note.Beats });
-            }
-            return data;
-        }
-
-        private static Melody ToMelody(MelodyData data)
-        {
-            var chord = ParseChordData(data.Chord);
-
-            var notes = new List<Note>();
-            if (data.Notes != null)
-            {
-                foreach (var n in data.Notes)
-                {
-                    notes.Add(new Note(n.Interval, n.Beats));
-                }
-            }
-            return new Melody(data.Name, chord, notes);
-        }
-
         private static string SerializeNew(IReadOnlyList<SavedMelody> entries)
         {
             var wrapper = new MelodyListWrapper { Melodies = new List<MelodyData>() };
             foreach (var entry in entries)
             {
-                wrapper.Melodies.Add(ToData(entry.Melody, entry.Position));
+                wrapper.Melodies.Add(MelodyJsonConverter.ToData(entry.Melody, entry.Position));
             }
             return JsonUtility.ToJson(wrapper, true);
-        }
-
-        private static Chord ParseChordData(ChordData chordData)
-        {
-            var intervals = new List<Interval>();
-            foreach (var v in chordData.Intervals)
-            {
-                intervals.Add(new Interval(v));
-            }
-            return new Chord(intervals, chordData.Beats);
         }
 
         private static List<SavedMelody> ParseNew(MelodyListWrapper wrapper)
@@ -223,7 +172,7 @@ namespace Assets.Scripts.Infrastructure
             foreach (var data in wrapper.Melodies)
             {
                 if (string.IsNullOrEmpty(data.Name)) continue;
-                entries.Add(new SavedMelody(ToMelody(data), data.Position));
+                entries.Add(new SavedMelody(MelodyJsonConverter.ToMelody(data), data.Position));
             }
             return entries;
         }
@@ -270,37 +219,6 @@ namespace Assets.Scripts.Infrastructure
                 entries.Add(new SavedMelody(new Melody(name, chord, notes), position));
             }
             return entries;
-        }
-
-        // ── 新フォーマット用シリアライズクラス ────────────────────────
-
-        [Serializable]
-        private class MelodyListWrapper
-        {
-            public List<MelodyData> Melodies;
-        }
-
-        [Serializable]
-        private class MelodyData
-        {
-            public string Name;
-            public int Position;
-            public ChordData Chord;
-            public List<NoteData> Notes;
-        }
-
-        [Serializable]
-        private class ChordData
-        {
-            public List<int> Intervals;
-            public int Beats;
-        }
-
-        [Serializable]
-        private class NoteData
-        {
-            public int Interval;
-            public int Beats;
         }
 
         // ── 旧フォーマット用（マイグレーションのみ・削除不可） ────────

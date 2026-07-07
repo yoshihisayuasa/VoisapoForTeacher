@@ -8,8 +8,8 @@ namespace Assets.Scripts.Domain.ValueObjects
 
         public BPM(int value)
         {
-            if (value < 1)
-                throw new ArgumentOutOfRangeException(nameof(value), "BPMは1以上でなければなりません。");
+            if (value < 10)
+                throw new ArgumentOutOfRangeException(nameof(value), "BPMは10以上でなければなりません。");
             Value = value;
         }
 

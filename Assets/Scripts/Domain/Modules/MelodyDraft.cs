@@ -20,9 +20,17 @@ namespace Assets.Scripts.Domain.Modules
         private int _chordBeats = 1;
         private readonly List<DraftNote> _melodyNotes = new();
 
-        public IReadOnlyList<DraftNote> MelodyNotes => _melodyNotes;
-        public IReadOnlyList<DraftNote> ChordNotes => _chordNotes;
+        // List/配列をそのまま返すと IReadOnlyList からダウンキャストして書き換えられるため、
+        // 読み取り専用ビューで包んで公開する（中身は内部コレクションに追従する）。
+        public IReadOnlyList<DraftNote> MelodyNotes { get; }
+        public IReadOnlyList<DraftNote> ChordNotes { get; }
         public int ChordBeats => _chordBeats;
+
+        public MelodyDraft()
+        {
+            MelodyNotes = _melodyNotes.AsReadOnly();
+            ChordNotes = Array.AsReadOnly(_chordNotes);
+        }
 
         public const int MaxMelodySteps = 26;
 

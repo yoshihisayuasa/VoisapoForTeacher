@@ -120,6 +120,14 @@ public sealed class PianoScrollController : MonoBehaviour, IPointerDownHandler, 
         UpdateViewRect();
     }
 
+    /// <summary>スケール適用後の content の見た目上の幅。スケール未初期化（0以下）は 1 とみなす。</summary>
+    private float VisualContentWidth()
+    {
+        var content = pianoScrollRect.content;
+        float scale = content.localScale.x > 0f ? content.localScale.x : 1f;
+        return content.rect.width * scale;
+    }
+
     public void ScrollOctaveUp() => ScrollByKeys(12);
     public void ScrollOctaveDown() => ScrollByKeys(-12);
 
@@ -127,12 +135,10 @@ public sealed class PianoScrollController : MonoBehaviour, IPointerDownHandler, 
     {
         if (pianoScrollRect == null) return;
 
-        var content = pianoScrollRect.content;
         var viewport = pianoScrollRect.viewport;
-        if (content == null || viewport == null) return;
+        if (pianoScrollRect.content == null || viewport == null) return;
 
-        float scale = content.localScale.x > 0f ? content.localScale.x : 1f;
-        float contentWidth = content.rect.width * scale;
+        float contentWidth = VisualContentWidth();
         float viewportWidth = viewport.rect.width;
         float scrollable = contentWidth - viewportWidth;
         if (scrollable <= 0f) return;
@@ -162,7 +168,7 @@ public sealed class PianoScrollController : MonoBehaviour, IPointerDownHandler, 
             return;
         }
 
-        float contentWidth = pianoScrollRect.content.rect.width * pianoScrollRect.content.localScale.x;
+        float contentWidth = VisualContentWidth();
         float viewportWidth = pianoScrollRect.viewport.rect.width;
         float miniMapWidth = miniMapRect.rect.width;
 

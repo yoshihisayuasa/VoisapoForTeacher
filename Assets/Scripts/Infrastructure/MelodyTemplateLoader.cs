@@ -1,5 +1,4 @@
 using Assets.Scripts.Domain.Entities;
-using Assets.Scripts.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,7 +20,7 @@ namespace Assets.Scripts.Infrastructure
 
             try
             {
-                var wrapper = JsonUtility.FromJson<TemplateListWrapper>(asset.text);
+                var wrapper = JsonUtility.FromJson<MelodyListWrapper>(asset.text);
                 return Parse(wrapper);
             }
             catch (Exception ex)
@@ -31,60 +30,19 @@ namespace Assets.Scripts.Infrastructure
             }
         }
 
-        private static List<Melody> Parse(TemplateListWrapper wrapper)
+        private static List<Melody> Parse(MelodyListWrapper wrapper)
         {
             var result = new List<Melody>();
             if (wrapper.Melodies == null)
             {
                 return result;
             }
-            foreach (var t in wrapper.Melodies)
+            foreach (var data in wrapper.Melodies)
             {
-                if (string.IsNullOrEmpty(t.Name)) continue;
-
-                var intervals = new List<Interval>();
-                foreach (var v in t.Chord.Intervals)
-                { 
-                    intervals.Add(new Interval(v));
-                }
-                var chord = new Chord(intervals, t.Chord.Beats);
-
-                var notes = new List<Note>();
-                if (t.Notes != null)
-                { 
-                    foreach (var n in t.Notes)
-                    { 
-                        notes.Add(new Note(n.Interval, n.Beats));
-                    }
-                }
-                result.Add(new Melody(t.Name, chord, notes));
+                if (string.IsNullOrEmpty(data.Name)) continue;
+                result.Add(MelodyJsonConverter.ToMelody(data));
             }
             return result;
-        }
-
-        [Serializable]
-        private class TemplateListWrapper { public List<TemplateData> Melodies; }
-
-        [Serializable]
-        private class TemplateData
-        {
-            public string Name;
-            public ChordData Chord;
-            public List<NoteData> Notes;
-        }
-
-        [Serializable]
-        private class ChordData
-        {
-            public List<int> Intervals;
-            public int Beats;
-        }
-
-        [Serializable]
-        private class NoteData
-        {
-            public int Interval;
-            public int Beats;
         }
     }
 }
