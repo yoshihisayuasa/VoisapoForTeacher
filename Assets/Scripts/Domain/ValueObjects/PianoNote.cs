@@ -16,6 +16,15 @@
             Note = note;
         }
 
+        /// <summary>
+        /// delta だけ移動した鍵盤を返す。keyCount 鍵の鍵盤からはみ出す場合は端に収める。
+        /// </summary>
+        public PianoNote MovedBy(int delta, int keyCount)
+        {
+            int idx = Math.Clamp(Index + delta, 0, keyCount - 1);
+            return new PianoNote((PianoNoteEnum)idx);
+        }
+
         protected override bool EqualsCore(PianoNote other)
         {
             return Index == other.Index;

@@ -31,12 +31,11 @@ namespace Assets.Scripts.UI.MelodyUI.PlayStrategies
 
             // ── メロディパート ──
             Context.NotifyMelodyBegan();
-            foreach (var note in melody.Notes)
+            foreach (var note in melody.NotesAt(pressedKey))
             {
-                var key = pressedKey + note.Interval;
-                piano.Play(key, settings.PlayPiano, VolumeManager.Instance.Volume);
+                piano.Play(note.Key, settings.PlayPiano, VolumeManager.Instance.Volume);
                 yield return new WaitForSeconds(BPMManager.Instance.SecondPerBeat * note.Beats);
-                piano.StopAndMarkPlayed(key);
+                piano.StopAndMarkPlayed(note.Key);
             }
         }
     }

@@ -6,9 +6,8 @@ using System.Linq;
 namespace Assets.Scripts.Domain.Entities
 {
     /// <summary>
-    /// 単音（相対インターバルと拍数）
+    /// 和音（根音からの相対インターバルの組と拍数）
     /// </summary>
-    /// 
     public readonly struct Chord
     {
         public const int Length = 3;
@@ -41,6 +40,24 @@ namespace Assets.Scripts.Domain.Entities
         }
     }
 
+    /// <summary>
+    /// 根音に単音を適用した、実際に鳴らす鍵盤と拍数のひとまとまり。
+    /// </summary>
+    public readonly struct NoteVoicing
+    {
+        public PianoNote Key { get; }
+        public int Beats { get; }
+
+        public NoteVoicing(PianoNote key, int beats)
+        {
+            Key = key;
+            Beats = beats;
+        }
+    }
+
+    /// <summary>
+    /// 単音（根音からの相対インターバルと拍数）
+    /// </summary>
     public readonly struct Note
     {
         public Interval Interval { get; }
@@ -123,6 +140,20 @@ namespace Assets.Scripts.Domain.Entities
                 keys.Add(rootKey + interval);
             }
             return new ChordVoicing(keys, Chord.Beats);
+        }
+
+        /// <summary>
+        /// 根音を与えたとき、メロディ各音が使う鍵盤と拍数を演奏順に返す。
+        /// 鍵盤範囲内であることは再生前の IsPlayableAt が保証するため、ここでは検証しない。
+        /// </summary>
+        public IReadOnlyList<NoteVoicing> NotesAt(PianoNote rootKey)
+        {
+            var notes = new List<NoteVoicing>(Notes.Count);
+            foreach (var note in Notes)
+            {
+                notes.Add(new NoteVoicing(rootKey + note.Interval, note.Beats));
+            }
+            return notes;
         }
     }
 }

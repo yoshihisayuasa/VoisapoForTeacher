@@ -38,8 +38,7 @@ namespace Assets.Scripts.UI.Piano
         public PianoNote MoveSelection(int delta)
         {
             Debug.Assert(_selectedKey != null, "_selectedKey is null");
-            int nextIndex = Mathf.Clamp(_selectedKey.Index + delta, 0, _keys.Count - 1);
-            var nextKey = new PianoNote((PianoNoteEnum)nextIndex);
+            var nextKey = _selectedKey.MovedBy(delta, _keys.Count);
 
             SelectKey(nextKey);
             return nextKey;
