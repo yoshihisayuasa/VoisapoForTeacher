@@ -26,6 +26,21 @@ namespace Assets.Scripts.Domain.Entities
         }
     }
 
+    /// <summary>
+    /// 根音に和音を適用した、実際に鳴らす鍵盤と拍数のひとまとまり。
+    /// </summary>
+    public readonly struct ChordVoicing
+    {
+        public IReadOnlyList<PianoNote> Keys { get; }
+        public int Beats { get; }
+
+        public ChordVoicing(IReadOnlyList<PianoNote> keys, int beats)
+        {
+            Keys = keys;
+            Beats = beats;
+        }
+    }
+
     public readonly struct Note
     {
         public Interval Interval { get; }
@@ -97,17 +112,17 @@ namespace Assets.Scripts.Domain.Entities
             return KeyRangeAt(rootKey).IsWithinKeyboard(keyCount);
         }
         /// <summary>
-        /// 根音を与えたとき、和音が使う鍵盤を返す。
+        /// 根音を与えたとき、和音が使う鍵盤と拍数を返す。
         /// 鍵盤範囲内であることは再生前の IsPlayableAt（音域は和音も含む）が保証するため、ここでは検証しない。
         /// </summary>
-        public IReadOnlyList<PianoNote> ChordKeysAt(PianoNote rootKey)
+        public ChordVoicing ChordAt(PianoNote rootKey)
         {
             var keys = new List<PianoNote>(Chord.Intervals.Count);
             foreach (var interval in Chord.Intervals)
             {
                 keys.Add(rootKey + interval);
             }
-            return keys;
+            return new ChordVoicing(keys, Chord.Beats);
         }
     }
 }

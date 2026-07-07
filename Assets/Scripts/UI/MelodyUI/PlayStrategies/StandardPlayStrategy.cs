@@ -25,10 +25,8 @@ namespace Assets.Scripts.UI.MelodyUI.PlayStrategies
                                             PianoNote pressedKey, PlayModeSettings settings)
         {
             // ── 和音パート ──
-            var chordKeys = melody.ChordKeysAt(pressedKey);
-
             Context.BeginChordSection();
-            yield return PlayChordOnce(piano, chordKeys, melody.Chord.Beats, settings);
+            yield return PlayChordOnce(piano, melody.ChordAt(pressedKey), settings);
             Context.EndChordSection();
 
             // ── メロディパート ──

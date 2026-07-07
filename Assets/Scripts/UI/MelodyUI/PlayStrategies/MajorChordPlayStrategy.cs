@@ -21,8 +21,7 @@ namespace Assets.Scripts.UI.MelodyUI.PlayStrategies
         public override IEnumerator Execute(PianoController piano, Melody melody,
                                             PianoNote pressedKey, PlayModeSettings settings)
         {
-            var chordKeys = melody.ChordKeysAt(pressedKey);
-            yield return PlayChordOnce(piano, chordKeys, melody.Chord.Beats, settings);
+            yield return PlayChordOnce(piano, melody.ChordAt(pressedKey), settings);
         }
     }
 }

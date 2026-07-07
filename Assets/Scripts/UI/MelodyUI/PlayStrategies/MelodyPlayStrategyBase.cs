@@ -28,18 +28,17 @@ namespace Assets.Scripts.UI.MelodyUI.PlayStrategies
                                             PianoNote pressedKey, PlayModeSettings settings);
 
         /// <summary>
-        /// 和音を beats 拍ぶん鳴らして止める共通手順。
+        /// 和音を拍数ぶん鳴らして止める共通手順。
         /// </summary>
-        protected IEnumerator PlayChordOnce(PianoController piano, IReadOnlyList<PianoNote> chordKeys,
-                                            int beats, PlayModeSettings settings)
+        protected IEnumerator PlayChordOnce(PianoController piano, ChordVoicing chord, PlayModeSettings settings)
         {
-            foreach (var key in chordKeys)
+            foreach (var key in chord.Keys)
             {
                 piano.Play(key, settings.PlayCode, VolumeManager.Instance.Volume);
             }
 
             float beatSec = BPMManager.Instance.SecondPerBeat;
-            for (int b = 0; b < beats; b++)
+            for (int b = 0; b < chord.Beats; b++)
             {
                 if (settings.PlayMetronome)
                 {
@@ -48,7 +47,7 @@ namespace Assets.Scripts.UI.MelodyUI.PlayStrategies
                 yield return new WaitForSeconds(beatSec);
             }
 
-            foreach (var key in chordKeys)
+            foreach (var key in chord.Keys)
             {
                 piano.Stop(key);
             }
