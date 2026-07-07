@@ -15,16 +15,8 @@ namespace Assets.Scripts.UI
     public sealed class NetworkEventRouter : MonoBehaviour
     {
         [SerializeField]
-        [Tooltip("Photon通信ゲートウェイ（未設定なら同じGameObjectから取得）")]
+        [Tooltip("Photon通信ゲートウェイ")]
         private PianoNetworkGateway _gateway;
-
-        private void Awake()
-        {
-            if (_gateway == null)
-            {
-                _gateway = GetComponent<PianoNetworkGateway>();
-            }
-        }
 
         private void Start()
         {

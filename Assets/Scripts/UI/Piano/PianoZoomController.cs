@@ -21,34 +21,19 @@ namespace Assets.Scripts.UI.Piano
 
         public float MinScale => _minScale;
         public float MaxScale => _maxScale;
-        public float CurrentScale => _scrollRect != null ? _scrollRect.content.localScale.x : 1f;
-        private void Awake()
-        {
-            if (_scrollRect == null)
-            {
-                _scrollRect = GetComponent<ScrollRect>();
-            }
-        }
+        public float CurrentScale => _scrollRect.content.localScale.x;
 
         private void Start()
         {
-            if (_scrollRect?.content != null)
-            {
-                var ls = _scrollRect.content.localScale;
-                if (ls.x <= 0f) ls.x = 1f;
-                // Y は常に 1 に固定
-                ls.y = 1f;
-                _scrollRect.content.localScale = ls;
-            }
+            var ls = _scrollRect.content.localScale;
+            if (ls.x <= 0f) ls.x = 1f;
+            // Y は常に 1 に固定
+            ls.y = 1f;
+            _scrollRect.content.localScale = ls;
         }
 
         private void Update()
         {
-            if (_scrollRect == null || _scrollRect.content == null || _scrollRect.viewport == null)
-            {  
-                return; 
-            }
-            
             var kb = Keyboard.current;
             var mouse = Mouse.current;
             if (kb == null || mouse == null)
@@ -73,12 +58,6 @@ namespace Assets.Scripts.UI.Piano
 
         public void SetScale(float newScale, float focusViewportFactor = 0.5f)
         {
-            if (_scrollRect == null || _scrollRect.content == null || _scrollRect.viewport == null)
-            {
-                return;
-            }
-            //newScale = Mathf.Clamp(newScale, _minScale, _maxScale);
-
             var content = _scrollRect.content;
             var viewport = _scrollRect.viewport;
 

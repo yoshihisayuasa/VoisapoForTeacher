@@ -54,11 +54,6 @@ namespace Assets.Scripts.UI.MelodyUI
             DontDestroyOnLoad(gameObject);
             PersistentRegistry.Register(gameObject);
 
-            if (_metronomeAudioSource == null)
-            {
-                _metronomeAudioSource = gameObject.AddComponent<AudioSource>();
-                _metronomeAudioSource.playOnAwake = false;
-            }
             _metronomePlayer = new MetronomePlayer(_metronomeAudioSource, _metronomeClip);
 
             // 戦略は状態を持たないため、種別ごとに1インスタンスを使い回す。

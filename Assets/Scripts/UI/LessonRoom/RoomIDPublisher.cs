@@ -31,7 +31,7 @@ namespace Assets.Scripts.UI.LessonRoom
 
         private void OnRoomCreated(RoomId roomId)
         {
-            _roomIdText.text = roomId.DisplayText;
+            _roomIdText.text = "Room ID : " + roomId.Value;
             RoomIdHolder.Set(roomId);
         }
 
