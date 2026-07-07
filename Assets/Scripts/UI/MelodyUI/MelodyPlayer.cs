@@ -183,12 +183,13 @@ namespace Assets.Scripts.UI.MelodyUI
                 if (!playSideChanged)
                 {
                     var nextKey = piano.SelectedKey + _autoKeyChangeState.NextRootStep();
-                    piano.SelectKey(nextKey);
 
                     if (!melody.IsPlayableAt(nextKey, piano.KeyCount))
                     {
                         break;
                     }
+
+                    piano.SelectKey(nextKey);
                 }
                 prevPlaySide = _currentSettings.PlayPiano;
 
