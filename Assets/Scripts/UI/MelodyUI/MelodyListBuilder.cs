@@ -45,13 +45,7 @@ namespace Assets.Scripts.UI
 
                 var btn = Instantiate(_buttonPrefab, parent);
 
-                if (btn.transform is RectTransform rt)
-                {
-                    rt.anchoredPosition = Vector2.zero;
-                    rt.localRotation = Quaternion.identity;
-                    rt.localScale = Vector3.one;
-                }
-
+                // 位置・回転・スケールのリセットは Initialize 内の SetSlot が行う。
                 var reorderItem = btn.GetComponent<DraggableMelodyButton>();
                 reorderItem.Initialize(entry, this, parent);
 

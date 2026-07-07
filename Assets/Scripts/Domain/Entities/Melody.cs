@@ -80,7 +80,6 @@ namespace Assets.Scripts.Domain.Entities
         public Chord Chord { get; }
 
         public IReadOnlyList<Note> Notes { get; }
-        public readonly int Length;
         private readonly Interval _minInterval;
         private readonly Interval _maxInterval;
 

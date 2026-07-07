@@ -228,6 +228,9 @@ namespace Assets.Scripts.Infrastructure
             return entries;
         }
 
+        // 旧フォーマットの和音は常に3拍固定（構成音数 Chord.Length と同値なのは偶然）。
+        private const int LegacyChordBeats = 3;
+
         private static List<SavedMelody> ParseLegacy(LegacyScaleDataWrapper legacy)
         {
             var type = typeof(LegacyScaleDataWrapper);
@@ -242,18 +245,17 @@ namespace Assets.Scripts.Infrastructure
 
                 var noteArr = type.GetField($"ScaleNote{i}")?.GetValue(legacy) as int[];
                 var beatArr = type.GetField($"ScaleBeat{i}")?.GetValue(legacy) as int[];
-                int len = noteArr.Length;
+                int len = noteArr?.Length ?? 0;
 
-                int legacyCordLength = Chord.Length;
                 var chordIntervals = new List<Interval>();
                 var notes = new List<Note>();
 
                 for (int j = 0; j < len; j++)
                 {
-                    int interval = (noteArr != null && j < noteArr.Length) ? noteArr[j] : 0;
+                    int interval = noteArr[j];
                     int beat = (beatArr != null && j < beatArr.Length) ? beatArr[j] : 0;
 
-                    if (j < legacyCordLength)
+                    if (j < Chord.Length)
                     {
                         chordIntervals.Add(new Interval(interval));
                     }
@@ -264,12 +266,7 @@ namespace Assets.Scripts.Infrastructure
                     }
                 }
 
-                while (chordIntervals.Count < legacyCordLength)
-                {
-                    chordIntervals.Add(new Interval(0));
-                }
-
-                var chord = new Chord(chordIntervals, legacyCordLength);
+                var chord = new Chord(chordIntervals, LegacyChordBeats);
                 entries.Add(new SavedMelody(new Melody(name, chord, notes), position));
             }
             return entries;
