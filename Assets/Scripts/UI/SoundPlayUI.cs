@@ -2,6 +2,7 @@ using Assets.Scripts.UI.Piano;
 using R3;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.UI
@@ -12,21 +13,14 @@ namespace Assets.Scripts.UI
     /// 生徒ビルドには配置しない（生徒は受信状態のみで駆動する）。
     /// </summary>
     [RequireComponent(typeof(Toggle))]
-    [RequireComponent(typeof(Selectable))]
     public sealed class SoundPlayUI : MonoBehaviour
     {
         [Header("UI")]
         [SerializeField] private Toggle _toggle;
-        [SerializeField] private Image _image;
+        [SerializeField, FormerlySerializedAs("_image")] private Graphic _graphic;
 
         private readonly Color _onColor = AppColors.Accent;
         private readonly Color _offColor = Color.white;
-
-        private void Awake()
-        {
-            if (_toggle == null) _toggle = GetComponent<Toggle>();
-            if (_image == null && GetComponent<Selectable>().targetGraphic is Image img) _image = img;
-        }
 
         private void Start()
         {
@@ -60,8 +54,11 @@ namespace Assets.Scripts.UI
 
         private void SyncToggle(bool isOn)
         {
-            if (_toggle != null && _toggle.isOn != isOn) _toggle.isOn = isOn;
-            if (_image != null) _image.color = isOn ? _onColor : _offColor;
+            if (_toggle.isOn != isOn)
+            {
+                _toggle.isOn = isOn;
+            }
+            _graphic.color = isOn ? _onColor : _offColor;
         }
 
         private void Update()

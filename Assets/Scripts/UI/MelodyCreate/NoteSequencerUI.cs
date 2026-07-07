@@ -3,7 +3,6 @@ using Assets.Scripts.Domain.Modules;
 using Assets.Scripts.Domain.ValueObjects;
 using Assets.Scripts.UI.Piano;
 using R3;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,12 +29,11 @@ namespace Assets.Scripts.UI.MelodyCreate
         private readonly List<NoteBoxUI> _chordBoxes = new();
         private readonly List<NoteBoxUI> _melodyBoxes = new();
 
-        private Coroutine _previewSoundCoroutine;
-        private PianoNote _previewingNote;
-        private const float PreviewSoundDuration = 0.5F;
+        private NotePreviewPlayer _previewPlayer;
 
         private void Start()
         {
+            _previewPlayer = new NotePreviewPlayer(this);
             InitChordBoxes();
             InitMelodyBoxes();
 
@@ -79,7 +77,7 @@ namespace Assets.Scripts.UI.MelodyCreate
         private void OnPianoKeyClicked(PianoNote key)
         {
             MelodyCreateManager.Instance.AddNote(key);
-            StartPreviewSound(key);
+            _previewPlayer.Play(key);
         }
 
         private void OnClearClicked()
@@ -138,32 +136,6 @@ namespace Assets.Scripts.UI.MelodyCreate
             _extendButton.interactable = manager.CanExtend;
             _deleteButton.interactable = manager.HasAnyInput;
             _clearButton.interactable = manager.HasAnyInput;
-        }
-
-        // ── プレビュー音 ─────────────────────────────────────────────────
-
-        private void StartPreviewSound(PianoNote key)
-        {
-            if (_previewSoundCoroutine != null)
-            {
-                StopCoroutine(_previewSoundCoroutine);
-                if (_previewingNote != null)
-                {
-                    PianoController.Instance.Stop(_previewingNote);
-                }
-            }
-
-            _previewingNote = key;
-            PianoController.Instance.Play(key, true, 1f);
-            _previewSoundCoroutine = StartCoroutine(StopPreviewSoundAfterDelay(key));
-        }
-
-        private IEnumerator StopPreviewSoundAfterDelay(PianoNote key)
-        {
-            yield return new WaitForSeconds(PreviewSoundDuration);
-            PianoController.Instance.Stop(key);
-            _previewSoundCoroutine = null;
-            _previewingNote = null;
         }
 
         // ── ヘルパー ─────────────────────────────────────────────────────

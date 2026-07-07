@@ -19,7 +19,8 @@ namespace Assets.Scripts.UI
 
         public string[] AvailableDevices => Microphone.devices;
 
-        public ReactiveProperty<bool> HasCapture { get; } = new(false);
+        private readonly ReactiveProperty<bool> _hasCapture = new(false);
+        public Observable<bool> HasCapture => _hasCapture;
 
         private readonly ReactiveProperty<bool> _isRecordingEnabled = new(false);
         public Observable<bool> IsRecordingEnabled => _isRecordingEnabled;
@@ -102,7 +103,7 @@ namespace Assets.Scripts.UI
             yield return new WaitForSeconds(delaySec);
 
             Microphone.End(_selectedDevice);
-            HasCapture.Value = _micClip != null;
+            _hasCapture.Value = _micClip != null;
         }
 
         public void Play()
@@ -118,7 +119,7 @@ namespace Assets.Scripts.UI
         private void OnDestroy()
         {
             Microphone.End(_selectedDevice);
-            HasCapture.Dispose();
+            _hasCapture.Dispose();
             _onMicAccessFailed.Dispose();
         }
     }

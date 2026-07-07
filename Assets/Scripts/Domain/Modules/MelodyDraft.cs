@@ -76,19 +76,19 @@ namespace Assets.Scripts.Domain.Modules
 
         public bool HasAnyInput => _chordEntries.Count > 0;
 
-        public void SetChordNotes(IEnumerable<PianoNote> notes)
+        private void SetChordNotes(IEnumerable<PianoNote> notes)
         {
             _chordEntries.Clear();
             _chordEntries.AddRange(notes.OrderByDescending(n => n.Index));
             RebuildChordSlots();
         }
 
-        public void ExtendChord()
+        private void ExtendChord()
         {
             _chordBeats++;
         }
 
-        public void ShrinkChord()
+        private void ShrinkChord()
         {
             _chordBeats = Math.Max(1, _chordBeats - 1);
         }
@@ -120,7 +120,7 @@ namespace Assets.Scripts.Domain.Modules
 
         // ── メロディ操作 ─────────────────────────────────────────────────────
 
-        public void AddMelodyNote(DraftNote note)
+        private void AddMelodyNote(DraftNote note)
         {
             if (!CanAddMelodyNote) return;
             _melodyNotes.Add(note);
@@ -130,14 +130,14 @@ namespace Assets.Scripts.Domain.Modules
             }
         }
 
-        public void ExtendLastMelodyNote()
+        private void ExtendLastMelodyNote()
         {
             if (_melodyNotes.Count == 0) return;
             var last = _melodyNotes[^1];
             _melodyNotes[^1] = last.WithBeats(last.Beats + 1);
         }
 
-        public void ShrinkLastMelodyNote()
+        private void ShrinkLastMelodyNote()
         {
             if (_melodyNotes.Count == 0) return;
             var last = _melodyNotes[^1];
@@ -145,7 +145,7 @@ namespace Assets.Scripts.Domain.Modules
             _melodyNotes[^1] = last.WithBeats(last.Beats - 1);
         }
 
-        public void RemoveLastMelodyNote()
+        private void RemoveLastMelodyNote()
         {
             if (_melodyNotes.Count == 0) return;
             _melodyNotes.RemoveAt(_melodyNotes.Count - 1);
@@ -162,6 +162,29 @@ namespace Assets.Scripts.Domain.Modules
             _chordBeats = 1;
             _melodyNotes.Clear();
             _root = null;
+        }
+
+        /// <summary>
+        /// テンプレートの内容で下書き全体を置き換える。root をテンプレートのルート音として展開する。
+        /// </summary>
+        public void LoadFrom(Melody template, PianoNote root)
+        {
+            ClearAll();
+
+            SetChordNotes(template.Chord.Intervals.Select(interval => root + interval));
+            for (int b = 1; b < template.Chord.Beats; b++)
+            {
+                ExtendChord();
+            }
+
+            foreach (var note in template.Notes)
+            {
+                AddMelodyNote(new DraftNote(root + note.Interval));
+                for (int b = 1; b < note.Beats; b++)
+                {
+                    ExtendLastMelodyNote();
+                }
+            }
         }
 
         // ── 複合操作 ─────────────────────────────────────────────────────────

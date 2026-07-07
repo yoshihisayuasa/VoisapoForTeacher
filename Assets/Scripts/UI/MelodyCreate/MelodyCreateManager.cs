@@ -7,7 +7,6 @@ using Assets.Scripts.UI.MelodyUI;
 using Assets.Scripts.UI.Modal;
 using R3;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -96,31 +95,8 @@ namespace Assets.Scripts.UI.MelodyCreate
 
         public void LoadTemplate(Melody template)
         {
-            _draft.ClearAll();
+            _draft.LoadFrom(template, new PianoNote(PianoNoteEnum.C4));
             CurrentMelody = null;
-
-            var root = new PianoNote(PianoNoteEnum.C4);
-
-            var chordNotes = template.Chord.Intervals
-                .Select(interval => root + interval);
-
-            _draft.SetChordNotes(chordNotes);
-
-            for (int b = 1; b < template.Chord.Beats; b++)
-            {
-                _draft.ExtendChord();
-            }
-
-            foreach (var note in template.Notes)
-            {
-                var draftNote = new DraftNote(root + note.Interval);
-                _draft.AddMelodyNote(draftNote);
-                for (int b = 1; b < note.Beats; b++)
-                { 
-                    _draft.ExtendLastMelodyNote();
-                }
-            }
-
             RebuildCurrentMelody();
             _draftChanged.OnNext(Unit.Default);
         }
