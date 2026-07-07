@@ -1,3 +1,4 @@
+using Assets.Scripts.UI;
 using Assets.Scripts.UI.Piano;
 using UnityEngine;
 using UnityEngine.UI;
@@ -120,14 +121,6 @@ public sealed class PianoScrollController : MonoBehaviour, IPointerDownHandler, 
         UpdateViewRect();
     }
 
-    /// <summary>スケール適用後の content の見た目上の幅。スケール未初期化（0以下）は 1 とみなす。</summary>
-    private float VisualContentWidth()
-    {
-        var content = pianoScrollRect.content;
-        float scale = content.localScale.x > 0f ? content.localScale.x : 1f;
-        return content.rect.width * scale;
-    }
-
     public void ScrollOctaveUp() => ScrollByKeys(12);
     public void ScrollOctaveDown() => ScrollByKeys(-12);
 
@@ -138,7 +131,7 @@ public sealed class PianoScrollController : MonoBehaviour, IPointerDownHandler, 
         var viewport = pianoScrollRect.viewport;
         if (pianoScrollRect.content == null || viewport == null) return;
 
-        float contentWidth = VisualContentWidth();
+        float contentWidth = ScrollRectGeometry.VisualContentWidth(pianoScrollRect);
         float viewportWidth = viewport.rect.width;
         float scrollable = contentWidth - viewportWidth;
         if (scrollable <= 0f) return;
@@ -168,7 +161,7 @@ public sealed class PianoScrollController : MonoBehaviour, IPointerDownHandler, 
             return;
         }
 
-        float contentWidth = VisualContentWidth();
+        float contentWidth = ScrollRectGeometry.VisualContentWidth(pianoScrollRect);
         float viewportWidth = pianoScrollRect.viewport.rect.width;
         float miniMapWidth = miniMapRect.rect.width;
 

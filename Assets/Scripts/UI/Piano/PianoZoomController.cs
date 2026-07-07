@@ -51,7 +51,7 @@ namespace Assets.Scripts.UI.Piano
             float contentWidth = content.rect.width;
             float viewportWidth = viewport.rect.width;
 
-            float oldScale = content.localScale.x;
+            float oldScale = ScrollRectGeometry.ScaleX(content);
             float oldVisualContentWidth = contentWidth * oldScale;
             float oldScrollable = Mathf.Max(oldVisualContentWidth - viewportWidth, 0f);
 

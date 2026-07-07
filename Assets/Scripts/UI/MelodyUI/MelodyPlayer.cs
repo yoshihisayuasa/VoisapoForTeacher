@@ -299,7 +299,7 @@ namespace Assets.Scripts.UI.MelodyUI
         {
             _currentSettings = PlayModeSettings.FromFlags(
                 SoundPlayManager.Instance.IsSoundPlay,
-                EarphoneModeManager.Instance?.EarphoneMode);
+                EarphoneModeManager.Instance.EarphoneMode);
         }
 
         private void OnMelodyChanged(Melody melody)

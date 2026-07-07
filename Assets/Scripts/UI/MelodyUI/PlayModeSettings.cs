@@ -16,16 +16,14 @@ namespace Assets.Scripts.UI.MelodyUI
             PlayMetronome = playMetronome;
         }
 
-        // 生徒ビルドには EarphoneModeManager が存在しないため、
-        // earphoneOn の欠如（null）を「オフ」として扱えるよう nullable で受ける。
-        public static PlayModeSettings FromFlags(bool isTeacherSide, bool? earphoneOn)
+        public static PlayModeSettings FromFlags(bool isTeacherSide, bool earphoneOn)
         {
             if (isTeacherSide)
             {
                 // 先生側: コード＋メトロノーム＋ピアノ
                 return new PlayModeSettings(true, true, true);
             }
-            else if (earphoneOn ?? false)
+            else if (earphoneOn)
             {
                 // イヤホンモード: コード＋メトロノーム（ピアノなし）
                 return new PlayModeSettings(true, true, false);

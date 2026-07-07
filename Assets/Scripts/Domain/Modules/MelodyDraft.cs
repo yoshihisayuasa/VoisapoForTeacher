@@ -13,23 +13,23 @@ namespace Assets.Scripts.Domain.Modules
     /// </summary>
     public sealed class MelodyDraft
     {
-        // コード音は「取り消しは入力の逆順」のため入力順で保持し、
-        // 表示用スロット（高い音から順・不足分は null）は別途組み立てる。
+        // コード音は「取り消しは入力の逆順」のため入力順で保持する。
         private readonly List<PianoNote> _chordEntries = new();
-        private readonly DraftNote[] _chordNotes = new DraftNote[Chord.Length];
         private int _chordBeats = 1;
         private readonly List<DraftNote> _melodyNotes = new();
 
-        // List/配列をそのまま返すと IReadOnlyList からダウンキャストして書き換えられるため、
+        // List をそのまま返すと IReadOnlyList からダウンキャストして書き換えられるため、
         // 読み取り専用ビューで包んで公開する（中身は内部コレクションに追従する）。
         public IReadOnlyList<DraftNote> MelodyNotes { get; }
-        public IReadOnlyList<DraftNote> ChordNotes { get; }
+
+        /// <summary>表示用スロット（高い音から順・不足分は null）。保持中のコード音から毎回組み立てる。</summary>
+        public IReadOnlyList<DraftNote> ChordNotes => BuildChordSlots();
+
         public int ChordBeats => _chordBeats;
 
         public MelodyDraft()
         {
             MelodyNotes = _melodyNotes.AsReadOnly();
-            ChordNotes = Array.AsReadOnly(_chordNotes);
         }
 
         public const int MaxMelodySteps = 26;
@@ -87,8 +87,9 @@ namespace Assets.Scripts.Domain.Modules
         private void SetChordNotes(IEnumerable<PianoNote> notes)
         {
             _chordEntries.Clear();
+            // 表示順は BuildChordSlots が決めるため、このソートは表示用ではない。
+            // 取り消し（DeleteLast）が低い音から消えるよう、保持順を音高降順にしている。
             _chordEntries.AddRange(notes.OrderByDescending(n => n.Index));
-            RebuildChordSlots();
         }
 
         private void ExtendChord()
@@ -104,7 +105,6 @@ namespace Assets.Scripts.Domain.Modules
         private void AddChordEntry(PianoNote key)
         {
             _chordEntries.Add(key);
-            RebuildChordSlots();
         }
 
         private void RemoveLastChordEntry()
@@ -114,16 +114,17 @@ namespace Assets.Scripts.Domain.Modules
                 return;
             }
             _chordEntries.RemoveAt(_chordEntries.Count - 1);
-            RebuildChordSlots();
         }
 
-        private void RebuildChordSlots()
+        private IReadOnlyList<DraftNote> BuildChordSlots()
         {
             var sorted = _chordEntries.OrderByDescending(n => n.Index).ToList();
+            var slots = new DraftNote[Chord.Length];
             for (int i = 0; i < Chord.Length; i++)
             {
-                _chordNotes[i] = i < sorted.Count ? new DraftNote(sorted[i]) : null;
+                slots[i] = i < sorted.Count ? new DraftNote(sorted[i]) : null;
             }
+            return slots;
         }
 
         // ── メロディ操作 ─────────────────────────────────────────────────────
@@ -163,10 +164,6 @@ namespace Assets.Scripts.Domain.Modules
         public void ClearAll()
         {
             _chordEntries.Clear();
-            for (int i = 0; i < Chord.Length; i++)
-            {
-                _chordNotes[i] = null;
-            }
             _chordBeats = 1;
             _melodyNotes.Clear();
             _root = null;
@@ -218,18 +215,9 @@ namespace Assets.Scripts.Domain.Modules
 
         // ── 検証 ────────────────────────────────────────────────────────────
 
-        public bool IsChordComplete => AllChordNotesSet();
+        public bool IsChordComplete => _chordEntries.Count >= Chord.Length;
 
         public bool CanPreview => IsChordComplete && _melodyNotes.Count > 0;
-
-        private bool AllChordNotesSet()
-        {
-            for (int i = 0; i < Chord.Length; i++)
-            {
-                if (_chordNotes[i] == null) return false;
-            }
-            return true;
-        }
 
         // ── ビルド ───────────────────────────────────────────────────────────
 
@@ -243,9 +231,10 @@ namespace Assets.Scripts.Domain.Modules
                 throw new InvalidOperationException("メロディに音符がありません");
             }
 
-            var chordIntervals = _chordNotes
-                .Where(n => n != null)
-                .Select(n => new Interval(n.Key.Index - _root.Index))
+            // 保存されるインターバル順（＝再生・表示順）を従来どおり音高降順に保つ。
+            var chordIntervals = _chordEntries
+                .OrderByDescending(n => n.Index)
+                .Select(n => new Interval(n.Index - _root.Index))
                 .ToList();
 
             var chord = new Chord(chordIntervals, _chordBeats);

@@ -1,5 +1,5 @@
+using Assets.Scripts.UI;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Assets.Scripts.UI.Piano
 {
@@ -21,9 +21,7 @@ namespace Assets.Scripts.UI.Piano
             RectTransform maxKeyRT,
             float currentNormalized)
         {
-            float contentScaleX = content.localScale.x;
-            if (contentScaleX <= 0f) contentScaleX = 1f;
-
+            float contentScaleX = ScrollRectGeometry.ScaleX(content);
             float visualContentWidth = content.rect.width * contentScaleX;
             float visualViewportWidth = viewport.rect.width;
             if (visualContentWidth <= visualViewportWidth)
