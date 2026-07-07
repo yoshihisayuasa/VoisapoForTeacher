@@ -25,8 +25,6 @@ namespace Assets.Scripts.UI.MelodyCreate
 
         private MelodyDraft _draft;
 
-        public Melody CurrentMelody { get; private set; }
-
         private readonly Subject<Unit> _draftChanged = new();
         public Observable<Unit> DraftChanged => _draftChanged;
 
@@ -37,14 +35,6 @@ namespace Assets.Scripts.UI.MelodyCreate
         public IReadOnlyList<DraftNote> ChordNotes => _draft.ChordNotes;
         public IReadOnlyList<DraftNote> MelodyNotes => _draft.MelodyNotes;
         public int ChordBeats => _draft.ChordBeats;
-
-        private void RebuildCurrentMelody()
-        {
-            if (_draft.CanPreview)
-            {
-                CurrentMelody = _draft.Build(string.Empty);
-            }
-        }
 
         private void Awake()
         {
@@ -65,21 +55,18 @@ namespace Assets.Scripts.UI.MelodyCreate
         public void AddNote(PianoNote key)
         {
             _draft.AddNote(key);
-            RebuildCurrentMelody();
             _draftChanged.OnNext(Unit.Default);
         }
 
         public void ClearAll()
         {
             _draft.ClearAll();
-            CurrentMelody = null;
             _draftChanged.OnNext(Unit.Default);
         }
 
         public void Extend()
         {
             _draft.Extend();
-            RebuildCurrentMelody();
             _draftChanged.OnNext(Unit.Default);
         }
 
@@ -89,25 +76,22 @@ namespace Assets.Scripts.UI.MelodyCreate
         public void DeleteLast()
         {
             _draft.DeleteLast();
-            RebuildCurrentMelody();
             _draftChanged.OnNext(Unit.Default);
         }
 
         public void LoadTemplate(Melody template)
         {
             _draft.LoadFrom(template, new PianoNote(PianoNoteEnum.C4));
-            CurrentMelody = null;
-            RebuildCurrentMelody();
             _draftChanged.OnNext(Unit.Default);
         }
 
         public void Preview()
         {
-            if (CurrentMelody == null || _draft.Root == null)
+            if (!_draft.CanPreview)
             {
                 return;
             }
-            _draftMelodyPlayer.Play(CurrentMelody, _draft.Root);
+            _draftMelodyPlayer.Play(_draft.Build(string.Empty), _draft.Root);
         }
 
         public void SaveWithName(string name)

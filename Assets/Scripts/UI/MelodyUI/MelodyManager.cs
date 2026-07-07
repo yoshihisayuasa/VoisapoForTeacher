@@ -41,8 +41,13 @@ namespace Assets.Scripts.UI.MelodyUI
             if (loadedEntries.Count > 0)
             {
                 _melodies.AddRange(loadedEntries);
-                CurrentMelody = _melodies.Find(e => e.Melody.Name == defaultMelodyName)?.Melody;
+                CurrentMelody = FindDefaultMelody();
             }
+        }
+
+        private Melody FindDefaultMelody()
+        {
+            return _melodies.Find(e => e.Melody.Name == defaultMelodyName).Melody;
         }
 
         public IReadOnlyList<SavedMelody> GetAllMelodies() => _melodies;
@@ -68,7 +73,7 @@ namespace Assets.Scripts.UI.MelodyUI
 
         public void ResetToDefault()
         {
-            var melody = _melodies.Find(e => e.Melody.Name == defaultMelodyName)?.Melody;
+            var melody = FindDefaultMelody();
             if (melody != null)
             {
                 SetCurrentMelody(melody);
@@ -80,7 +85,7 @@ namespace Assets.Scripts.UI.MelodyUI
             _melodies.Remove(entry);
             if (CurrentMelody == entry.Melody)
             {
-                SetCurrentMelody(_melodies.Find(e => e.Melody.Name == defaultMelodyName)?.Melody);
+                SetCurrentMelody(FindDefaultMelody());
             }
             SaveAllMelodies();
         }
