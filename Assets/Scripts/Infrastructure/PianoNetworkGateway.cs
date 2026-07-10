@@ -12,7 +12,8 @@ namespace Assets.Scripts.Infrastructure
     /// 鍵盤入力・先生状態のPhoton通信を1箇所に集約するゲートウェイ（インフラ層）。
     /// 送信メソッドと受信ストリーム（ドメイン型）を公開するだけで、
     /// 受信が誰にどう影響するかは知らない（采配は UI 層の NetworkEventRouter が行う）。
-    /// 送信可否（先生のみ・入室中のみ）の判定はここで行う。
+    /// 送信可否の判定はここで行う。先生の「意図」（状態・設定）は先生のみ、
+    /// 演奏の「事実」（周キー・バトン）は音源側の端末（どちらの役割でも）が入室中に送る。
     ///
     /// 通信は RaiseEvent（イベントコード方式）を使う。PhotonView / ViewID には依存しないため、
     /// 先生・生徒シーン間で ViewID を一致させる必要がなく、エディタの ID 振り直しの影響を受けない。
@@ -35,6 +36,9 @@ namespace Assets.Scripts.Infrastructure
             public const byte Stop = 5;
             public const byte SoundSetSelection = 6;
             public const byte SoundPlayState = 7;
+            public const byte AutoKeyChange = 8;
+            public const byte LoopKey = 9;
+            public const byte PlaybackBaton = 10;
         }
 
         private readonly Subject<PianoNote> _keyDownReceived = new();
@@ -44,6 +48,9 @@ namespace Assets.Scripts.Infrastructure
         private readonly Subject<Unit> _stopReceived = new();
         private readonly Subject<int> _soundSetReceived = new();
         private readonly Subject<bool> _soundPlayStateReceived = new();
+        private readonly Subject<AutoKeyChangeState> _autoKeyChangeReceived = new();
+        private readonly Subject<PianoNote> _loopKeyReceived = new();
+        private readonly Subject<PianoNote> _playbackBatonReceived = new();
         private readonly Subject<Unit> _studentJoined = new();
         private readonly Subject<bool> _studentPresenceChanged = new();
 
@@ -54,6 +61,13 @@ namespace Assets.Scripts.Infrastructure
         public Observable<Unit> StopReceived => _stopReceived;
         public Observable<int> SoundSetReceived => _soundSetReceived;
         public Observable<bool> SoundPlayStateReceived => _soundPlayStateReceived;
+        public Observable<AutoKeyChangeState> AutoKeyChangeReceived => _autoKeyChangeReceived;
+
+        /// <summary>音源側（トークン保持者）がループ各周の開始時に演奏したキー。描画専用。</summary>
+        public Observable<PianoNote> LoopKeyReceived => _loopKeyReceived;
+
+        /// <summary>再生権限の委譲（バトン）。受け取った側が次の音源側としてこのキーから再生を引き継ぐ。</summary>
+        public Observable<PianoNote> PlaybackBatonReceived => _playbackBatonReceived;
 
         /// <summary>生徒が後から入室した（状態の再送が必要になった）ことを通知する。</summary>
         public Observable<Unit> StudentJoined => _studentJoined;
@@ -127,6 +141,28 @@ namespace Assets.Scripts.Infrastructure
             RaiseToOthers(EventCode.SoundPlayState, !isSoundPlay);
         }
 
+        public void SendAutoKeyChange(AutoKeyChangeState state)
+        {
+            if (!CanSend()) return;
+            RaiseToOthers(EventCode.AutoKeyChange, (int)state);
+        }
+
+        // ── 送信（音源側＝トークン保持者。演奏の「事実」なので先生・生徒どちらからも送る） ──
+        // エコー防止は役割ではなく由来で行う：これらはローカル発イベントの購読からのみ呼ばれ、
+        // 受信は別ストリームに流れるため再送信は起きない。
+
+        public void SendLoopKey(PianoNote note)
+        {
+            if (!PhotonNetwork.InRoom) return;
+            RaiseToOthers(EventCode.LoopKey, note.Index);
+        }
+
+        public void SendPlaybackBaton(PianoNote note)
+        {
+            if (!PhotonNetwork.InRoom) return;
+            RaiseToOthers(EventCode.PlaybackBaton, note.Index);
+        }
+
         private static bool CanSend()
         {
             return AppMode.IsTeacher && PhotonNetwork.InRoom;
@@ -178,6 +214,18 @@ namespace Assets.Scripts.Infrastructure
                     _soundPlayStateReceived.OnNext((bool)photonEvent.CustomData);
                     break;
 
+                case EventCode.AutoKeyChange:
+                    _autoKeyChangeReceived.OnNext((AutoKeyChangeState)(int)photonEvent.CustomData);
+                    break;
+
+                case EventCode.LoopKey:
+                    _loopKeyReceived.OnNext(ToNote(photonEvent.CustomData));
+                    break;
+
+                case EventCode.PlaybackBaton:
+                    _playbackBatonReceived.OnNext(ToNote(photonEvent.CustomData));
+                    break;
+
                 // Photon 内部イベント（コード200以降）等は対象外なので無視する。
                 default:
                     break;
@@ -198,6 +246,9 @@ namespace Assets.Scripts.Infrastructure
             _stopReceived.Dispose();
             _soundSetReceived.Dispose();
             _soundPlayStateReceived.Dispose();
+            _autoKeyChangeReceived.Dispose();
+            _loopKeyReceived.Dispose();
+            _playbackBatonReceived.Dispose();
             _studentJoined.Dispose();
             _studentPresenceChanged.Dispose();
         }

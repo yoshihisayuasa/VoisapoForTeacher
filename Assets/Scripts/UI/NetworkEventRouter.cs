@@ -21,6 +21,7 @@ namespace Assets.Scripts.UI
         private void Start()
         {
             SubscribeReceivedEvents();
+            SubscribePerformanceSends();
 
             if (AppMode.IsTeacher)
             {
@@ -68,6 +69,35 @@ namespace Assets.Scripts.UI
             _gateway.SoundPlayStateReceived
                 .Subscribe(state => SoundPlayManager.Instance.SetState(state))
                 .AddTo(this);
+
+            _gateway.AutoKeyChangeReceived
+                .Subscribe(state => AutoKeyChangeManager.Instance.ApplyRemote(state))
+                .AddTo(this);
+
+            _gateway.LoopKeyReceived
+                .Subscribe(key => MelodyPlayer.Instance.RenderLoopKey(key))
+                .AddTo(this);
+
+            _gateway.PlaybackBatonReceived
+                .Subscribe(key => MelodyPlayer.Instance.ReceiveBaton(key))
+                .AddTo(this);
+        }
+
+        /// <summary>
+        /// 演奏の事実（周キー・バトン）の送信。発生源はその時のトークン保持者（音源側）で
+        /// 先生・生徒どちらにもなり得るため、役割で分岐せずどちらの端末も同じ配線にする。
+        /// エコー防止は由来分離で担保される：これらのストリームにはローカル発イベントしか
+        /// 流れず、受信は上の ApplyRemote / RenderLoopKey / ReceiveBaton に直接届く。
+        /// </summary>
+        private void SubscribePerformanceSends()
+        {
+            MelodyPlayer.Instance.OnLoopKeyPlayed
+                .Subscribe(_gateway.SendLoopKey)
+                .AddTo(this);
+
+            MelodyPlayer.Instance.OnBatonPassed
+                .Subscribe(_gateway.SendPlaybackBaton)
+                .AddTo(this);
         }
 
         /// <summary>
@@ -97,6 +127,11 @@ namespace Assets.Scripts.UI
                 .Subscribe(_gateway.SendBpm)
                 .AddTo(this);
 
+            // 自動キー変更は先生の「意図」。ローカル操作由来の変更だけを送る（受信の再送信をしない）。
+            AutoKeyChangeManager.Instance.LocalChanged
+                .Subscribe(_gateway.SendAutoKeyChange)
+                .AddTo(this);
+
             if (SoundSourceSwitcher.Instance != null)
             {
                 SoundSourceSwitcher.Instance.OnChanged
@@ -120,13 +155,20 @@ namespace Assets.Scripts.UI
                 .Subscribe(connected => SoundPlayManager.Instance.SetStudentConnected(connected))
                 .AddTo(this);
 
+            // 再生権限（バトン）を持つ生徒が切断すると委譲が永遠に完了しないため、先生が自己回収する。
+            // 上の SetStudentConnected の購読が先に走り、実効状態（先生が音源側）へ戻ってから呼ばれる。
+            _gateway.StudentPresenceChanged
+                .Where(connected => !connected)
+                .Subscribe(_ => MelodyPlayer.Instance.ReclaimPlaybackAuthority())
+                .AddTo(this);
+
             _gateway.StudentJoined
                 .Subscribe(_ => ResendCurrentState())
                 .AddTo(this);
         }
 
         /// <summary>
-        /// 後から入室した生徒に、先生の現在の状態（選択メロディ・音再生状態・BPM・音源）を再送する。
+        /// 後から入室した生徒に、先生の現在の状態（選択メロディ・音再生状態・BPM・自動キー変更・音源）を再送する。
         /// 生徒は1人前提（ルームは MaxPlayers=2）のため、全員向け送信＝入室した生徒向けになる。
         /// 音再生状態は、新規起動の生徒なら既定値（鳴らさない）と一致するため冗長だが、
         /// 古い状態を保持したまま再入室した生徒（例：切断→再接続）を訂正できるのはこの再送だけ。
@@ -142,6 +184,7 @@ namespace Assets.Scripts.UI
 
             _gateway.SendSoundPlayState(SoundPlayManager.Instance.IsSoundPlay);
             _gateway.SendBpm(BPMManager.Instance.Value);
+            _gateway.SendAutoKeyChange(AutoKeyChangeManager.Instance.Current);
 
             if (SoundSourceSwitcher.Instance != null)
             {
