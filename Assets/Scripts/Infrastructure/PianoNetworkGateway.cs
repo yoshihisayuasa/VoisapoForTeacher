@@ -53,6 +53,7 @@ namespace Assets.Scripts.Infrastructure
         private readonly Subject<PianoNote> _playbackBatonReceived = new();
         private readonly Subject<Unit> _studentJoined = new();
         private readonly Subject<bool> _studentPresenceChanged = new();
+        private readonly Subject<Unit> _selfLeftRoom = new();
 
         public Observable<PianoNote> KeyDownReceived => _keyDownReceived;
         public Observable<PianoNote> KeyUpReceived => _keyUpReceived;
@@ -75,6 +76,9 @@ namespace Assets.Scripts.Infrastructure
         /// <summary>生徒の在室状態の変化（入室で true、退室時は残員から判定）。</summary>
         public Observable<bool> StudentPresenceChanged => _studentPresenceChanged;
 
+        /// <summary>自分がルームから出た（自発ログアウト・回線切断の両方）。ルーム由来の状態が無効になったことを意味する。</summary>
+        public Observable<Unit> SelfLeftRoom => _selfLeftRoom;
+
         /// <summary>
         /// 自分（先生）以外のプレイヤー（生徒）が同じルームに居るか。
         /// </summary>
@@ -94,6 +98,16 @@ namespace Assets.Scripts.Infrastructure
             if (!AppMode.IsTeacher) return;
 
             _studentPresenceChanged.OnNext(HasConnectedStudent);
+        }
+
+        public override void OnLeftRoom()
+        {
+            _selfLeftRoom.OnNext(Unit.Default);
+        }
+
+        public override void OnDisconnected(DisconnectCause cause)
+        {
+            _selfLeftRoom.OnNext(Unit.Default);
         }
 
         // ── 送信（先生のみ） ──
@@ -251,6 +265,7 @@ namespace Assets.Scripts.Infrastructure
             _playbackBatonReceived.Dispose();
             _studentJoined.Dispose();
             _studentPresenceChanged.Dispose();
+            _selfLeftRoom.Dispose();
         }
     }
 }

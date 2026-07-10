@@ -1,3 +1,4 @@
+using Assets.Scripts.Domain.ValueObjects;
 using Assets.Scripts.UI.MelodyUI;
 using Assets.Scripts.UI.Piano;
 using Assets.Scripts.Infrastructure;
@@ -27,6 +28,10 @@ namespace Assets.Scripts.UI
             {
                 SubscribeTeacherSends();
                 SubscribeStudentPresence();
+            }
+            else
+            {
+                SubscribeSelfRoomExit();
             }
         }
 
@@ -138,6 +143,24 @@ namespace Assets.Scripts.UI
                     .Subscribe(_gateway.SendSoundSetSelection)
                     .AddTo(this);
             }
+        }
+
+        /// <summary>
+        /// 自分（生徒）の退室・切断で、ルーム由来の状態をすべて既定へ戻す（生徒のみ）。
+        /// 自動再生ループの条件はローカル状態だけを見るため、ここで戻さないと
+        /// ログアウト後も再生が回り続け、単独演奏時にも古い状態でループが再発する。
+        /// 再入室時の復元は先生側の ResendCurrentState が行う。
+        /// </summary>
+        private void SubscribeSelfRoomExit()
+        {
+            _gateway.SelfLeftRoom
+                .Subscribe(_ =>
+                {
+                    MelodyPlayer.Instance.FinishMelody();
+                    AutoKeyChangeManager.Instance.ApplyRemote(AutoKeyChangeState.None);
+                    SoundPlayManager.Instance.SetState(false);
+                })
+                .AddTo(this);
         }
 
         private void SubscribeStudentPresence()
