@@ -14,48 +14,52 @@ namespace Assets.Scripts.Infrastructure
         // ── 公開API ──────────────────────────────────────────────────
 
         /// <summary>
-        /// JSONファイルからメロディエントリリストを読み込む。
-        /// 旧フォーマットを検出した場合は自動マイグレーションを行う。
+        /// メロディエントリリストを読み込む。フォーマットの新旧はファイル名で判別する。
+        /// 新フォーマットは fileName、旧フォーマットは legacyFileName に保存されている前提。
+        /// 旧フォーマットしか無ければ新フォーマットへ移行して書き出す。
         /// </summary>
-        public static List<SavedMelody> LoadFromJsonResource(string fileName)
+        public static List<SavedMelody> LoadFromJsonResource(string fileName, string legacyFileName)
         {
             string path = GetPersistentPath(fileName);
-            string jsonText;
-
             Debug.Log($"Persistent Path: {path}");
 
+            // 1. 新フォーマットが既にあればそのまま読む。
             if (System.IO.File.Exists(path))
             {
-                jsonText = System.IO.File.ReadAllText(path);
-            }
-            else
-            {
-                var textAsset = Resources.Load<TextAsset>(fileName);
-                if (textAsset == null)
-                {
-                    Debug.LogError($"JSONファイルのロードに失敗: {fileName}");
-                    return new List<SavedMelody>();
-                }
-                jsonText = textAsset.text;
-                System.IO.File.WriteAllText(path, jsonText);
+                return ParseNewText(System.IO.File.ReadAllText(path));
             }
 
+            // 2. 旧フォーマットが残っていれば移行して新フォーマットで書き出す。
+            string legacyPath = GetPersistentPath(legacyFileName);
+            if (System.IO.File.Exists(legacyPath))
+            {
+                Debug.Log("旧フォーマットを検出。自動マイグレーションを実行します。");
+                var legacy = JsonUtility.FromJson<LegacyScaleDataWrapper>(
+                    System.IO.File.ReadAllText(legacyPath));
+                var migrated = MergeLegacyWithSeed(legacy, fileName);
+                System.IO.File.WriteAllText(path, SerializeNew(migrated));
+                Debug.Log($"マイグレーション完了: {migrated.Count} 曲");
+                return migrated;
+            }
+
+            // 3. どちらも無い初回起動はシード（Resources）から生成する。
+            var seed = Resources.Load<TextAsset>(fileName);
+            if (seed == null)
+            {
+                Debug.LogError($"シードJSONのロードに失敗: {fileName}");
+                return new List<SavedMelody>();
+            }
+            System.IO.File.WriteAllText(path, seed.text);
+            return ParseNewText(seed.text);
+        }
+
+        // 新フォーマットのJSON文字列をエントリリストへ復元する。
+        private static List<SavedMelody> ParseNewText(string jsonText)
+        {
             try
             {
-                // 旧フォーマット検出（ScaleNum フィールドが存在する）
-                var legacy = JsonUtility.FromJson<LegacyScaleDataWrapper>(jsonText);
-                if (legacy != null && legacy.ScaleNum > 0 && legacy.ScaleName != null)
-                {
-                    Debug.Log("旧フォーマットを検出。自動マイグレーションを実行します。");
-                    var migrated = ParseLegacy(legacy);
-                    System.IO.File.WriteAllText(path, SerializeNew(migrated));
-                    Debug.Log($"マイグレーション完了: {migrated.Count} 曲");
-                    return migrated;
-                }
-
-                // 新フォーマット
                 var wrapper = JsonUtility.FromJson<MelodyListWrapper>(jsonText);
-                if (wrapper.Melodies == null || wrapper.Melodies.Count == 0)
+                if (wrapper == null || wrapper.Melodies == null || wrapper.Melodies.Count == 0)
                 {
                     Debug.LogError("JSONデータが不正です");
                     return new List<SavedMelody>();
@@ -177,13 +181,76 @@ namespace Assets.Scripts.Infrastructure
             return entries;
         }
 
+        /// <summary>
+        /// 旧フォーマットを移行する。シードの組み込みメロディ（削除フラグ付き）を土台に、
+        /// 旧データからは組み込みと名前が重複しない自作メロディのみを追加してマージする。
+        /// </summary>
+        private static List<SavedMelody> MergeLegacyWithSeed(LegacyScaleDataWrapper legacy, string fileName)
+        {
+            var merged = LoadSeedBuiltIns(fileName);
+
+            var builtInNames = new HashSet<string>();
+            foreach (var entry in merged)
+            {
+                builtInNames.Add(entry.Melody.Name);
+            }
+
+            foreach (var entry in ParseLegacy(legacy))
+            {
+                if (builtInNames.Contains(entry.Melody.Name)) continue;
+                merged.Add(entry);
+            }
+
+            for (int i = 0; i < merged.Count; i++)
+            {
+                merged[i].SetPosition(i);
+            }
+            return merged;
+        }
+
+        // シード（Resources）の組み込みメロディを読み込む。組み込みの削除フラグはシードJSONが持つ。
+        private static List<SavedMelody> LoadSeedBuiltIns(string fileName)
+        {
+            var textAsset = Resources.Load<TextAsset>(fileName);
+            if (textAsset == null)
+            {
+                Debug.LogError($"シードJSONのロードに失敗: {fileName}");
+                return new List<SavedMelody>();
+            }
+            var wrapper = JsonUtility.FromJson<MelodyListWrapper>(textAsset.text);
+            if (wrapper == null || wrapper.Melodies == null)
+            {
+                return new List<SavedMelody>();
+            }
+            return ParseNew(wrapper);
+        }
+
         // 旧フォーマットの和音は常に3拍固定（構成音数 Chord.Length と同値なのは偶然）。
         private const int LegacyChordBeats = 3;
+
+        /// <summary>
+        /// 旧フォーマットは種別を持たないため、表示名から再生種別を解決する。
+        /// 名前と種別の対応は旧フォーマット移行だけが知る（新フォーマットは Kind をデータに持つ）。
+        /// </summary>
+        private static MelodyKind ResolveLegacyKind(string name) => name switch
+        {
+            "Single"           => MelodyKind.Single,
+            "Major& Metronome" => MelodyKind.ChordWithMetronome,
+            "Major Code"       => MelodyKind.Chord,
+            _                  => MelodyKind.Standard,
+        };
 
         private static List<SavedMelody> ParseLegacy(LegacyScaleDataWrapper legacy)
         {
             var type = typeof(LegacyScaleDataWrapper);
             var entries = new List<SavedMelody>();
+
+            // legacyFileName に旧フォーマット以外（例: 開発端末に残った新フォーマット）が
+            // 置かれていた場合は ScaleName が null。自作なしとして扱い、シードのみで再構成させる。
+            if (legacy == null || legacy.ScaleName == null)
+            {
+                return entries;
+            }
 
             for (int i = 0; i < legacy.ScaleName.Count; i++)
             {
@@ -216,7 +283,8 @@ namespace Assets.Scripts.Infrastructure
                 }
 
                 var chord = new Chord(chordIntervals, LegacyChordBeats);
-                entries.Add(new SavedMelody(new Melody(name, chord, notes), position));
+                entries.Add(new SavedMelody(
+                    new Melody(name, ResolveLegacyKind(name), chord, notes, isProtected: false, isUserCreated: true), position));
             }
             return entries;
         }

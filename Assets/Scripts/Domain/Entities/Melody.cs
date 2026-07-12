@@ -79,30 +79,28 @@ namespace Assets.Scripts.Domain.Entities
         public MelodyKind Kind { get; }
         public Chord Chord { get; }
 
+        /// <summary>削除不可（保護されている）メロディか。組み込みメロディの保護に使う。</summary>
+        public bool IsProtected { get; }
+
+        /// <summary>ユーザーが自作したメロディか。テンプレート由来なら false。将来の課金判定に使う。</summary>
+        public bool IsUserCreated { get; }
+
         public IReadOnlyList<Note> Notes { get; }
         private readonly Interval _minInterval;
         private readonly Interval _maxInterval;
 
 
-        public Melody(string name, Chord chord, List<Note> notes)
+        public Melody(string name, MelodyKind kind, Chord chord, List<Note> notes, bool isProtected, bool isUserCreated)
         {
             Name = name;
-            Kind = ResolveKind(name);
+            Kind = kind;
             Chord = chord;
             Notes = notes;
+            IsProtected = isProtected;
+            IsUserCreated = isUserCreated;
             (_minInterval, _maxInterval) = CalculateIntervalRange();
         }
 
-        /// <summary>
-        /// 表示名から再生種別を解決する。名前と種別の対応はここ1箇所だけが知る。
-        /// </summary>
-        private static MelodyKind ResolveKind(string name) => name switch
-        {
-            "Single"           => MelodyKind.Single,
-            "Major& Metronome" => MelodyKind.MajorWithMetronome,
-            "Major Code"       => MelodyKind.MajorChord,
-            _                  => MelodyKind.Standard,
-        };
         private (Interval min, Interval max) CalculateIntervalRange()
         {
             var chordValues = Chord.Intervals.Select(i => i.Value);

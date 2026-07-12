@@ -75,8 +75,8 @@ namespace Assets.Scripts.UI.MelodyUI
             {
                 [MelodyKind.Standard]           = new StandardPlayStrategy(this),
                 [MelodyKind.Single]             = new SinglePlayStrategy(this),
-                [MelodyKind.MajorWithMetronome] = new MajorWithMetronomePlayStrategy(this),
-                [MelodyKind.MajorChord]         = new MajorChordPlayStrategy(this),
+                [MelodyKind.ChordWithMetronome] = new ChordWithMetronomePlayStrategy(this),
+                [MelodyKind.Chord]              = new ChordPlayStrategy(this),
             };
         }
 
@@ -154,8 +154,6 @@ namespace Assets.Scripts.UI.MelodyUI
         {
             _metronomePlayer.PlayOneShot(VolumeManager.Instance.Volume);
         }
-
-        public bool CanDeleteMelody(Melody melody) => GetStrategy(melody).CanDelete;
 
         private IEnumerator PlayMelodyAtKeyOnce(PianoController piano, Melody melody,
                                                 PianoNote pressedKey, PlayModeSettings settings)

@@ -8,14 +8,13 @@ namespace Assets.Scripts.UI.MelodyUI.PlayStrategies
     /// <summary>
     /// 和音のみを既定の拍数ぶん鳴らして終わる。
     /// </summary>
-    public sealed class MajorChordPlayStrategy : MelodyPlayStrategyBase
+    public sealed class ChordPlayStrategy : MelodyPlayStrategyBase
     {
-        public MajorChordPlayStrategy(IMelodyPlaybackContext context) : base(context)
+        public ChordPlayStrategy(IMelodyPlaybackContext context) : base(context)
         {
         }
 
         public override bool SupportAutoKeyChange => false;
-        public override bool CanDelete => false;
         public override bool StopOnKeyUp => false;
 
         public override IEnumerator Execute(PianoController piano, Melody melody,

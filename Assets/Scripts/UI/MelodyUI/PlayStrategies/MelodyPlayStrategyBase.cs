@@ -21,7 +21,6 @@ namespace Assets.Scripts.UI.MelodyUI.PlayStrategies
         }
 
         public abstract bool SupportAutoKeyChange { get; }
-        public abstract bool CanDelete { get; }
         public abstract bool StopOnKeyUp { get; }
 
         public abstract IEnumerator Execute(PianoController piano, Melody melody,

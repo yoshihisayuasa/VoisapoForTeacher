@@ -9,7 +9,7 @@ namespace Assets.Scripts.UI.MelodyUI.PlayStrategies
 {
     /// <summary>
     /// 標準再生：和音パートに続けてメロディパートを1音ずつ鳴らす。
-    /// 自動転調と削除に対応する唯一の種別。
+    /// 自動転調に対応する唯一の種別。
     /// </summary>
     public sealed class StandardPlayStrategy : MelodyPlayStrategyBase
     {
@@ -18,7 +18,6 @@ namespace Assets.Scripts.UI.MelodyUI.PlayStrategies
         }
 
         public override bool SupportAutoKeyChange => true;
-        public override bool CanDelete => true;
         public override bool StopOnKeyUp => false;
 
         public override IEnumerator Execute(PianoController piano, Melody melody,

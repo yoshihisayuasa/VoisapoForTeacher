@@ -3,6 +3,9 @@
         {
             "Name": "Single",
             "Position": 0,
+            "Kind": "Single",
+            "IsProtected": true,
+            "IsUserCreated": false,
             "Chord": {
                 "Intervals": [
                     0,
@@ -21,6 +24,25 @@
         {
             "Name": "Major Code",
             "Position": 1,
+            "Kind": "Chord",
+            "IsProtected": true,
+            "IsUserCreated": false,
+            "Chord": {
+                "Intervals": [
+                    0,
+                    4,
+                    7
+                ],
+                "Beats": 3
+            },
+            "Notes": []
+        },
+        {
+            "Name": "Major& Metronome",
+            "Position": 2,
+            "Kind": "ChordWithMetronome",
+            "IsProtected": true,
+            "IsUserCreated": false,
             "Chord": {
                 "Intervals": [
                     0,
@@ -33,7 +55,10 @@
         },
         {
             "Name": "3tone",
-            "Position": 2,
+            "Position": 3,
+            "Kind": "Standard",
+            "IsProtected": false,
+            "IsUserCreated": false,
             "Chord": {
                 "Intervals": [
                     0,
@@ -67,7 +92,10 @@
         },
         {
             "Name": "1octave",
-            "Position": 3,
+            "Position": 4,
+            "Kind": "Standard",
+            "IsProtected": false,
+            "IsUserCreated": false,
             "Chord": {
                 "Intervals": [
                     0,
@@ -109,7 +137,10 @@
         },
         {
             "Name": "1.5octave",
-            "Position": 4,
+            "Position": 5,
+            "Kind": "Standard",
+            "IsProtected": false,
+            "IsUserCreated": false,
             "Chord": {
                 "Intervals": [
                     0,
@@ -175,7 +206,10 @@
         },
         {
             "Name": "Octave Repeat",
-            "Position": 5,
+            "Position": 6,
+            "Kind": "Standard",
+            "IsProtected": false,
+            "IsUserCreated": false,
             "Chord": {
                 "Intervals": [
                     0,
@@ -229,7 +263,10 @@
         },
         {
             "Name": "[↓]Octave",
-            "Position": 6,
+            "Position": 7,
+            "Kind": "Standard",
+            "IsProtected": false,
+            "IsUserCreated": false,
             "Chord": {
                 "Intervals": [
                     -12,
@@ -259,7 +296,10 @@
         },
         {
             "Name": "[↓]Octave Rpeat",
-            "Position": 7,
+            "Position": 8,
+            "Kind": "Standard",
+            "IsProtected": false,
+            "IsUserCreated": false,
             "Chord": {
                 "Intervals": [
                     -12,
@@ -301,7 +341,10 @@
         },
         {
             "Name": "[~]Octave Repeat",
-            "Position": 8,
+            "Position": 9,
+            "Kind": "Standard",
+            "IsProtected": false,
+            "IsUserCreated": false,
             "Chord": {
                 "Intervals": [
                     0,
@@ -355,7 +398,10 @@
         },
         {
             "Name": "Broken Arpeggio",
-            "Position": 9,
+            "Position": 10,
+            "Kind": "Standard",
+            "IsProtected": false,
+            "IsUserCreated": false,
             "Chord": {
                 "Intervals": [
                     0,
@@ -421,7 +467,10 @@
         },
         {
             "Name": "Back&Forth",
-            "Position": 10,
+            "Position": 11,
+            "Kind": "Standard",
+            "IsProtected": false,
+            "IsUserCreated": false,
             "Chord": {
                 "Intervals": [
                     -12,
@@ -475,7 +524,10 @@
         },
         {
             "Name": "2octave",
-            "Position": 11,
+            "Position": 12,
+            "Kind": "Standard",
+            "IsProtected": false,
+            "IsUserCreated": false,
             "Chord": {
                 "Intervals": [
                     0,
@@ -541,7 +593,10 @@
         },
         {
             "Name": " 5tone",
-            "Position": 12,
+            "Position": 13,
+            "Kind": "Standard",
+            "IsProtected": false,
+            "IsUserCreated": false,
             "Chord": {
                 "Intervals": [
                     0,

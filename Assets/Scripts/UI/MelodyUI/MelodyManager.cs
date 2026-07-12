@@ -16,7 +16,8 @@ namespace Assets.Scripts.UI.MelodyUI
         private readonly Subject<Melody> _melodyChanged = new();
         public Observable<Melody> MelodyChanged => _melodyChanged;
 
-        private const string _jsonFileName = "savedata2";
+        private const string _jsonFileName = "savedata3";
+        private const string _legacyJsonFileName = "savedata2";
         private const string defaultMelodyName = "Single";
 
         private readonly List<SavedMelody> _melodies = new();
@@ -37,7 +38,7 @@ namespace Assets.Scripts.UI.MelodyUI
 
         private void Start()
         {
-            var loadedEntries = MelodyJsonLoader.LoadFromJsonResource(_jsonFileName);
+            var loadedEntries = MelodyJsonLoader.LoadFromJsonResource(_jsonFileName, _legacyJsonFileName);
             if (loadedEntries.Count > 0)
             {
                 _melodies.AddRange(loadedEntries);

@@ -7,7 +7,7 @@ namespace Assets.Scripts.Domain.ValueObjects
     {
         Standard,
         Single,
-        MajorWithMetronome,
-        MajorChord,
+        ChordWithMetronome,
+        Chord,
     }
 }

@@ -10,14 +10,13 @@ namespace Assets.Scripts.UI.MelodyUI.PlayStrategies
     /// <summary>
     /// 和音を鳴らしたあと、停止されるまでメトロノームだけを刻み続ける。
     /// </summary>
-    public sealed class MajorWithMetronomePlayStrategy : MelodyPlayStrategyBase
+    public sealed class ChordWithMetronomePlayStrategy : MelodyPlayStrategyBase
     {
-        public MajorWithMetronomePlayStrategy(IMelodyPlaybackContext context) : base(context)
+        public ChordWithMetronomePlayStrategy(IMelodyPlaybackContext context) : base(context)
         {
         }
 
         public override bool SupportAutoKeyChange => false;
-        public override bool CanDelete => false;
         public override bool StopOnKeyUp => false;
 
         public override IEnumerator Execute(PianoController piano, Melody melody,

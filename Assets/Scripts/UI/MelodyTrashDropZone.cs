@@ -22,7 +22,7 @@ namespace Assets.Scripts.UI
                 return;
             }
 
-            if (!MelodyPlayer.Instance.CanDeleteMelody(item.Entry.Melody))
+            if (item.Entry.IsProtected)
             {
                 item.ResetToDragStart();
                 ConfirmModalUI.Show("You cannot delete this melody.");

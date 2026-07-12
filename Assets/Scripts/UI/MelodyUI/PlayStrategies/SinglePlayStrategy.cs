@@ -16,7 +16,6 @@ namespace Assets.Scripts.UI.MelodyUI.PlayStrategies
         }
 
         public override bool SupportAutoKeyChange => false;
-        public override bool CanDelete => false;
         public override bool StopOnKeyUp => true;
 
         public override IEnumerator Execute(PianoController piano, Melody melody,
