@@ -21,9 +21,6 @@ namespace Assets.Scripts.Domain.ValueObjects
             Max = ordered ? key2 : key1;
         }
 
-        public bool IsMin(PianoNote key) => key == Min;
-        public bool IsMax(PianoNote key) => key == Max;
-
         /// <summary>
         /// この範囲が keyCount 鍵の鍵盤に収まっているか。
         /// </summary>

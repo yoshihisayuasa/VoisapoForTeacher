@@ -25,15 +25,17 @@ namespace Assets.Scripts.UI.Piano
         // キーボード操作・受信など、ポインタ以外からの押下／離鍵を注入するストリーム。
         private Subject<PianoNote> _keyClicks;
         private Subject<PianoNote> _keyUps;
-        private Subject<PianoNote> _virtualKeyEnters;
 
         // 根音(SelectedKey)として確定した押下を外部へ通知するストリーム。
         private Subject<PianoNote> _rootKeyPressed;
 
-        // 外部公開する鍵盤イベント（押下確定・離鍵・ホバー進入）。Awake で組み立てる。
+        // 選択鍵盤（根音）の変更を外部へ通知するストリーム。発火点は SelectKey のみ。
+        private Subject<PianoNote> _selectionChanged;
+
+        // 外部公開する鍵盤イベント（押下確定・離鍵・選択変更）。Awake で組み立てる。
         public Observable<PianoNote> OnRootKeyPressedAsObservable { get; private set; }
         public Observable<PianoNote> OnAnyKeyUpAsObservable { get; private set; }
-        public Observable<PianoNote> OnAnyKeyEnterAsObservable { get; private set; }
+        public Observable<PianoNote> OnSelectionChangedAsObservable { get; private set; }
 
         [SerializeField]
         [Tooltip("ピアノ鍵盤を含む ScrollRect (水平スクロール)")] private ScrollRect _scrollRect;
@@ -67,8 +69,8 @@ namespace Assets.Scripts.UI.Piano
 
             _keyClicks        = new Subject<PianoNote>();
             _keyUps           = new Subject<PianoNote>();
-            _virtualKeyEnters = new Subject<PianoNote>();
-            _rootKeyPressed      = new Subject<PianoNote>();
+            _rootKeyPressed   = new Subject<PianoNote>();
+            _selectionChanged = new Subject<PianoNote>();
 
             // 鍵盤のポインタ入力検知（PianoKeyInputUI）は先生・生徒どちらのビルドにも存在する。
             var keyInputs = _pianoKeys
@@ -92,9 +94,17 @@ namespace Assets.Scripts.UI.Piano
                 _rootKeyPressed.OnNext(note);
             }).AddTo(this);
 
-            OnRootKeyPressedAsObservable = _rootKeyPressed;
-            OnAnyKeyUpAsObservable    = AppMode.IsTeacher ? pointerUps.Merge(_keyUps) : _keyUps;
-            OnAnyKeyEnterAsObservable = AppMode.IsTeacher ? pointerEnters.Merge(_virtualKeyEnters) : _virtualKeyEnters;
+            OnRootKeyPressedAsObservable   = _rootKeyPressed;
+            OnAnyKeyUpAsObservable         = AppMode.IsTeacher ? pointerUps.Merge(_keyUps) : _keyUps;
+            OnSelectionChangedAsObservable = _selectionChanged;
+
+            // 先生はマウスホバーで根音を移動できる（キーボード操作＝MoveSelectionと対称）。
+            // 選択への追従（ハイライト更新等）は OnSelectionChanged の購読側が行う。
+            // 生徒はホバーで選択を動かさない。
+            if (AppMode.IsTeacher)
+            {
+                pointerEnters.Subscribe(SelectKey).AddTo(this);
+            }
 
             // 生徒は鍵盤を押している間だけ、その鍵盤の音をローカルで鳴らす（ハイライト無し）。
             if (!AppMode.IsTeacher)
@@ -127,18 +137,18 @@ namespace Assets.Scripts.UI.Piano
         {
             _keyClicks?.Dispose();
             _keyUps?.Dispose();
-            _virtualKeyEnters?.Dispose();
             _rootKeyPressed?.Dispose();
+            _selectionChanged?.Dispose();
         }
 
         /// <summary>
-        /// 選択中の鍵盤を delta だけ移動し、移動先を仮想的な「ホバー進入」として通知する。
+        /// 選択中の鍵盤を delta だけ移動する。
         /// キーボード操作（先生専用の PianoKeyboardInput）から呼ぶ。
         /// </summary>
         public void MoveSelection(int delta)
         {
-            var nextKey = _highlighter.MoveSelection(delta);
-            _virtualKeyEnters.OnNext(nextKey);
+            Debug.Assert(SelectedKey != null, "SelectedKey is null");
+            SelectKey(SelectedKey.MovedBy(delta, KeyCount));
         }
 
         public PianoNote SelectedKey => _highlighter.SelectedKey;
@@ -239,9 +249,14 @@ namespace Assets.Scripts.UI.Piano
             return _keyDict[pressedKey.Note];
         }
 
+        /// <summary>
+        /// 選択鍵盤（根音）を変更する。あらゆる経路（ポインタ・キーボード・再生系・受信）の
+        /// 選択変更はここを通り、OnSelectionChanged で購読側へ通知される。
+        /// </summary>
         public void SelectKey(PianoNote key)
         {
             _highlighter.SelectKey(key);
+            _selectionChanged.OnNext(key);
         }
 
         public void Deselect()

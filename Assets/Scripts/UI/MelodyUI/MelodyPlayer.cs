@@ -42,6 +42,9 @@ namespace Assets.Scripts.UI.MelodyUI
 
         private MetronomePlayer _metronomePlayer;
         private Dictionary<MelodyKind, IMelodyPlayStrategy> _strategies;
+
+        // スクロール追従（EnsureVisible）専用。範囲ハイライトの更新は
+        // 演奏シーンにのみ存在する MelodyRangeHighlightBinder が担う。
         private readonly MelodyRangePresenter _rangePresenter = new();
 
         private AutoKeyChangeState _autoKeyChangeState = AutoKeyChangeState.None;
@@ -367,7 +370,6 @@ namespace Assets.Scripts.UI.MelodyUI
         private void Start()
         {
             SceneManager.sceneLoaded += OnSceneLoaded;
-            MelodyManager.Instance.MelodyChanged.Subscribe(OnMelodyChanged).AddTo(this);
             AutoKeyChangeManager.Instance.State.Subscribe(HandleAutoKeyChangeState).AddTo(this);
             SubscribeToPiano();
 
@@ -395,12 +397,13 @@ namespace Assets.Scripts.UI.MelodyUI
             var piano = PianoController.Instance;
             if (piano == null) return;
 
+            // ハイライトの追従は MelodyRangeHighlightBinder（演奏シーンのみ）が OnSelectionChanged
+            // 購読で担うため、ここでは再生とスクロールだけ行う。
             piano.OnRootKeyPressedAsObservable
                 .Subscribe(key =>
                 {
                     var melody = MelodyManager.Instance.CurrentMelody;
                     if (melody == null) return;
-                    _rangePresenter.RefreshHighlight(piano, melody);
                     PlayMelody(melody, _currentSettings);
                     _rangePresenter.EnsureVisible(piano, melody);
                 })
@@ -418,14 +421,6 @@ namespace Assets.Scripts.UI.MelodyUI
                 })
                 .AddTo(_pianoDisposable);
 
-            piano.OnAnyKeyEnterAsObservable
-                .Subscribe(key =>
-                {
-                    var melody = MelodyManager.Instance.CurrentMelody;
-                    if (melody == null) return;
-                    _rangePresenter.RefreshHighlight(piano, melody);
-                })
-                .AddTo(_pianoDisposable);
         }
 
         // 現在の再生サイド・イヤホン状態から再生設定を組み立て直す。
@@ -434,13 +429,6 @@ namespace Assets.Scripts.UI.MelodyUI
             _currentSettings = PlayModeSettings.FromFlags(
                 SoundPlayManager.Instance.IsSoundPlay,
                 EarphoneModeManager.Instance.EarphoneMode);
-        }
-
-        private void OnMelodyChanged(Melody melody)
-        {
-            if (melody == null) return;
-            var piano = PianoController.Instance;
-            _rangePresenter.RefreshHighlight(piano, melody);
         }
 
         private void OnDestroy()

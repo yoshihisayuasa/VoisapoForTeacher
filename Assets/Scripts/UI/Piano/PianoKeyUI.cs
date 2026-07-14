@@ -20,16 +20,17 @@ namespace Assets.Scripts.UI.Piano
         [Tooltip("鍵盤用AudioSource")]
         private AudioSource _audioSource;
 
-        private KeyLogicalState _logicalState = KeyLogicalState.Default;
-        private KeyHighlightState _highlightState = KeyHighlightState.None;
+        private PlaybackState _playbackState = PlaybackState.NotPlayed;
+        private RangeEdge _rangeEdge = RangeEdge.None;
+        private bool _isSelected;
 
         private Image _keyLabelBg;
         private Color _defaultColor;
 
         private PianoKeyInfrastructure _infra;
 
-        private enum KeyLogicalState  { Default, Playing, Played }
-        private enum KeyHighlightState { None, Min, Max, Accent }
+        private enum PlaybackState { NotPlayed, Playing, Played }
+        private enum RangeEdge { None, Min, Max }
 
 
         public PianoNoteEnum NoteEnum => _keyEnum;
@@ -37,25 +38,20 @@ namespace Assets.Scripts.UI.Piano
         private void Awake()
         {
             _keyLabelBg = GetComponent<Image>();
-            if (_keyLabelBg != null)
-            {
-                _defaultColor = _keyLabelBg.color;
-            }
+            _defaultColor = _keyLabelBg.color;
 
             _infra = new PianoKeyInfrastructure(_audioSource, null);
         }
 
         public void SetPlayingVisual()
         {
-            if (_keyLabelBg == null) return;
-            _logicalState = KeyLogicalState.Playing;
+            _playbackState = PlaybackState.Playing;
             UpdateVisual();
         }
 
         public void SetKeyVisual(bool setPlayedColor)
         {
-            if (_keyLabelBg == null) return;
-            _logicalState = setPlayedColor ? KeyLogicalState.Played : KeyLogicalState.Default;
+            _playbackState = setPlayedColor ? PlaybackState.Played : PlaybackState.NotPlayed;
             UpdateVisual();
         }
 
@@ -76,63 +72,68 @@ namespace Assets.Scripts.UI.Piano
             _infra.StopSound(fadeOutDuration);
         }
 
-        public void SetMaxHighlightColor()
+        public void MarkAsRangeMax()
         {
-            _highlightState = KeyHighlightState.Max;
+            _rangeEdge = RangeEdge.Max;
             UpdateVisual();
         }
 
-        public void SetMinHighlightColor()
+        public void MarkAsRangeMin()
         {
-            _highlightState = KeyHighlightState.Min;
+            _rangeEdge = RangeEdge.Min;
             UpdateVisual();
         }
 
-        public void ResetHighlightedColor()
+        public void ClearRangeEdge()
         {
-            _highlightState = KeyHighlightState.None;
+            _rangeEdge = RangeEdge.None;
             UpdateVisual();
         }
 
-        public void SetAccentColor()
+        public void Select()
         {
-            _highlightState = KeyHighlightState.Accent;
+            _isSelected = true;
             UpdateVisual();
         }
 
-        public void ResetAccentColor()
+        public void Deselect()
         {
-            _highlightState = KeyHighlightState.None;
+            _isSelected = false;
             UpdateVisual();
         }
 
+        /// <summary>
+        /// 「選択（根音）」と「範囲の端（Min/Max）」は独立した状態として保持し、
+        /// 同じ鍵盤に重なったときの優先順位はここで一元的に解決する。
+        /// 選択が外れれば、残っている状態（Min/Max等）の色が自然に現れる。
+        /// </summary>
         private void UpdateVisual()
         {
-            if (_logicalState == KeyLogicalState.Playing)
+            if (_playbackState == PlaybackState.Playing)
             {
                 _keyLabelBg.color = AppColors.PianoKeyPlaying;
                 return;
             }
 
-            if (_highlightState == KeyHighlightState.Accent)
+            if (_isSelected)
             {
                 _keyLabelBg.color = AppColors.Accent;
                 return;
             }
 
-            if (_highlightState == KeyHighlightState.Min)
+            if (_rangeEdge == RangeEdge.Min)
             {
                 _keyLabelBg.color = AppColors.PianoKeyMin;
                 return;
             }
 
-            if (_highlightState == KeyHighlightState.Max)
+            if (_rangeEdge == RangeEdge.Max)
             {
                 _keyLabelBg.color = AppColors.PianoKeyMax;
                 return;
             }
 
-            _keyLabelBg.color = _logicalState == KeyLogicalState.Played
+            _keyLabelBg.color = _playbackState == PlaybackState.Played
                 ? AppColors.PianoKeyPlayed
                 : _defaultColor;
         }

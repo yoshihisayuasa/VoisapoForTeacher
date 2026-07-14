@@ -1,12 +1,11 @@
 using Assets.Scripts.Domain.ValueObjects;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Assets.Scripts.UI.Piano
 {
     /// <summary>
     /// 役割：選択鍵盤（根音）とハイライト範囲（Min/Max）の視覚状態管理。
-    /// 選択とハイライトが同じ鍵盤に重なったときの色の復元も、このクラスが解決する。
+    /// 選択とハイライトが同じ鍵盤に重なったときの色の優先順位は PianoKeyUI が解決する。
     /// </summary>
     public sealed class PianoKeyHighlighter
     {
@@ -25,30 +24,16 @@ namespace Assets.Scripts.UI.Piano
         {
             if (_selectedKey != null)
             {
-                GetKeyUI(_selectedKey).ResetAccentColor();
-                RestoreHighlightIfNeeded(_selectedKey);
+                GetKeyUI(_selectedKey).Deselect();
             }
             _selectedKey = key;
-            GetKeyUI(_selectedKey).SetAccentColor();
-        }
-
-        /// <summary>
-        /// 選択中の鍵盤を delta だけ移動し、移動先の鍵盤を返す。
-        /// </summary>
-        public PianoNote MoveSelection(int delta)
-        {
-            Debug.Assert(_selectedKey != null, "_selectedKey is null");
-            var nextKey = _selectedKey.MovedBy(delta, _keys.Count);
-
-            SelectKey(nextKey);
-            return nextKey;
+            GetKeyUI(_selectedKey).Select();
         }
 
         public void Deselect()
         {
             if (_selectedKey == null) return;
-            GetKeyUI(_selectedKey).ResetAccentColor();
-            RestoreHighlightIfNeeded(_selectedKey);
+            GetKeyUI(_selectedKey).Deselect();
             _selectedKey = null;
         }
 
@@ -58,8 +43,8 @@ namespace Assets.Scripts.UI.Piano
 
             _highlightedRange = range;
 
-            if (range.Min != _selectedKey) GetKeyUI(range.Min).SetMinHighlightColor();
-            if (range.Max != _selectedKey) GetKeyUI(range.Max).SetMaxHighlightColor();
+            GetKeyUI(range.Min).MarkAsRangeMin();
+            GetKeyUI(range.Max).MarkAsRangeMax();
         }
 
         /// <summary>
@@ -69,28 +54,10 @@ namespace Assets.Scripts.UI.Piano
         {
             if (_highlightedRange is null) return;
 
-            var oldMin = _highlightedRange.Min;
-            var oldMax = _highlightedRange.Max;
-            if (oldMin != _selectedKey) GetKeyUI(oldMin).ResetHighlightedColor();
-            if (oldMax != _selectedKey) GetKeyUI(oldMax).ResetHighlightedColor();
+            GetKeyUI(_highlightedRange.Min).ClearRangeEdge();
+            GetKeyUI(_highlightedRange.Max).ClearRangeEdge();
 
             _highlightedRange = null;
-        }
-
-        private void RestoreHighlightIfNeeded(PianoNote key)
-        {
-            if (_highlightedRange is null)
-            {
-                return;
-            }
-            if (_highlightedRange.IsMin(key))
-            {                 
-                GetKeyUI(key).SetMinHighlightColor();
-            }
-            else if (_highlightedRange.IsMax(key))
-            { 
-                GetKeyUI(key).SetMaxHighlightColor();
-            }
         }
 
         private PianoKeyUI GetKeyUI(PianoNote key)

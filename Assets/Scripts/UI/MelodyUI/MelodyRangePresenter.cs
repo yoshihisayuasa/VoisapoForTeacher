@@ -5,7 +5,8 @@ namespace Assets.Scripts.UI.MelodyUI
 {
     /// <summary>
     /// 選択中メロディの再生可能範囲を鍵盤表示へ反映する表示専任クラス。
-    /// ハイライトの更新と、範囲を画面内へ収めるスクロールを担う。
+    /// ハイライトの更新（MelodyRangeHighlightBinder＝演奏シーンの先生専用）と、
+    /// 範囲を画面内へ収めるスクロール（MelodyPlayer＝全ビルド共通）を担う。
     /// </summary>
     public sealed class MelodyRangePresenter
     {

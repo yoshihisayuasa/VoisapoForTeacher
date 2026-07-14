@@ -5957,8 +5957,6 @@ GameObject:
   - component: {fileID: 1226294179}
   - component: {fileID: 1226294183}
   - component: {fileID: 1226294180}
-  - component: {fileID: 1226294184}
-  - component: {fileID: 1226294185}
   m_Layer: 0
   m_Name: PianoKeyInputUI
   m_TagString: Untagged
@@ -6005,30 +6003,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1226294178}
   m_CullTransparentMesh: 1
---- !u!114 &1226294184
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1226294178}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01d88efd8fc74944b95415dd7f6ece54, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Piano.PianoKeyboardInput
---- !u!114 &1226294185
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1226294178}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a57017623d692fd40a4039b7537d537e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.MelodyUI.MelodyRangeHighlightBinder
 --- !u!1 &1258802739
 GameObject:
   m_ObjectHideFlags: 0
@@ -10141,7 +10115,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1779829479195383461, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_Volume
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1798922622342507820, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_Volume
@@ -10877,7 +10851,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9008306001989273675, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -166.81793
+      value: -528.73785
       objectReference: {fileID: 0}
     - target: {fileID: 9008306001989273675, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_AnchoredPosition.y
