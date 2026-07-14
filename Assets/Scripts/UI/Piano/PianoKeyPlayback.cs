@@ -21,14 +21,14 @@ namespace Assets.Scripts.UI.Piano
         /// <summary>
         /// 視覚は常に更新し、音再生は isPlaySound で制御する。
         /// </summary>
-        public void Play(PianoNote pressedKey, bool isPlaySound, float volume)
+        public void Play(PianoNote pressedKey, bool isPlaySound, Volume volume)
         {
             _playingKeys.Add(pressedKey);
             var key = GetKeyUI(pressedKey);
             key.SetPlayingVisual();
             if (isPlaySound)
             {
-                key.PlaySound(volume * SoundSourceSwitcher.Instance.CurrentVolumeMultiplier);
+                key.PlaySound(volume.Scale(SoundSourceSwitcher.Instance.CurrentVolumeMultiplier));
             }
         }
 
@@ -37,7 +37,7 @@ namespace Assets.Scripts.UI.Piano
         /// </summary>
         public void PlayKeySound(PianoNote note)
         {
-            GetKeyUI(note).PlaySound(VolumeManager.Instance.Volume * SoundSourceSwitcher.Instance.CurrentVolumeMultiplier);
+            GetKeyUI(note).PlaySound(VolumeManager.Instance.Volume.Scale(SoundSourceSwitcher.Instance.CurrentVolumeMultiplier));
         }
 
         /// <summary>

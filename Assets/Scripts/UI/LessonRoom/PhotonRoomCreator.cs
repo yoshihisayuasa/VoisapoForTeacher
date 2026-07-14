@@ -1,4 +1,5 @@
 using System;
+using Assets.Scripts.Domain.StaticValues;
 using Assets.Scripts.Domain.ValueObjects;
 using Assets.Scripts.UI;
 using ExitGames.Client.Photon;
@@ -84,7 +85,7 @@ namespace Assets.Scripts.UI.LessonRoom
             _pendingRoomId = RoomId.Generate();
 
             // レッスンは先生1人＋生徒1人の前提。運用ルールではなく Photon 自体に上限を守らせる。
-            var options = new RoomOptions { MaxPlayers = 2 };
+            var options = new RoomOptions { MaxPlayers = LessonRules.MaxParticipants };
             PhotonNetwork.CreateRoom(_pendingRoomId.Value, options);
         }
     }

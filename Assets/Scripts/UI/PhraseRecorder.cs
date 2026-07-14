@@ -1,3 +1,4 @@
+using Assets.Scripts.Domain.StaticValues;
 using Assets.Scripts.UI.MelodyUI;
 using R3;
 using System.Collections;
@@ -7,9 +8,6 @@ namespace Assets.Scripts.UI
 {
     public sealed class PhraseRecorder : MonoBehaviour
     {
-        private const int MaxPhraseSec = 30;
-        private const int SampleRate = 44100;
-
         public static PhraseRecorder Instance { get; private set; }
 
         [SerializeField] private AudioSource _playbackSource;
@@ -74,7 +72,7 @@ namespace Assets.Scripts.UI
             {
                 return;
             }
-            _micClip = Microphone.Start(_selectedDevice, false, MaxPhraseSec, SampleRate);
+            _micClip = Microphone.Start(_selectedDevice, false, RecordingRules.MaxPhraseSec, RecordingRules.SampleRate);
             if (_micClip == null)
             {
                 _isRecordingEnabled.Value = false;

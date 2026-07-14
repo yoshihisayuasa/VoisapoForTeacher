@@ -1,3 +1,4 @@
+using Assets.Scripts.Domain.ValueObjects;
 using UnityEngine;
 
 namespace Assets.Scripts.UI.MelodyUI
@@ -13,9 +14,9 @@ namespace Assets.Scripts.UI.MelodyUI
             _clip = clip;
         }
 
-        public void PlayOneShot(float volume)
+        public void PlayOneShot(Volume volume)
         {
-            _audioSource.PlayOneShot(_clip, volume);
+            _audioSource.PlayOneShot(_clip, volume.Value);
         }
 
         public void Stop()

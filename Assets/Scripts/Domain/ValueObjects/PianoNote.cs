@@ -4,6 +4,9 @@ namespace Assets.Scripts.Domain.ValueObjects
 
     public sealed class PianoNote : ValueObject<PianoNote>
     {
+        /// <summary>ルート音の既定値（C4）。</summary>
+        public static PianoNote DefaultRoot => new(PianoNoteEnum.C4);
+
         public PianoNoteEnum Note { get; }
 
         public int Index => (int)Note;

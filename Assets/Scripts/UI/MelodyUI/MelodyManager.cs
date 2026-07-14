@@ -18,7 +18,6 @@ namespace Assets.Scripts.UI.MelodyUI
 
         private const string _jsonFileName = "savedata3";
         private const string _legacyJsonFileName = "savedata2";
-        private const string defaultMelodyName = "Single";
 
         private readonly List<SavedMelody> _melodies = new();
 
@@ -48,7 +47,7 @@ namespace Assets.Scripts.UI.MelodyUI
 
         private Melody FindDefaultMelody()
         {
-            return _melodies.Find(e => e.Melody.Name == defaultMelodyName).Melody;
+            return _melodies[0].Melody;
         }
 
         public IReadOnlyList<SavedMelody> GetAllMelodies() => _melodies;
@@ -65,11 +64,6 @@ namespace Assets.Scripts.UI.MelodyUI
         {
             CurrentMelody = melody;
             _melodyChanged.OnNext(melody);
-        }
-
-        public void ClearCurrentMelody()
-        {
-            CurrentMelody = null;
         }
 
         public void ResetToDefault()
@@ -104,7 +98,7 @@ namespace Assets.Scripts.UI.MelodyUI
         public void NavigateToMelodyCreate(string sceneName)
         {
             MelodyPlayer.Instance.StopMelodyAndReset();
-            ClearCurrentMelody();
+            CurrentMelody = null;
             AutoKeyChangeManager.Instance.SetState(AutoKeyChangeState.None);
             EarphoneModeManager.Instance.SetMode(false);
             SceneManager.LoadScene(sceneName);

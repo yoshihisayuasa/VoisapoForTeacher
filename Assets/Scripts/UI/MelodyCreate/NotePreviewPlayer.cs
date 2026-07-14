@@ -30,7 +30,7 @@ namespace Assets.Scripts.UI.MelodyCreate
             StopCurrent();
 
             _playingNote = key;
-            PianoController.Instance.Play(key, true, 1f);
+            PianoController.Instance.Play(key, true, VolumeManager.Instance.Volume);
             _stopCoroutine = _coroutineHost.StartCoroutine(StopAfterDelay(key));
         }
 

@@ -3,7 +3,7 @@
 namespace Assets.Scripts.Domain.ValueObjects
 {
     /// <summary>
-    /// 音量値オブジェクト（0.0〜1.0のみ許容）
+    /// 音量値オブジェクト（範囲外は0.0〜1.0に丸めて保持する）
     /// </summary>
     public sealed class Volume : ValueObject<Volume>
     {
@@ -11,9 +11,15 @@ namespace Assets.Scripts.Domain.ValueObjects
 
         public Volume(float value)
         {
-            if (value < 0f || value > 1f)
-                throw new ArgumentOutOfRangeException(nameof(value), "音量は0.0〜1.0の範囲でなければなりません。");
-            Value = value;
+            Value = Math.Clamp(value, 0f, 1f);
+        }
+
+        /// <summary>
+        /// 音量に倍率を掛けた新しい音量を返す（結果は0.0〜1.0に丸められる）。
+        /// </summary>
+        public Volume Scale(float multiplier)
+        {
+            return new Volume(Value * multiplier);
         }
 
         protected override bool EqualsCore(Volume other) => Value.Equals(other.Value);

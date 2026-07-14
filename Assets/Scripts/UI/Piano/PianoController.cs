@@ -119,7 +119,7 @@ namespace Assets.Scripts.UI.Piano
 
         private void Start()
         {
-            SelectKey(new PianoNote(PianoNoteEnum.C4));
+            SelectKey(PianoNote.DefaultRoot);
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace Assets.Scripts.UI.Piano
         /// <summary>
         /// 視覚は常に更新し、音再生は isPlaySound で制御する。
         /// </summary>
-        public void Play(PianoNote pressedKey, bool isPlaySound, float volume)
+        public void Play(PianoNote pressedKey, bool isPlaySound, Volume volume)
         {
             _playback.Play(pressedKey, isPlaySound, volume);
         }

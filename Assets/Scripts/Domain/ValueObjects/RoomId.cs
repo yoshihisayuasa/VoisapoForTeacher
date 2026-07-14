@@ -4,6 +4,8 @@ namespace Assets.Scripts.Domain.ValueObjects
 
     public sealed class RoomId : ValueObject<RoomId>
     {
+        public const int Digits = 4;
+
         private const int Min = 1000;
         private const int Max = 9999;
 

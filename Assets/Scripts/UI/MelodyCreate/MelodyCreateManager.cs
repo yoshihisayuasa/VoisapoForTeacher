@@ -81,7 +81,7 @@ namespace Assets.Scripts.UI.MelodyCreate
 
         public void LoadTemplate(Melody template)
         {
-            _draft.LoadFrom(template, new PianoNote(PianoNoteEnum.C4));
+            _draft.LoadFrom(template, PianoNote.DefaultRoot);
             _draftChanged.OnNext(Unit.Default);
         }
 

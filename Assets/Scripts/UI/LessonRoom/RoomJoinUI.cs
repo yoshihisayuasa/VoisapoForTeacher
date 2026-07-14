@@ -1,3 +1,4 @@
+using Assets.Scripts.Domain.ValueObjects;
 using Assets.Scripts.UI.Modal;
 using R3;
 using TMPro;
@@ -8,7 +9,6 @@ namespace Assets.Scripts.UI.LessonRoom
 {
     public sealed class RoomJoinUI : MonoBehaviour
     {
-        private const int _idLength = 4;
         private const string _loginLabel = "Login";
         private const string _logoutLabel = "Logout";
 
@@ -25,7 +25,7 @@ namespace Assets.Scripts.UI.LessonRoom
         private void Start()
         {
             _inputField.contentType = TMP_InputField.ContentType.IntegerNumber;
-            _inputField.characterLimit = _idLength;
+            _inputField.characterLimit = RoomId.Digits;
 
             _joinButton.onClick.AddListener(OnButtonClicked);
             _inputField.onValueChanged.AddListener(_ => RefreshButton());
@@ -57,7 +57,7 @@ namespace Assets.Scripts.UI.LessonRoom
                 return false;
             }
 
-            return _isJoined || _inputField.text.Length == _idLength;
+            return _isJoined || _inputField.text.Length == RoomId.Digits;
         }
 
         private void RefreshButton()

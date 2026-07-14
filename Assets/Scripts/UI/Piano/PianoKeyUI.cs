@@ -61,9 +61,9 @@ namespace Assets.Scripts.UI.Piano
         }
 
         // 音のみ再生
-        public void PlaySound(float volume)
+        public void PlaySound(Volume volume)
         {
-            _infra.PlaySound(volume);
+            _infra.PlaySound(volume.Value);
         }
 
         // 音のみ停止（フェードアウト）

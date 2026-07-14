@@ -12,7 +12,7 @@ namespace Assets.Scripts.UI
 
         private void Start()
         {
-            _slider.value= VolumeManager.Instance.Volume;
+            _slider.value = VolumeManager.Instance.Volume.Value;
             _slider.onValueChanged.AddListener(OnSliderValueChanged);
         }
 
