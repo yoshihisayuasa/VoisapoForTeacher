@@ -42,7 +42,7 @@ namespace Assets.Scripts.UI.MelodyUI
         private AudioSource _metronomeAudioSource;
 
         private MetronomePlayer _metronomePlayer;
-        private Dictionary<MelodyKind, IMelodyPlayStrategy> _strategies;
+        private Dictionary<MelodyKind, MelodyPlayStrategy> _strategies;
 
         // スクロール追従（EnsureVisible）専用。範囲ハイライトの更新は
         // 演奏シーンにのみ存在する MelodyRangeHighlightBinder が担う。
@@ -56,6 +56,7 @@ namespace Assets.Scripts.UI.MelodyUI
         // 再生権限トークン/バトンの調停は _authority に委譲する。ここではコルーチンの
         // 生存状態だけを持つ（保留バトンの昇格契機を MelodyPlayer 側で選ぶため）。
         private bool _isPlaybackRunning = false;
+        private Coroutine _playbackCoroutine;
 
         private CompositeDisposable _pianoDisposable = new();
 
@@ -73,7 +74,7 @@ namespace Assets.Scripts.UI.MelodyUI
             _metronomePlayer = new MetronomePlayer(_metronomeAudioSource, _metronomeClip);
 
             // 戦略は状態を持たないため、種別ごとに1インスタンスを使い回す。
-            _strategies = new Dictionary<MelodyKind, IMelodyPlayStrategy>
+            _strategies = new Dictionary<MelodyKind, MelodyPlayStrategy>
             {
                 [MelodyKind.Standard]           = new StandardPlayStrategy(this),
                 [MelodyKind.Single]             = new SinglePlayStrategy(this),
@@ -93,7 +94,7 @@ namespace Assets.Scripts.UI.MelodyUI
             // 再生開始時点の音源側がトークンを持つ。SoundPlayState と KeyDown はどちらも
             // 先生発（同一送信者内で順序保証）なので、この判定は両端末で一致する。
             _authority.AssumeToken(SoundPlayManager.Instance.IsSoundPlay);
-            StartCoroutine(RunPlayback(piano, melody));
+            _playbackCoroutine = StartCoroutine(RunPlayback(piano, melody));
         }
 
         /// <summary>
@@ -119,7 +120,12 @@ namespace Assets.Scripts.UI.MelodyUI
             var piano = PianoController.Instance;
             piano.StopAllKeys(setKeyVisual);
 
-            StopAllCoroutines();
+            if (_playbackCoroutine != null)
+            {
+                StopCoroutine(_playbackCoroutine);
+                _playbackCoroutine = null;
+            }
+
             _isPlayingChord = false;
             _isPlaybackRunning = false;
             _authority.Clear();
@@ -129,7 +135,7 @@ namespace Assets.Scripts.UI.MelodyUI
             _onPlayEnded.OnNext(shouldDelayRecordStop);
         }
 
-        private IMelodyPlayStrategy GetStrategy(Melody melody) =>
+        private MelodyPlayStrategy GetStrategy(Melody melody) =>
             _strategies.TryGetValue(melody.Kind, out var strategy)
                 ? strategy
                 : _strategies[MelodyKind.Standard];
@@ -153,19 +159,28 @@ namespace Assets.Scripts.UI.MelodyUI
 
         void IMelodyPlaybackContext.PlayMetronomeBeat()
         {
-            _metronomePlayer.PlayOneShot(VolumeManager.Instance.Volume);
+            _metronomePlayer.PlayOneShot();
         }
 
-        private IEnumerator PlayMelodyAtKeyOnce(PianoController piano, Melody melody,
-                                                PianoNote pressedKey, PlayModeSettings settings)
-        {
-            NotifyTeacherPlayStatus();
-            yield return StartCoroutine(GetStrategy(melody).Execute(piano, melody, pressedKey, settings));
-        }
+        void IMelodyPlaybackContext.NotifyTeacherPlayStatus() => NotifyTeacherPlayStatus();
+
+        bool IMelodyPlaybackContext.ShouldContinueAutoKeyChange()
+            => _authority.HasToken && _autoKeyChangeState.IsActive();
+
+        bool IMelodyPlaybackContext.TryPassBatonAtBoundary(PianoNote currentKey)
+            => _authority.TryPassBatonAtBoundary(SoundPlayManager.Instance.IsSoundPlay, currentKey);
+
+        PianoNote IMelodyPlaybackContext.NextAutoKeyChangeRoot(PianoNote currentKey)
+            => currentKey + _autoKeyChangeState.NextRootStep();
+
+        void IMelodyPlaybackContext.NotifyLoopKey(PianoNote key)
+            => _onLoopKeyPlayed.OnNext(key);
+
+        bool IMelodyPlaybackContext.HasPendingBaton => _authority.HasPendingBaton;
 
         // 「先生側で鳴っているか」は端末ごとに視点が異なる。先生は自分が音源側なら true、
         // 生徒は状態が反転同期されるため自分が音源側でない（false）ときが先生側再生。
-        // ループ再生中に音源側が切り替わっても表示へ追従できるよう、再生のたびに現在状態を通知する。
+        // ループ再生中に音源側が切り替わっても表示へ追従できるよう、周ごとに現在状態を通知する。
         private void NotifyTeacherPlayStatus()
         {
             bool isSoundPlay = SoundPlayManager.Instance.IsSoundPlay;
@@ -180,58 +195,29 @@ namespace Assets.Scripts.UI.MelodyUI
         private IEnumerator RunPlayback(PianoController piano, Melody melody)
         {
             _isPlaybackRunning = true;
-            yield return StartCoroutine(PlayMelodyLoopCoroutine(piano, melody));
+
+            // 入れ子は StartCoroutine で回さない（別コルーチンになり、StopCoroutine が
+            // 外側にしか効かず内側が鳴り続ける）。IEnumerator を直接 yield して
+            // このコルーチンの一部として実行し、1ハンドルで丸ごと止められるようにする。
+            yield return PlaySession(piano, melody);
+
             _isPlaybackRunning = false;
+            _playbackCoroutine = null;
             PromotePendingBatonIfAny();
         }
 
-        private IEnumerator PlayMelodyLoopCoroutine(PianoController piano, Melody melody)
+        // 1回の再生セッション。開始キーの演奏可否だけ見てから戦略へ委ねる。
+        // 自動転調のループは戦略（Standard）が自分のセッション内で回す。
+        private IEnumerator PlaySession(PianoController piano, Melody melody)
         {
             var rootKey = piano.SelectedKey;
             if (!melody.IsPlayableAt(rootKey, piano.KeyCount))
             {
                 yield break;
             }
-            var strategy = GetStrategy(melody);
 
-            yield return StartCoroutine(PlayMelodyAtKeyOnce(piano, melody, rootKey, _currentSettings));
-
-            if (!strategy.SupportAutoKeyChange)
-            {
-                yield break;
-            }
-
-            // ループはトークン保持者（音源側）だけが回す。描画側はこの while に入らず1回で終わる。
-            while (_authority.HasToken && _autoKeyChangeState.IsActive())
-            {
-                piano.StopAllKeys(true);
-
-                // 権限委譲: 自分がもう音源側でないなら、弾き切ったこの境界で止めて渡す。
-                // 新権威は同じキーから再開する（サイド切替の周は移調しない、従来の挙動を維持）。
-                if (_authority.TryPassBatonAtBoundary(SoundPlayManager.Instance.IsSoundPlay, piano.SelectedKey))
-                {
-                    yield break;
-                }
-
-                var nextKey = piano.SelectedKey + _autoKeyChangeState.NextRootStep();
-
-                if (!melody.IsPlayableAt(nextKey, piano.KeyCount))
-                {
-                    break;
-                }
-
-                piano.SelectKey(nextKey);
-                _onLoopKeyPlayed.OnNext(nextKey);
-
-                yield return StartCoroutine(PlayMelodyAtKeyOnce(piano, melody, piano.SelectedKey, _currentSettings));
-            }
-
-            // 保留中のバトンがあれば終了せずに抜け、RunPlayback 側で権威を引き継ぐ。
-            // （FinishMelody は全コルーチン停止と保留バトンの破棄を伴うため、ここで呼ぶと引き継げない）
-            if (!_authority.HasPendingBaton)
-            {
-                FinishMelody();
-            }
+            NotifyTeacherPlayStatus();
+            yield return GetStrategy(melody).Execute(piano, melody, rootKey, _currentSettings);
         }
 
         /// <summary>
@@ -249,7 +235,7 @@ namespace Assets.Scripts.UI.MelodyUI
 
             var piano = PianoController.Instance;
             piano.SelectKey(key);
-            StartCoroutine(RunPlayback(piano, _currentMelody));
+            _playbackCoroutine = StartCoroutine(RunPlayback(piano, _currentMelody));
         }
 
         /// <summary>
@@ -265,6 +251,9 @@ namespace Assets.Scripts.UI.MelodyUI
 
             _authority.SetPending(nextKey);
 
+            // idle 窓でバトンが届いたら、ここで能動的に昇格する。旧保持者は委譲と同時にループを止めて
+            // 周キーの送信をやめるため RenderLoopKey はもう来ず、今拾わないとループを駆動する主体が
+            // いなくなって演奏が止まる。再生中なら割り込まず RunPlayback 末尾で昇格する（別の窓）。
             if (!_isPlaybackRunning)
             {
                 PromotePendingBatonIfAny();
@@ -305,7 +294,7 @@ namespace Assets.Scripts.UI.MelodyUI
 
             // 旧権威（いまは描画側）もこのキーへ追従させる。
             _onLoopKeyPlayed.OnNext(startKey);
-            StartCoroutine(RunPlayback(piano, _currentMelody));
+            _playbackCoroutine = StartCoroutine(RunPlayback(piano, _currentMelody));
         }
 
         private void HandleAutoKeyChangeState(AutoKeyChangeState newState)
@@ -351,7 +340,7 @@ namespace Assets.Scripts.UI.MelodyUI
             // 新ルート設定・描画側への通知・再開
             piano.SelectKey(transposed);
             _onLoopKeyPlayed.OnNext(transposed);
-            StartCoroutine(RunPlayback(piano, _currentMelody));
+            _playbackCoroutine = StartCoroutine(RunPlayback(piano, _currentMelody));
         }
 
         private void Start()
@@ -401,10 +390,7 @@ namespace Assets.Scripts.UI.MelodyUI
                 {
                     var melody = MelodyManager.Instance.CurrentMelody;
                     if (melody == null) return;
-                    if (GetStrategy(melody).StopOnKeyUp)
-                    {
-                        FinishMelody();
-                    }
+                    GetStrategy(melody).OnKeyUp();
                 })
                 .AddTo(_pianoDisposable);
 
@@ -422,6 +408,12 @@ namespace Assets.Scripts.UI.MelodyUI
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
             _pianoDisposable.Dispose();
+
+            _onPlayEnded.Dispose();
+            _onMelodyBegan.Dispose();
+            _onTeacherPlayStatus.Dispose();
+            _onLoopKeyPlayed.Dispose();
+            _authority.Dispose();
         }
 
     }

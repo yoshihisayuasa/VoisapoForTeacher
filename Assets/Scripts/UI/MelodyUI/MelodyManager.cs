@@ -103,5 +103,10 @@ namespace Assets.Scripts.UI.MelodyUI
             EarphoneModeManager.Instance.SetMode(false);
             SceneManager.LoadScene(sceneName);
         }
+
+        private void OnDestroy()
+        {
+            _melodyChanged.Dispose();
+        }
     }
 }

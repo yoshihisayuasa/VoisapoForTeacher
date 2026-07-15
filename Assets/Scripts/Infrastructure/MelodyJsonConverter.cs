@@ -2,6 +2,7 @@ using Assets.Scripts.Domain.Entities;
 using Assets.Scripts.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets.Scripts.Infrastructure
 {
@@ -12,6 +13,46 @@ namespace Assets.Scripts.Infrastructure
     /// </summary>
     internal static class MelodyJsonConverter
     {
+        /// <summary>
+        /// メロディリストのJSON文字列を復元する。読めない1件はスキップして残りを返す（部分復旧）。
+        /// source はエラーログでどのJSONの話かを示すための呼び出し元の名前。
+        /// </summary>
+        internal static List<SavedMelody> ToSavedMelodies(string jsonText, string source)
+        {
+            var entries = new List<SavedMelody>();
+
+            MelodyListWrapper wrapper;
+            try
+            {
+                wrapper = JsonUtility.FromJson<MelodyListWrapper>(jsonText);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"{source}のJSONパースエラー: {ex.Message}");
+                return entries;
+            }
+
+            if (wrapper == null || wrapper.Melodies == null || wrapper.Melodies.Count == 0)
+            {
+                Debug.LogError($"{source}のJSONデータが不正です");
+                return entries;
+            }
+
+            foreach (var data in wrapper.Melodies)
+            {
+                try
+                {
+                    if (string.IsNullOrEmpty(data.Name)) continue;
+                    entries.Add(new SavedMelody(ToMelody(data), data.Position));
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"{source}のメロディ「{data?.Name}」を読み込めないためスキップします: {ex.Message}");
+                }
+            }
+            return entries;
+        }
+
         internal static Melody ToMelody(MelodyData data)
         {
             var intervals = new List<Interval>();

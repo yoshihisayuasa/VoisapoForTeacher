@@ -1,5 +1,4 @@
 using Assets.Scripts.Domain.Entities;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,31 +17,12 @@ namespace Assets.Scripts.Infrastructure
                 return new List<Melody>();
             }
 
-            try
+            var templates = new List<Melody>();
+            foreach (var entry in MelodyJsonConverter.ToSavedMelodies(asset.text, "テンプレートJSON"))
             {
-                var wrapper = JsonUtility.FromJson<MelodyListWrapper>(asset.text);
-                return Parse(wrapper);
+                templates.Add(entry.Melody);
             }
-            catch (Exception ex)
-            {
-                Debug.LogError($"テンプレートJSONパースエラー: {ex.Message}");
-                return new List<Melody>();
-            }
-        }
-
-        private static List<Melody> Parse(MelodyListWrapper wrapper)
-        {
-            var result = new List<Melody>();
-            if (wrapper.Melodies == null)
-            {
-                return result;
-            }
-            foreach (var data in wrapper.Melodies)
-            {
-                if (string.IsNullOrEmpty(data.Name)) continue;
-                result.Add(MelodyJsonConverter.ToMelody(data));
-            }
-            return result;
+            return templates;
         }
     }
 }

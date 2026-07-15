@@ -118,6 +118,7 @@ namespace Assets.Scripts.UI
         {
             Microphone.End(_selectedDevice);
             _hasCapture.Dispose();
+            _isRecordingEnabled.Dispose();
             _onMicAccessFailed.Dispose();
         }
     }

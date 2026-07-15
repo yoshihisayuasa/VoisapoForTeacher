@@ -1,5 +1,6 @@
 using Assets.Scripts.Domain.ValueObjects;
 using R3;
+using System;
 
 namespace Assets.Scripts.UI.MelodyUI
 {
@@ -8,7 +9,7 @@ namespace Assets.Scripts.UI.MelodyUI
     /// コルーチンや鍵盤操作といった「再生の実行」は持たず、状態遷移と判断のみに徹する。
     /// このため MonoBehaviour に依存せず、単体でテストできる。
     /// </summary>
-    public sealed class PlaybackAuthorityCoordinator
+    public sealed class PlaybackAuthorityCoordinator : IDisposable
     {
         // トークン保持者（音源側）だけがループ・周キー送信・±2即時反転の判断を行う。
         // 非保持者（描画側）は受信したキーごとの1回再生に徹する。
@@ -75,6 +76,11 @@ namespace Assets.Scripts.UI.MelodyUI
             _pendingBaton = null;
             HasToken = true;
             return true;
+        }
+
+        public void Dispose()
+        {
+            _onBatonPassed.Dispose();
         }
     }
 }

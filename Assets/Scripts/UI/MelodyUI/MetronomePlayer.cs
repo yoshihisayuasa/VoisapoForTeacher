@@ -1,4 +1,4 @@
-using Assets.Scripts.Domain.ValueObjects;
+using Assets.Scripts.UI;
 using UnityEngine;
 
 namespace Assets.Scripts.UI.MelodyUI
@@ -14,9 +14,12 @@ namespace Assets.Scripts.UI.MelodyUI
             _clip = clip;
         }
 
-        public void PlayOneShot(Volume volume)
+        /// <summary>
+        /// 現在の音量設定で1回鳴らす。鍵盤と違い音源別の倍率は掛けない。
+        /// </summary>
+        public void PlayOneShot()
         {
-            _audioSource.PlayOneShot(_clip, volume.Value);
+            _audioSource.PlayOneShot(_clip, VolumeManager.Instance.Volume.Value);
         }
 
         public void Stop()

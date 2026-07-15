@@ -18,17 +18,21 @@ namespace Assets.Scripts.UI.Piano
             _keys = keys;
         }
 
+        /// <summary>現在の音量設定に音源別の倍率を掛けた、鍵盤を鳴らすときの実効音量。</summary>
+        private static Volume CurrentVolume =>
+            VolumeManager.Instance.Volume.Scale(SoundSourceSwitcher.Instance.CurrentVolumeMultiplier);
+
         /// <summary>
         /// 視覚は常に更新し、音再生は isPlaySound で制御する。
         /// </summary>
-        public void Play(PianoNote pressedKey, bool isPlaySound, Volume volume)
+        public void Play(PianoNote pressedKey, bool isPlaySound)
         {
             _playingKeys.Add(pressedKey);
             var key = GetKeyUI(pressedKey);
             key.SetPlayingVisual();
             if (isPlaySound)
             {
-                key.PlaySound(volume.Scale(SoundSourceSwitcher.Instance.CurrentVolumeMultiplier));
+                key.PlaySound(CurrentVolume);
             }
         }
 
@@ -37,7 +41,7 @@ namespace Assets.Scripts.UI.Piano
         /// </summary>
         public void PlayKeySound(PianoNote note)
         {
-            GetKeyUI(note).PlaySound(VolumeManager.Instance.Volume.Scale(SoundSourceSwitcher.Instance.CurrentVolumeMultiplier));
+            GetKeyUI(note).PlaySound(CurrentVolume);
         }
 
         /// <summary>

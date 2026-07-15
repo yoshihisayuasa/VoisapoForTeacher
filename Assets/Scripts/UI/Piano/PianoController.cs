@@ -176,9 +176,9 @@ namespace Assets.Scripts.UI.Piano
         /// <summary>
         /// 視覚は常に更新し、音再生は isPlaySound で制御する。
         /// </summary>
-        public void Play(PianoNote pressedKey, bool isPlaySound, Volume volume)
+        public void Play(PianoNote pressedKey, bool isPlaySound)
         {
-            _playback.Play(pressedKey, isPlaySound, volume);
+            _playback.Play(pressedKey, isPlaySound);
         }
 
         /// <summary>

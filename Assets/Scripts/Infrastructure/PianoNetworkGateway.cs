@@ -115,7 +115,7 @@ namespace Assets.Scripts.Infrastructure
         public void SendMelodySelection(Melody melody)
         {
             if (!CanSend() || melody == null) return;
-            RaiseToOthers(EventCode.MelodySelection, MelodyJsonLoader.SerializeMelody(melody));
+            RaiseToOthers(EventCode.MelodySelection, MelodyNetworkSerializer.Serialize(melody));
         }
 
         public void SendBpm(int bpm)
@@ -205,7 +205,7 @@ namespace Assets.Scripts.Infrastructure
                     break;
 
                 case EventCode.MelodySelection:
-                    var melody = MelodyJsonLoader.DeserializeMelody((string)photonEvent.CustomData);
+                    var melody = MelodyNetworkSerializer.Deserialize((string)photonEvent.CustomData);
                     if (melody != null)
                     {
                         _melodyReceived.OnNext(melody);

@@ -40,7 +40,9 @@
       "Bash(echo \"EXIT:$?\")",
       "Bash(python -c ' *)",
       "Bash(powershell -Command '$d = Get-Content '\\\\''Assets/Resources/savedata3.json'\\\\'' -Raw -Encoding UTF8 | ConvertFrom-Json; $d.Melodies | ForEach-Object { '\\\\''{0} {1} {2} {3}'\\\\'' -f $_.Position, $_.Name, $_.Kind, $_.IsProtected }; '\\\\''total: '\\\\'' + $d.Melodies.Count')",
-      "PowerShell(try { Get-Content \"C:\\\\Users\\\\yuasa\\\\source\\\\repos\\\\VoisapoForTeacher\\\\Assets\\\\Resources\\\\savedata3.json\" -Raw | ConvertFrom-Json | Out-Null; \"JSON OK\" } catch { \"JSON NG: $\\($_.Exception.Message\\)\" })"
+      "PowerShell(try { Get-Content \"C:\\\\Users\\\\yuasa\\\\source\\\\repos\\\\VoisapoForTeacher\\\\Assets\\\\Resources\\\\savedata3.json\" -Raw | ConvertFrom-Json | Out-Null; \"JSON OK\" } catch { \"JSON NG: $\\($_.Exception.Message\\)\" })",
+      "Bash(command -v dotnet)",
+      "Bash(python -)"
     ]
   }
 }
