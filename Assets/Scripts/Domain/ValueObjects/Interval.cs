@@ -1,7 +1,7 @@
-﻿
+
 namespace Assets.Scripts.Domain.ValueObjects
 {
-    public sealed class Interval  
+    public sealed class Interval : ValueObject<Interval>
     {
         public int Value { get; }
         public Interval(int value)
@@ -18,5 +18,14 @@ namespace Assets.Scripts.Domain.ValueObjects
             return new Interval(a.Value - b.Value);
         }
 
+        protected override bool EqualsCore(Interval other)
+        {
+            return Value == other.Value;
+        }
+
+        protected override int GetHashCodeCore()
+        {
+            return Value.GetHashCode();
+        }
     }
 }

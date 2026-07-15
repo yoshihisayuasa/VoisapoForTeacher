@@ -4,7 +4,7 @@ namespace Assets.Scripts.Domain.ValueObjects
 {
     public sealed class BPM : ValueObject<BPM>
     {
-        public int Value { get; } = 120;
+        public int Value { get; }
 
         public BPM(int value)
         {
@@ -16,18 +16,9 @@ namespace Assets.Scripts.Domain.ValueObjects
         public BPM Increment(int step = 10) => new(Value + step);
         public BPM Decrement(int step = 10) => new(Math.Max(10, Value - step));
 
-        public override int CompareTo(BPM other)
-        {
-            if (other is null)
-            {
-                return 1;
-            }
-            return Value.CompareTo(other.Value);
-        }
-
         protected override bool EqualsCore(BPM other)
         {
-            return other != null && Value == other.Value;
+            return Value == other.Value;
         }
 
         protected override int GetHashCodeCore()

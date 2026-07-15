@@ -29,15 +29,9 @@ namespace Assets.Scripts.Domain.ValueObjects
             return false;
         }
 
-        public bool IsNewerThan(AppVersion other) => CompareTo(other) > 0;
+        public bool IsNewerThan(AppVersion other) => _version.CompareTo(other._version) > 0;
 
         public override string ToString() => _version.ToString();
-
-        public override int CompareTo(AppVersion other)
-        {
-            if (other is null) return 1;
-            return _version.CompareTo(other._version);
-        }
 
         protected override bool EqualsCore(AppVersion other) => _version == other._version;
 

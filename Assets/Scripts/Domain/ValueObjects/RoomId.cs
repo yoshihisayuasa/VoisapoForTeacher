@@ -17,16 +17,7 @@ namespace Assets.Scripts.Domain.ValueObjects
 
         public static RoomId Generate() => new(_random.Next(Min, Max + 1).ToString());
 
-        public override int CompareTo(RoomId other)
-        {
-            if (other is null)
-            {
-                return 1;
-            }
-            return string.Compare(Value, other.Value, StringComparison.Ordinal);
-        }
-
-        protected override bool EqualsCore(RoomId other) => other != null && Value == other.Value;
+        protected override bool EqualsCore(RoomId other) => Value == other.Value;
 
         protected override int GetHashCodeCore() => Value.GetHashCode();
     }

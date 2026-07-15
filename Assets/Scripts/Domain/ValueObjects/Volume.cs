@@ -24,11 +24,5 @@ namespace Assets.Scripts.Domain.ValueObjects
 
         protected override bool EqualsCore(Volume other) => Value.Equals(other.Value);
         protected override int GetHashCodeCore() => Value.GetHashCode();
-
-        public override int CompareTo(Volume other)
-        {
-            if (other is null) return 1;
-            return Value.CompareTo(other.Value);
-        }
     }
 }

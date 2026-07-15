@@ -29,16 +29,9 @@ namespace Assets.Scripts.Domain.ValueObjects
             return 0 <= Min.Index && Max.Index < keyCount;
         }
 
-        public override int CompareTo(PianoKeyRange other)
-        {
-            if (other is null) return 1;
-            int minComparison = Min.CompareTo(other.Min);
-            return minComparison != 0 ? minComparison : Max.CompareTo(other.Max);
-        }
-
         protected override bool EqualsCore(PianoKeyRange other)
         {
-            return other != null && Min == other.Min && Max == other.Max;
+            return Min == other.Min && Max == other.Max;
         }
 
         protected override int GetHashCodeCore()

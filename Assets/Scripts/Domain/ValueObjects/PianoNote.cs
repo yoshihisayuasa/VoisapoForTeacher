@@ -55,12 +55,6 @@ namespace Assets.Scripts.Domain.ValueObjects
             return Index == other.Index;
         }
 
-        public override int CompareTo(PianoNote other)
-        {
-            if (other is null) return 1;
-            return Index.CompareTo(other.Index);
-        }
-
         protected override int GetHashCodeCore()
         {
             return Index.GetHashCode();
