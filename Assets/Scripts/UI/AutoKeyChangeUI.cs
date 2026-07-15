@@ -15,9 +15,6 @@ namespace Assets.Scripts.UI
         [SerializeField] private Image _upImage;
         [SerializeField] private Image _downImage;
 
-        private Color _normalColor = Color.white;
-        private Color _activeColor = AppColors.Accent;
-
         void Awake()
         {
             _upButton.onClick.AddListener(OnUpClicked);
@@ -37,8 +34,8 @@ namespace Assets.Scripts.UI
 
         private void HandleStateChanged(AutoKeyChangeState state)
         {
-            _upImage.color = state == AutoKeyChangeState.Up ? _activeColor : _normalColor;
-            _downImage.color = state == AutoKeyChangeState.Down ? _activeColor : _normalColor;
+            _upImage.color = AppColors.ActiveOrWhite(state == AutoKeyChangeState.Up);
+            _downImage.color = AppColors.ActiveOrWhite(state == AutoKeyChangeState.Down);
         }
     }
 }

@@ -19,8 +19,6 @@ namespace Assets.Scripts.UI
         [SerializeField] private Toggle _toggle;
         [SerializeField, FormerlySerializedAs("_image")] private Graphic _graphic;
 
-        private readonly Color _onColor = AppColors.Accent;
-        private readonly Color _offColor = Color.white;
 
         private void Start()
         {
@@ -58,7 +56,7 @@ namespace Assets.Scripts.UI
             {
                 _toggle.isOn = isOn;
             }
-            _graphic.color = isOn ? _onColor : _offColor;
+            _graphic.color = AppColors.ActiveOrWhite(isOn);
         }
 
         private void Update()

@@ -45,7 +45,7 @@ namespace Assets.Scripts.UI
 
         private void UpdateColor(Melody selected)
         {
-            _button.image.color = selected == Entry.Melody ? AppColors.Accent : Color.white;
+            _button.image.color = AppColors.ActiveOrWhite(selected == Entry.Melody);
         }
 
         public void OnBeginDrag(PointerEventData eventData)

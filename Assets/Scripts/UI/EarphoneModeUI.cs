@@ -11,8 +11,6 @@ namespace Assets.Scripts.UI
     {
         [SerializeField] private Button _earphoneModeButton;
         [SerializeField] private Image _targetImage;                // 色を変える対象（必ず割り当てる）
-        private Color _normalColor = Color.white;  // 2回目で戻す色
-        private Color _activeColor = AppColors.Accent;
 
         private bool _isEarphoneModeOn = false;
 
@@ -40,7 +38,7 @@ namespace Assets.Scripts.UI
         }
         private void UpdateVisual()
         {
-            _targetImage.color = _isEarphoneModeOn ? _activeColor : _normalColor;
+            _targetImage.color = AppColors.ActiveOrWhite(_isEarphoneModeOn);
         }
     }
 }
