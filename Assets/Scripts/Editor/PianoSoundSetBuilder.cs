@@ -12,21 +12,6 @@ namespace Assets.Scripts.Editor
     /// </summary>
     public static class PianoSoundSetBuilder
     {
-        /// <summary>
-        /// enum名（例: C2Sharp）をファイル名（例: C#2）に変換する。
-        /// "Sharp"サフィックスを"#"に置換し、数字の前に挿入する。
-        /// </summary>
-        private static string EnumNameToFileName(string enumName)
-        {
-            if (!enumName.EndsWith("Sharp")) return enumName;
-
-            var withoutSharp = enumName[..^5];
-            int digitStart = withoutSharp.IndexOfAny("0123456789".ToCharArray());
-            if (digitStart < 0) return enumName;
-
-            return withoutSharp[..digitStart] + "#" + withoutSharp[digitStart..];
-        }
-
         [MenuItem("Voisapo/Build PianoSoundSet from folder")]
         public static void BuildFromFolder()
         {
@@ -60,7 +45,8 @@ namespace Assets.Scripts.Editor
             {
                 if (note == PianoNoteEnum.None) continue;
 
-                var fileName = EnumNameToFileName(note.ToString());
+                // 音源ファイルは音名表記（C#2.ogg）で置く。
+                var fileName = new PianoNote(note).DisplayText;
                 var clip = AssetDatabase.LoadAssetAtPath<AudioClip>($"{relativeFolderPath}/{fileName}{".ogg"}")
                         ?? LoadClip(relativeFolderPath, fileName, ".oga");
 

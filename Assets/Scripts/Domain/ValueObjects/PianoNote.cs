@@ -12,6 +12,19 @@ namespace Assets.Scripts.Domain.ValueObjects
         public int Index => (int)Note;
         public bool IsSharp => Note.ToString().Contains("Sharp");
 
+        /// <summary>
+        /// 音名表記（例: C2Sharp → C#2）。画面表示と音源ファイル名の両方がこの表記に従う。
+        /// enum名は「音名1文字＋オクターブ1桁（＋Sharp）」で定義する前提。
+        /// </summary>
+        public string DisplayText
+        {
+            get
+            {
+                string name = Note.ToString();
+                return IsSharp ? $"{name[0]}#{name[1]}" : name;
+            }
+        }
+
         public PianoNote(PianoNoteEnum note)
         {
             Note = note;

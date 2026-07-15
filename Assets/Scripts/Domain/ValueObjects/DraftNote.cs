@@ -10,7 +10,7 @@ namespace Assets.Scripts.Domain.ValueObjects
         public PianoNote Key { get; }
         public int Beats { get; }
 
-        public string DisplayText => Key.Note.ToString().Replace("Sharp", "#");
+        public string DisplayText => Key.DisplayText;
 
         public DraftNote(PianoNote key, int beats = 1)
         {
