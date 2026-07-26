@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: f71aa2582bd3348b7bb22e3f01dc2aba
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192362
+  packageName: UniPay - In App Purchase (IAP) Billing
+  packageVersion: 6.2.3
+  assetPath: Assets/UniPay/Scripts/Extensions/CustomStoreCart.cs
+  uploadId: 944408

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: fca4237ebf8d9774aa658f9355fed61c
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192362
+  packageName: UniPay - In App Purchase (IAP) Billing
+  packageVersion: 6.2.3
+  assetPath: Assets/UniPay/Scripts/UIWindowMessage.cs
+  uploadId: 944408

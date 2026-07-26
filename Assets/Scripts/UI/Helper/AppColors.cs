@@ -10,6 +10,7 @@ namespace Assets.Scripts.UI
         public static readonly Color PianoKeyPlayed  = new(1.000f, 0.678f, 0.831f); // #FFADD4
         public static readonly Color PianoKeyMin     = new(0.620f, 0.890f, 0.560f); // #4CD631
         public static readonly Color PianoKeyMax     = new(0.530f, 0.840f, 0.960f); // #00BFFF
+        public static readonly Color Disabled        = new(0.627f, 0.627f, 0.627f); // #A0A0A0
 
         public static Color ActiveOrWhite(bool isActive) => isActive ? Accent : Color.white;
     }

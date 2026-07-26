@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 2b46b597bbb4ba8419b98ab144fd517f
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192362
+  packageName: UniPay - In App Purchase (IAP) Billing
+  packageVersion: 6.2.3
+  assetPath: Assets/UniPay/Scenes/03 HorizontalScroll.unity
+  uploadId: 944408

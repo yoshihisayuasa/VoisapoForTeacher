@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 2d3b90f0447728840b7e27faa8bc005e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192362
+  packageName: UniPay - In App Purchase (IAP) Billing
+  packageVersion: 6.2.3
+  assetPath: Assets/UniPay/Scripts/Extensions/PayPal/PayPalStoreConfig.cs
+  uploadId: 944408

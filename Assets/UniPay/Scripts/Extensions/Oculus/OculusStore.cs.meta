@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: 85acf58d6264846918db43dd0d619587
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192362
+  packageName: UniPay - In App Purchase (IAP) Billing
+  packageVersion: 6.2.3
+  assetPath: Assets/UniPay/Scripts/Extensions/Oculus/OculusStore.cs
+  uploadId: 944408

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 2584e5d7d54335e4fb604c56fa906531
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192362
+  packageName: UniPay - In App Purchase (IAP) Billing
+  packageVersion: 6.2.3
+  assetPath: Assets/UniPay/README.pdf
+  uploadId: 944408

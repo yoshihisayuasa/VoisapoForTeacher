@@ -43,7 +43,21 @@
       "PowerShell(try { Get-Content \"C:\\\\Users\\\\yuasa\\\\source\\\\repos\\\\VoisapoForTeacher\\\\Assets\\\\Resources\\\\savedata3.json\" -Raw | ConvertFrom-Json | Out-Null; \"JSON OK\" } catch { \"JSON NG: $\\($_.Exception.Message\\)\" })",
       "Bash(command -v dotnet)",
       "Bash(python -)",
-      "Bash(grep -n \"ValueObjects.ValueObject.cs\\\\|ValueObjects\\\\\\\\\\\\\\\\ValueObject.cs\" Assembly-CSharp.csproj)"
+      "Bash(grep -n \"ValueObjects.ValueObject.cs\\\\|ValueObjects\\\\\\\\\\\\\\\\ValueObject.cs\" Assembly-CSharp.csproj)",
+      "Bash(xargs wc -l)",
+      "WebSearch",
+      "Bash(grep -c \"Assets\\\\\\\\\\\\\\\\Scripts\" Assembly-CSharp.csproj)",
+      "PowerShell(& \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\" \"C:\\\\Users\\\\yuasa\\\\source\\\\repos\\\\VoisapoForTeacher\\\\_ClaudeCompileCheck.csproj\" /t:Build /p:Configuration=Debug /p:OutputPath=\"C:\\\\Users\\\\yuasa\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-yuasa-source-repos-VoisapoForTeacher-Assets-Scripts\\\\1a3cef54-0521-4ee0-9567-110bdafe5071\\\\scratchpad\\\\bin\\\\\" /nologo /v:minimal /clp:ErrorsOnly | Select-Object -First 60)",
+      "PowerShell(& \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\" \"C:\\\\Users\\\\yuasa\\\\source\\\\repos\\\\VoisapoForTeacher\\\\_ClaudeCompileCheck.csproj\" /restore /t:Build /p:Configuration=Debug /p:OutputPath=\"C:\\\\Users\\\\yuasa\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-yuasa-source-repos-VoisapoForTeacher-Assets-Scripts\\\\1a3cef54-0521-4ee0-9567-110bdafe5071\\\\scratchpad\\\\bin\\\\\" /nologo /v:minimal /clp:ErrorsOnly | Select-Object -First 80)",
+      "PowerShell($dll = \"C:\\\\Users\\\\yuasa\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-yuasa-source-repos-VoisapoForTeacher-Assets-Scripts\\\\1a3cef54-0521-4ee0-9567-110bdafe5071\\\\scratchpad\\\\bin\\\\Assembly-CSharp.dll\"; if \\(Test-Path $dll\\) { \"OK: $\\(\\(Get-Item $dll\\).Length\\) bytes  $\\(\\(Get-Item $dll\\).LastWriteTime\\)\" } else { \"DLL NOT FOUND\" })",
+      "Bash(python *)",
+      "PowerShell(& \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\" \"C:\\\\Users\\\\yuasa\\\\source\\\\repos\\\\VoisapoForTeacher\\\\_ClaudeCompileCheck.csproj\" /restore /t:Build /p:Configuration=Debug /p:OutputPath=\"C:\\\\Users\\\\yuasa\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-yuasa-source-repos-VoisapoForTeacher-Assets-Scripts\\\\1a3cef54-0521-4ee0-9567-110bdafe5071\\\\scratchpad\\\\bin3\\\\\" /nologo /v:minimal /clp:ErrorsOnly | Select-Object -First 40; \"EXITCODE=$LASTEXITCODE\")",
+      "Bash([ -f \"$LOG\" ])",
+      "Read(//c/Users/yuasa/AppData/Local/Unity/Editor/**)",
+      "Skill(artifact-design)",
+      "Artifact",
+      "Bash(grep -aB1 \"m_Name:\")",
+      "PowerShell(Select-String *)"
     ]
   }
 }

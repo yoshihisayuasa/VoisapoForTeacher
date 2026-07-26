@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: 1aa72183dd53546bfb046e7691a3baa0
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192362
+  packageName: UniPay - In App Purchase (IAP) Billing
+  packageVersion: 6.2.3
+  assetPath: Assets/UniPay/Scripts/Extensions/PayPal/PayPalStoreWrapper.cs
+  uploadId: 944408

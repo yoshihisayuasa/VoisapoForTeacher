@@ -1,3 +1,4 @@
+using Assets.Scripts.Domain.Modules;
 using Assets.Scripts.Domain.ValueObjects;
 using R3;
 using UnityEngine;
@@ -6,19 +7,19 @@ using UnityEngine.UI;
 namespace Assets.Scripts.UI
 {
     /// <summary>
-    /// 自動キー変更 UI（上/下ボタン）
+    /// 自動キー変更 UI（上/下ボタン）。プレミアム限定のため、クリックは PremiumGateButton が受け取る。
     /// </summary>
     public sealed class AutoKeyChangeUI : MonoBehaviour
     {
-        [SerializeField] private Button _upButton;
-        [SerializeField] private Button _downButton;
+        [SerializeField] private PremiumGateButton _upGate;
+        [SerializeField] private PremiumGateButton _downGate;
         [SerializeField] private Image _upImage;
         [SerializeField] private Image _downImage;
 
         void Awake()
         {
-            _upButton.onClick.AddListener(OnUpClicked);
-            _downButton.onClick.AddListener(OnDownClicked);
+            _upGate.Bind(new FeatureGate(PremiumFeature.AutoKeyChange), OnUpClicked);
+            _downGate.Bind(new FeatureGate(PremiumFeature.AutoKeyChange), OnDownClicked);
             AutoKeyChangeManager.Instance.State.Subscribe(HandleStateChanged).AddTo(this);
         }
 

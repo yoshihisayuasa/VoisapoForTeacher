@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 0fbfdd499720a4c618c174e31297c475
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192362
+  packageName: UniPay - In App Purchase (IAP) Billing
+  packageVersion: 6.2.3
+  assetPath: Assets/UniPay/Scenes/10 Bundle.unity
+  uploadId: 944408

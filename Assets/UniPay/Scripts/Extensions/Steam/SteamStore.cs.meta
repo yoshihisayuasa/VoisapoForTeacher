@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: dc7440633481c449ba13f9bd2bd9a976
+timeCreated: 1533491806
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192362
+  packageName: UniPay - In App Purchase (IAP) Billing
+  packageVersion: 6.2.3
+  assetPath: Assets/UniPay/Scripts/Extensions/Steam/SteamStore.cs
+  uploadId: 944408

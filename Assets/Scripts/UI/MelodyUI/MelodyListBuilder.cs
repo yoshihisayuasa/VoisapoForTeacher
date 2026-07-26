@@ -1,4 +1,5 @@
 using Assets.Scripts.Domain.Entities;
+using Assets.Scripts.Domain.Modules;
 using Assets.Scripts.UI.MelodyUI;
 using System.Collections.Generic;
 using TMPro;
@@ -55,10 +56,11 @@ namespace Assets.Scripts.UI
                     text.text = string.IsNullOrEmpty(entry.Melody.Name) ? $"Melody {idx + 1}" : entry.Melody.Name;
                 }
 
-                btn.onClick.AddListener(() =>
-                {
-                    manager.SetCurrentMelody(entry.Melody);
-                });
+                // 自作メロディの選択はプレミアム限定。組み込みメロディは無料のまま選べる。
+                // どちらになるかは entry 自身が判断する。
+                btn.GetComponent<PremiumGateButton>().Bind(
+                    new MelodySelectGate(entry),
+                    () => manager.SetCurrentMelody(entry.Melody));
             }
         }
 

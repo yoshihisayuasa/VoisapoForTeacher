@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: a8a997436c8fe244397e212b95ba5ecd
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192362
+  packageName: UniPay - In App Purchase (IAP) Billing
+  packageVersion: 6.2.3
+  assetPath: Assets/UniPay/Animations/WindowScaleUp.anim
+  uploadId: 944408

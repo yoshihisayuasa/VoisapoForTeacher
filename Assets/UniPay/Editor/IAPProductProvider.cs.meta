@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: e735f0ab7800a41ceb864d8d6fb6ecd4
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192362
+  packageName: UniPay - In App Purchase (IAP) Billing
+  packageVersion: 6.2.3
+  assetPath: Assets/UniPay/Editor/IAPProductProvider.cs
+  uploadId: 944408

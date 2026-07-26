@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 966eba9e9de98f24cabd742e44ce9482
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192362
+  packageName: UniPay - In App Purchase (IAP) Billing
+  packageVersion: 6.2.3
+  assetPath: Assets/UniPay/Prefabs/Window - Preview.prefab
+  uploadId: 944408

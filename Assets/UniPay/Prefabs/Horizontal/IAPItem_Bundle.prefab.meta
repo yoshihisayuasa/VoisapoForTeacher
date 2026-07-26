@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: b92aae1ecf1636748a5eb0b80d70c8ba
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192362
+  packageName: UniPay - In App Purchase (IAP) Billing
+  packageVersion: 6.2.3
+  assetPath: Assets/UniPay/Prefabs/Horizontal/IAPItem_Bundle.prefab
+  uploadId: 944408

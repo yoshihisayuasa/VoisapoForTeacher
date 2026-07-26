@@ -74,7 +74,7 @@ namespace Assets.Scripts.Infrastructure
 
                 var chord = new Chord(chordIntervals, LegacyChordBeats);
                 entries.Add(new SavedMelody(
-                    new Melody(name, MelodyKinds.FromDisplayName(name), chord, notes, isProtected: false, isUserCreated: true),
+                    new Melody(name, MelodyKinds.FromDisplayName(name), chord, notes, isProtected: false, isPremiumOnly: true),
                     position));
             }
             return entries;

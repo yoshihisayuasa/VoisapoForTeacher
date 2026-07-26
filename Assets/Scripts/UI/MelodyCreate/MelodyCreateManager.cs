@@ -108,9 +108,8 @@ namespace Assets.Scripts.UI.MelodyCreate
                 return;
             }
 
-            int position = MelodyManager.Instance.MelodyCount;
             Melody melody = _draft.Build(name);
-            MelodyManager.Instance.AddMelody(new SavedMelody(melody, position));
+            MelodyManager.Instance.AddMelody(melody);
 
             LoadMainScene();
         }

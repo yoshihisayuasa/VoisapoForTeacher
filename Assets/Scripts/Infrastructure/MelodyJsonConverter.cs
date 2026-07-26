@@ -70,7 +70,7 @@ namespace Assets.Scripts.Infrastructure
                     notes.Add(new Note(n.Interval, n.Beats));
                 }
             }
-            return new Melody(data.Name, ParseKind(data.Kind), chord, notes, data.IsProtected, data.IsUserCreated);
+            return new Melody(data.Name, ParseKind(data.Kind), chord, notes, data.IsProtected, data.IsPremiumOnly);
         }
 
         // 種別はJSONに文字列で持つ（intだとenumの並び替えでデータが壊れるため）。
@@ -96,7 +96,7 @@ namespace Assets.Scripts.Infrastructure
                 Position = position,
                 Kind = melody.Kind.ToString(),
                 IsProtected = melody.IsProtected,
-                IsUserCreated = melody.IsUserCreated,
+                IsPremiumOnly = melody.IsPremiumOnly,
                 Chord = chordData,
                 Notes = new List<NoteData>()
             };
@@ -121,7 +121,7 @@ namespace Assets.Scripts.Infrastructure
         public int Position;
         public string Kind;
         public bool IsProtected;
-        public bool IsUserCreated;
+        public bool IsPremiumOnly;
         public ChordData Chord;
         public List<NoteData> Notes;
     }

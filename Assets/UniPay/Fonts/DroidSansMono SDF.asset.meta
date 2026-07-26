@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2dd7e96f889104813946a2c64811016a
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192362
+  packageName: UniPay - In App Purchase (IAP) Billing
+  packageVersion: 6.2.3
+  assetPath: Assets/UniPay/Fonts/DroidSansMono SDF.asset
+  uploadId: 944408

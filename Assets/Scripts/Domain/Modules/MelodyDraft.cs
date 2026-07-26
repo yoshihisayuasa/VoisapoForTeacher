@@ -243,7 +243,7 @@ namespace Assets.Scripts.Domain.Modules
                 .Select(n => new Note(n.Key.Index - _root.Index, n.Beats))
                 .ToList();
 
-            return new Melody(name, MelodyKind.Standard, chord, notes, isProtected: false, isUserCreated: true);
+            return new Melody(name, MelodyKind.Standard, chord, notes, isProtected: false, isPremiumOnly: true);
         }
     }
 }

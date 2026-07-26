@@ -5,7 +5,7 @@
             "Position": 0,
             "Kind": "Single",
             "IsProtected": true,
-            "IsUserCreated": false,
+            "IsPremiumOnly": false,
             "Chord": {
                 "Intervals": [
                     0,
@@ -26,7 +26,7 @@
             "Position": 1,
             "Kind": "Chord",
             "IsProtected": true,
-            "IsUserCreated": false,
+            "IsPremiumOnly": false,
             "Chord": {
                 "Intervals": [
                     0,
@@ -42,7 +42,7 @@
             "Position": 2,
             "Kind": "ChordWithMetronome",
             "IsProtected": true,
-            "IsUserCreated": false,
+            "IsPremiumOnly": false,
             "Chord": {
                 "Intervals": [
                     0,
@@ -58,7 +58,7 @@
             "Position": 3,
             "Kind": "Standard",
             "IsProtected": false,
-            "IsUserCreated": false,
+            "IsPremiumOnly": false,
             "Chord": {
                 "Intervals": [
                     0,
@@ -95,7 +95,7 @@
             "Position": 4,
             "Kind": "Standard",
             "IsProtected": false,
-            "IsUserCreated": false,
+            "IsPremiumOnly": false,
             "Chord": {
                 "Intervals": [
                     0,
@@ -140,7 +140,7 @@
             "Position": 5,
             "Kind": "Standard",
             "IsProtected": false,
-            "IsUserCreated": false,
+            "IsPremiumOnly": false,
             "Chord": {
                 "Intervals": [
                     0,
@@ -209,7 +209,7 @@
             "Position": 6,
             "Kind": "Standard",
             "IsProtected": false,
-            "IsUserCreated": false,
+            "IsPremiumOnly": false,
             "Chord": {
                 "Intervals": [
                     0,
@@ -266,7 +266,7 @@
             "Position": 7,
             "Kind": "Standard",
             "IsProtected": false,
-            "IsUserCreated": false,
+            "IsPremiumOnly": false,
             "Chord": {
                 "Intervals": [
                     -12,
@@ -299,7 +299,7 @@
             "Position": 8,
             "Kind": "Standard",
             "IsProtected": false,
-            "IsUserCreated": false,
+            "IsPremiumOnly": false,
             "Chord": {
                 "Intervals": [
                     -12,
@@ -344,7 +344,7 @@
             "Position": 9,
             "Kind": "Standard",
             "IsProtected": false,
-            "IsUserCreated": false,
+            "IsPremiumOnly": false,
             "Chord": {
                 "Intervals": [
                     0,
@@ -401,7 +401,7 @@
             "Position": 10,
             "Kind": "Standard",
             "IsProtected": false,
-            "IsUserCreated": false,
+            "IsPremiumOnly": false,
             "Chord": {
                 "Intervals": [
                     0,
@@ -470,7 +470,7 @@
             "Position": 11,
             "Kind": "Standard",
             "IsProtected": false,
-            "IsUserCreated": false,
+            "IsPremiumOnly": false,
             "Chord": {
                 "Intervals": [
                     -12,
@@ -527,7 +527,7 @@
             "Position": 12,
             "Kind": "Standard",
             "IsProtected": false,
-            "IsUserCreated": false,
+            "IsPremiumOnly": false,
             "Chord": {
                 "Intervals": [
                     0,
@@ -596,7 +596,7 @@
             "Position": 13,
             "Kind": "Standard",
             "IsProtected": false,
-            "IsUserCreated": false,
+            "IsPremiumOnly": false,
             "Chord": {
                 "Intervals": [
                     0,

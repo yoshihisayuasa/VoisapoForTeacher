@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 57ae7f80b5e66fb4f9c0c8a96a7cef99
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192362
+  packageName: UniPay - In App Purchase (IAP) Billing
+  packageVersion: 6.2.3
+  assetPath: Assets/UniPay/Editor/Packages/VR.unitypackage
+  uploadId: 944408

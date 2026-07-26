@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: f2a132dfa6f0b634b9b1b076ec6d17fb
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192362
+  packageName: UniPay - In App Purchase (IAP) Billing
+  packageVersion: 6.2.3
+  assetPath: Assets/UniPay/Animations/Window.controller
+  uploadId: 944408

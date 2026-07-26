@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: 23e91bef63fda411b807fe5d22a63a59
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192362
+  packageName: UniPay - In App Purchase (IAP) Billing
+  packageVersion: 6.2.3
+  assetPath: Assets/UniPay/Scripts/Extensions/Amazon/AmazonStoreWrapper.cs
+  uploadId: 944408

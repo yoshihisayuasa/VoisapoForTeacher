@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: 086fc1d9e85524278a84e051b1aee041
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192362
+  packageName: UniPay - In App Purchase (IAP) Billing
+  packageVersion: 6.2.3
+  assetPath: Assets/UniPay/Scripts/Extensions/CustomStoreOrderInfo.cs
+  uploadId: 944408

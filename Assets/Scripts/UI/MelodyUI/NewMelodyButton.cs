@@ -1,18 +1,20 @@
+using Assets.Scripts.Domain.Modules;
+using Assets.Scripts.Domain.ValueObjects;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Assets.Scripts.UI.MelodyUI
 {
     /// <summary>
-    /// メロディ作成シーンへ遷移するボタン。
+    /// メロディ作成シーンへ遷移するボタン。作成シーンへの入口をここで一括してゲートする。
     /// </summary>
     public sealed class NewMelodyButton : MonoBehaviour
     {
         [SerializeField] private string _melodyCreateSceneName = "MelodyCreate";
+        [SerializeField] private PremiumGateButton _gate;
 
         private void Start()
         {
-            GetComponent<Button>().onClick.AddListener(OnClicked);
+            _gate.Bind(new FeatureGate(PremiumFeature.MelodyCreate), OnClicked);
         }
 
         private void OnClicked()

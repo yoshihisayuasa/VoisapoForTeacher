@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 52443fc71c1c3f44aa6d5d5f09694288
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192362
+  packageName: UniPay - In App Purchase (IAP) Billing
+  packageVersion: 6.2.3
+  assetPath: Assets/UniPay/Prefabs/Vertical/IGCItem_MultiSelect_Locked.prefab
+  uploadId: 944408

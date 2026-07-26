@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 452a694c543a4b04583ea27486dd3ad3
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192362
+  packageName: UniPay - In App Purchase (IAP) Billing
+  packageVersion: 6.2.3
+  assetPath: Assets/UniPay/Prefabs/Resources/UIShopFeedback.prefab
+  uploadId: 944408

@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 5e2e1038bd28eba45aa6e59fc82e802f
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 192362
+  packageName: UniPay - In App Purchase (IAP) Billing
+  packageVersion: 6.2.3
+  assetPath: Assets/UniPay/Prefabs/Horizontal/IGCItem_MultiSelect.prefab
+  uploadId: 944408

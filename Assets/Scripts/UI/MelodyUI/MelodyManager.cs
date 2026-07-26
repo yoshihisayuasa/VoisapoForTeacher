@@ -51,13 +51,26 @@ namespace Assets.Scripts.UI.MelodyUI
         }
 
         public IReadOnlyList<SavedMelody> GetAllMelodies() => _melodies;
-        public int MelodyCount => _melodies.Count;
         public bool ContainsMelodyWithName(string name) => _melodies.Exists(e => e.Melody.Name == name);
 
-        public void AddMelody(SavedMelody entry)
+        public void AddMelody(Melody melody)
         {
-            _melodies.Add(entry);
+            _melodies.Add(new SavedMelody(melody, NextAvailablePosition()));
             SaveAllMelodies();
+        }
+
+        /// <summary>
+        /// 未使用のポジション（スロット番号）のうち最小のものを返す。
+        /// 途中のメロディを削除して歯抜けができても、その空きを優先的に埋める。
+        /// </summary>
+        private int NextAvailablePosition()
+        {
+            int position = 0;
+            while (_melodies.Exists(e => e.Position == position))
+            {
+                position++;
+            }
+            return position;
         }
 
         public void SetCurrentMelody(Melody melody)

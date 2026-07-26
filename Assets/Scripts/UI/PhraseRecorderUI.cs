@@ -1,5 +1,7 @@
+using Assets.Scripts.Domain.ValueObjects;
 using Assets.Scripts.UI.Modal;
 using R3;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,11 +9,16 @@ namespace Assets.Scripts.UI
 {
     public sealed class PhraseRecorderUI : MonoBehaviour
     {
-        private static readonly Color RecordingOnColor  = AppColors.TeacherSide;
-        private static readonly Color RecordingOffColor = new(0.5f, 0.5f, 0.5f);
+        private static readonly Color StandbyColor = AppColors.TeacherSide;
+        private static readonly Color DisabledColor = Color.white;
+        private static readonly Color RecordingDimColor = new(0.55f, 0.15f, 0.15f);
+        private const float BlinkIntervalSec = 0.5f;
 
         [SerializeField] private Button _playButton;
         [SerializeField] private Button _recordToggleButton;
+        [SerializeField] private GameObject _standbyGuide;
+
+        private Coroutine _blinkCoroutine;
 
         private void Start()
         {
@@ -21,8 +28,12 @@ namespace Assets.Scripts.UI
                 .Subscribe(hasCapture => _playButton.interactable = hasCapture)
                 .AddTo(this);
 
-            PhraseRecorder.Instance.IsRecordingEnabled
-                .Subscribe(enabled => _recordToggleButton.image.color = enabled ? RecordingOnColor : RecordingOffColor)
+            PhraseRecorder.Instance.State
+                .Subscribe(state => ApplyState(state))
+                .AddTo(this);
+
+            PhraseRecorder.Instance.IsPlaybackActive
+                .Subscribe(isPlaying => _playButton.image.color = AppColors.ActiveOrWhite(isPlaying))
                 .AddTo(this);
 
             PhraseRecorder.Instance.OnMicAccessFailed
@@ -31,6 +42,46 @@ namespace Assets.Scripts.UI
 
             _playButton.onClick.AddListener(OnPlayButtonClicked);
             _recordToggleButton.onClick.AddListener(OnRecordToggleClicked);
+        }
+
+        private void ApplyState(RecordingState state)
+        {
+            StopBlink();
+            _standbyGuide.SetActive(state == RecordingState.Standby);
+            switch (state)
+            {
+                case RecordingState.Disabled:
+                    _recordToggleButton.image.color = DisabledColor;
+                    break;
+                case RecordingState.Standby:
+                    _recordToggleButton.image.color = StandbyColor;
+                    break;
+                case RecordingState.Recording:
+                    _blinkCoroutine = StartCoroutine(Blink());
+                    break;
+            }
+        }
+
+        private IEnumerator Blink()
+        {
+            var wait = new WaitForSeconds(BlinkIntervalSec);
+            while (true)
+            {
+                _recordToggleButton.image.color = StandbyColor;
+                yield return wait;
+                _recordToggleButton.image.color = RecordingDimColor;
+                yield return wait;
+            }
+        }
+
+        private void StopBlink()
+        {
+            if (_blinkCoroutine == null)
+            {
+                return;
+            }
+            StopCoroutine(_blinkCoroutine);
+            _blinkCoroutine = null;
         }
 
         private void OnPlayButtonClicked()

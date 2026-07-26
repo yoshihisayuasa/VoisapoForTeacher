@@ -82,23 +82,41 @@ namespace Assets.Scripts.Domain.Entities
         /// <summary>削除不可（保護されている）メロディか。組み込みメロディの保護に使う。</summary>
         public bool IsProtected { get; }
 
-        /// <summary>ユーザーが自作したメロディか。テンプレート由来なら false。将来の課金判定に使う。</summary>
-        public bool IsUserCreated { get; }
+        /// <summary>
+        /// プレミアム（課金）限定のメロディか。自作メロディと、有料として配布するメロディがこれに当たる。
+        /// 由来（自作かテンプレートか）ではなく、課金しないと使えないかどうかだけを表す。
+        /// </summary>
+        public bool IsPremiumOnly { get; }
 
         public IReadOnlyList<Note> Notes { get; }
         private readonly Interval _minInterval;
         private readonly Interval _maxInterval;
 
 
-        public Melody(string name, MelodyKind kind, Chord chord, List<Note> notes, bool isProtected, bool isUserCreated)
+        public Melody(string name, MelodyKind kind, Chord chord, List<Note> notes, bool isProtected, bool isPremiumOnly)
         {
             Name = name;
             Kind = kind;
             Chord = chord;
             Notes = notes;
             IsProtected = isProtected;
-            IsUserCreated = isUserCreated;
+            IsPremiumOnly = isPremiumOnly;
             (_minInterval, _maxInterval) = CalculateIntervalRange();
+        }
+
+        /// <summary>
+        /// このメロディを選択して良いかを課金状態に照らして判断する。
+        /// 無料メロディは常に選べる。プレミアム限定メロディは購読中だけ選べ、
+        /// 期限切れ後も一覧には残るが選択できない。
+        /// </summary>
+        public void GateSelect(Entitlement entitlement, Action onAllowed, Action onDenied)
+        {
+            if (!IsPremiumOnly)
+            {
+                onAllowed();
+                return;
+            }
+            entitlement.Gate(PremiumFeature.PremiumMelodySelect, onAllowed, onDenied);
         }
 
         private (Interval min, Interval max) CalculateIntervalRange()

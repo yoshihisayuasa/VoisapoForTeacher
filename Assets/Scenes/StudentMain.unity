@@ -5078,7 +5078,7 @@ GameObject:
   - component: {fileID: 1731833572}
   - component: {fileID: 1731833571}
   m_Layer: 0
-  m_Name: GameSetting
+  m_Name: AppInitializer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

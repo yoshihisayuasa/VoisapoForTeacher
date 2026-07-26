@@ -1,3 +1,6 @@
+using Assets.Scripts.Domain.ValueObjects;
+using System;
+
 namespace Assets.Scripts.Domain.Entities
 {
     public sealed class SavedMelody
@@ -7,8 +10,6 @@ namespace Assets.Scripts.Domain.Entities
 
         public bool IsProtected => Melody.IsProtected;
 
-        public bool IsUserCreated => Melody.IsUserCreated;
-
         public SavedMelody(Melody melody, int position)
         {
             Melody = melody;
@@ -16,5 +17,13 @@ namespace Assets.Scripts.Domain.Entities
         }
 
         public void SetPosition(int position) => Position = position;
+
+        /// <summary>
+        /// このメロディを選択して良いかを課金状態に照らして判断する。判断はメロディ自身が持つ。
+        /// </summary>
+        public void GateSelect(Entitlement entitlement, Action onAllowed, Action onDenied)
+        {
+            Melody.GateSelect(entitlement, onAllowed, onDenied);
+        }
     }
 }
