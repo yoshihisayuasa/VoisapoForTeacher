@@ -3382,8 +3382,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Scripts.UI.Piano.SoundSourceSwitcher
   _soundSets:
-  - {fileID: 11400000, guid: b70dda0191e39c84296f401b51d4cf4c, type: 2}
   - {fileID: 11400000, guid: d8dc7c8a2e630ac4d88db34eabb9a5b2, type: 2}
+  - {fileID: 11400000, guid: b70dda0191e39c84296f401b51d4cf4c, type: 2}
 --- !u!1 &635445884
 GameObject:
   m_ObjectHideFlags: 0

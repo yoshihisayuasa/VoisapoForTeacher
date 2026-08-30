@@ -15,6 +15,7 @@ namespace UniPay
     {
         public IAppleOrderInfo Apple { get => null; }
         public IGoogleOrderInfo Google { get => null; }
+        public IPaymentProvidersOrderInfo PaymentProviders { get => null; }
 
         public List<IPurchasedProductInfo> PurchasedProductInfo { get; set; }
 

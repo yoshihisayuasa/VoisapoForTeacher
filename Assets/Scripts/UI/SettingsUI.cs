@@ -1,3 +1,4 @@
+using Assets.Scripts.Domain.ValueObjects;
 using Assets.Scripts.UI.Piano;
 using TMPro;
 using UnityEngine;
@@ -84,21 +85,10 @@ namespace Assets.Scripts.UI
 
         private void InitializePianoScaleSlider()
         {
-            if (_pianoScaleSlider == null)
-            {
-                return;
-            }
-
-            var zoomController = FindFirstObjectByType<PianoZoomController>();
-            if (zoomController == null)
-            {
-                return;
-            }
-
-            _pianoScaleSlider.minValue = zoomController.MinScale;
-            _pianoScaleSlider.maxValue = zoomController.MaxScale;
-            _pianoScaleSlider.value = zoomController.CurrentScale;
-            _pianoScaleSlider.onValueChanged.AddListener(value => zoomController.SetScale(value));
+            _pianoScaleSlider.minValue = PianoScale.Min;
+            _pianoScaleSlider.maxValue = PianoScale.Max;
+            _pianoScaleSlider.value = PianoScaleManager.Instance.Scale.Value;
+            _pianoScaleSlider.onValueChanged.AddListener(PianoScaleManager.Instance.SetScale);
         }
     }
 }

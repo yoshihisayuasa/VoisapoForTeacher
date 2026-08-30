@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Assets.Scripts.Infrastructure;
 using R3;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.UI.Piano
 {
@@ -52,6 +51,8 @@ namespace Assets.Scripts.UI.Piano
 
         private void Start()
         {
+            // 保存値は音源セットを減らしたアップデート後に範囲外になり得るため、必ず一覧の範囲へ丸める。
+            _currentIndex = Mathf.Clamp(SoundSourcePreference.Recall(0), 0, _soundSets.Count - 1);
             ApplySoundSet(_soundSets[_currentIndex]);
         }
 
@@ -61,6 +62,7 @@ namespace Assets.Scripts.UI.Piano
         public void SwitchTo(int index)
         {
             _currentIndex = index;
+            SoundSourcePreference.Remember(index);
             ApplySoundSet(_soundSets[_currentIndex]);
             _onChanged.OnNext(index);
         }

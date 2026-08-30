@@ -18,13 +18,21 @@ namespace Assets.Scripts.UI.Modal
         /// <summary>本文左右の余白（px）。本文の希望幅に加えてウィンドウ幅を決める。</summary>
         private const float HorizontalPadding = 64f;
 
+        /// <summary>ウィンドウ幅の上限（コンテナ幅に対する比率）。画面からはみ出させない。</summary>
+        private const float MaximumWidthRatio = 0.9f;
+
+        [SerializeField] private RectTransform _container;
         [SerializeField] private RectTransform _window;
+        [SerializeField] private RectTransform _bodyRect;
         [SerializeField] private TMP_Text _bodyText;
         [SerializeField] private Button _okButton;
         [SerializeField] private Button _cancelButton;
 
         private Action _onConfirm;
         private Action _onCancel;
+
+        private Vector2 _baseWindowSize;
+        private Vector2 _baseBodySize;
 
         /// <summary>
         /// 確認モーダルを表示する。onCancel が null のときは OK のみ（情報表示）になる。
@@ -47,27 +55,49 @@ namespace Assets.Scripts.UI.Modal
             _onCancel = onCancel;
 
             _cancelButton.gameObject.SetActive(onCancel != null);
-
-            ResizeWidthToBody(body);
         }
 
         /// <summary>
-        /// 本文の希望幅にパディングを足してウィンドウ横幅を設定する。
-        /// 高さは変えず、メッセージに応じて横幅だけ伸縮させる（常に1行）。
+        /// 本文に合わせてウィンドウの大きさを決める。
+        /// 1行で収まるうちは横に伸ばし、コンテナ幅の上限に達したら折り返して縦に伸ばす。
         /// </summary>
-        private void ResizeWidthToBody(string body)
+        private void ResizeToBody(string body)
         {
+            var maximumWidth = _container.rect.width * MaximumWidthRatio;
+
             _bodyText.textWrappingMode = TextWrappingModes.NoWrap;
+            var windowWidth = _bodyText.GetPreferredValues(body).x + HorizontalPadding;
 
-            var bodyWidth = _bodyText.GetPreferredValues(body).x;
+            if (windowWidth > maximumWidth)
+            {
+                _bodyText.textWrappingMode = TextWrappingModes.Normal;
+                windowWidth = maximumWidth;
+            }
 
-            _window.sizeDelta = new Vector2(bodyWidth + HorizontalPadding, _window.sizeDelta.y);
+            var bodyWidth = windowWidth - HorizontalPadding;
+            var bodyHeight = _bodyText.GetPreferredValues(body, bodyWidth, 0f).y;
+            var extraHeight = Mathf.Max(0f, bodyHeight - _baseBodySize.y);
+
+            _window.sizeDelta = new Vector2(windowWidth, _baseWindowSize.y + extraHeight);
+            _bodyRect.sizeDelta = new Vector2(_baseBodySize.x, _baseBodySize.y + extraHeight);
         }
 
+        private void Awake()
+        {
+            _baseWindowSize = _window.sizeDelta;
+            _baseBodySize = _bodyRect.sizeDelta;
+        }
+
+        /// <summary>
+        /// ModalContainer は onLoad（= Setup）を親付けより前に呼ぶため、
+        /// その時点ではコンテナ幅が 0 で上限を決められない。大きさの調整はここで行う。
+        /// </summary>
         private void Start()
         {
             _okButton.onClick.AddListener(OnOkClicked);
             _cancelButton.onClick.AddListener(OnCancelClicked);
+
+            ResizeToBody(_bodyText.text);
         }
 
         private void OnOkClicked()

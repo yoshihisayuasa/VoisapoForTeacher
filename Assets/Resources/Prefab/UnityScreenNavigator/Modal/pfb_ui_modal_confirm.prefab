@@ -627,7 +627,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c3e9a14b2d54e0fa1b6c8d2e3f40516, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.Modal.ConfirmModalUI
+  _container: {fileID: 1320892694070783849}
   _window: {fileID: 7047777371366345238}
+  _bodyRect: {fileID: 3498234043847722601}
   _bodyText: {fileID: 2738012144634584785}
   _okButton: {fileID: 9102582938984568392}
   _cancelButton: {fileID: 5649468050275655429}
@@ -666,7 +668,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -28.2}
-  m_SizeDelta: {x: 0, y: 40}
+  m_SizeDelta: {x: -64, y: 40}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &2082253855628234457
 CanvasRenderer:

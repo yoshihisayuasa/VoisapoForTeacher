@@ -117,9 +117,17 @@ namespace Assets.Scripts.UI.Piano
             // このクラスはネットワークの存在を知らない。
         }
 
+        /// <summary>
+        /// 既定の根音を選ぶのは先生だけ。生徒の選択は先生の押下受信でのみ決まるため、
+        /// ここで選ぶと誰も弾いていないのに C4 がハイライトされたまま起動してしまう。
+        /// 生徒は最初の受信まで未選択（SelectedKey は null）で、購読側もそれを許容している。
+        /// </summary>
         private void Start()
         {
-            SelectKey(PianoNote.DefaultRoot);
+            if (AppMode.IsTeacher)
+            {
+                SelectKey(PianoNote.DefaultRoot);
+            }
         }
 
         /// <summary>
@@ -252,6 +260,10 @@ namespace Assets.Scripts.UI.Piano
         /// <summary>
         /// 選択鍵盤（根音）を変更する。あらゆる経路（ポインタ・キーボード・再生系・受信）の
         /// 選択変更はここを通り、OnSelectionChanged で購読側へ通知される。
+        /// 順序は「確定してから通知」（_rootKeyPressed と同じ規約）。SelectedKey の実体は
+        /// _highlighter が持つため、先に確定させないと購読者が古い根音で計算してしまう。
+        /// 購読者はイベント引数ではなく SelectedKey を読み直す（例：MelodyRangePresenter は
+        /// シーン入場時・メロディ変更時にも同じメソッドで現在状態から作り直すため）。
         /// </summary>
         public void SelectKey(PianoNote key)
         {

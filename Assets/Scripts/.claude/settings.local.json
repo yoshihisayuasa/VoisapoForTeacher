@@ -57,7 +57,10 @@
       "Skill(artifact-design)",
       "Artifact",
       "Bash(grep -aB1 \"m_Name:\")",
-      "PowerShell(Select-String *)"
+      "PowerShell(Select-String *)",
+      "PowerShell(git *)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "PowerShell($p = 'HKCU:\\\\Software\\\\Unity\\\\UnityEditor\\\\DefaultCompany\\\\Voisapo'; $i = Get-ItemProperty $p; \"SoundSourceIndex = \" + $i.SoundSourceIndex_h1557885445; $raw = $i.PianoScale_h2719837028; \"PianoScale \\(raw bytes\\) = \" + \\($raw -join ','\\); if \\($raw -is [byte[]]\\) { \"PianoScale \\(float\\) = \" + [BitConverter]::ToSingle\\($raw, 0\\) })"
     ]
   }
 }
