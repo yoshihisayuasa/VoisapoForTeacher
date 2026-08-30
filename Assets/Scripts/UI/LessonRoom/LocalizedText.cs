@@ -11,9 +11,7 @@ namespace Assets.Scripts.UI.LessonRoom
 
         private void Awake()
         {
-            GetComponent<TMP_Text>().text = Application.systemLanguage == SystemLanguage.Japanese
-                ? _japanese
-                : _english;
+            GetComponent<TMP_Text>().text = new LocalizedMessage(_japanese, _english).ForCurrentLanguage();
         }
     }
 }

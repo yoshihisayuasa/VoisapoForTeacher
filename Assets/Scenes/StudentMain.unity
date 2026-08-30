@@ -5452,6 +5452,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1731833572}
   - component: {fileID: 1731833571}
+  - component: {fileID: 1731833573}
   m_Layer: 0
   m_Name: AppInitializer
   m_TagString: Untagged
@@ -5487,6 +5488,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1731833573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1731833570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 734f08d0d0424e4458f3e7ec5531bea8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.StudentStartupNoticeUI
 --- !u!1 &1777360665
 GameObject:
   m_ObjectHideFlags: 0
