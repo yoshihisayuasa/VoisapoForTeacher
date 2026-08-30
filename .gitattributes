@@ -1,0 +1,6 @@
+# UnityのYAMLファイルは改行コードをLFに固定する
+# core.autocrlf=true の環境でCRLFに変換されると、Windows/Mac間で不要な差分が出るため
+*.asset   text eol=lf
+*.unity   text eol=lf
+*.prefab  text eol=lf
+*.meta    text eol=lf

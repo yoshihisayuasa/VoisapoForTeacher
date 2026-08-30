@@ -76,6 +76,8 @@ crashlytics-build.properties
 /[Aa]ssets/Photon/
 
 *.asset
+# ProjectSettings配下はプロジェクト全体の設定なのでバージョン管理する
+!ProjectSettings/**/*.asset
 *.ttf
 *.otf
 *.bytes
