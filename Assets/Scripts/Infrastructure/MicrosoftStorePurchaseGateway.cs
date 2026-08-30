@@ -18,9 +18,10 @@ namespace Assets.Scripts.Infrastructure
     /// </summary>
     public sealed class MicrosoftStorePurchaseGateway : IPurchaseGateway
     {
-        // パートナーセンターで採番されるアドオンのストア ID に差し替えること。
-        private const string MonthlyStoreId = "getsugaku_jpy1900_1weekfree";
-        private const string YearlyStoreId = "nengaku_jpy14900_1weekfree";
+        // パートナーセンターで採番されたアドオンのストア ID。
+        // 括弧内は同じアドオンの製品 ID（パートナーセンターで人が読む方の識別子）。
+        private const string MonthlyStoreId = "9P5P5VSQ5CXW"; // getsugaku_jpy1900_1weekfree
+        private const string YearlyStoreId = "9NGHBXBSCPRR";  // nengaku_jpy14900_1weekfree
 
         /// <summary>サブスクリプションアドオンは Durable として取得する。</summary>
         private static readonly string[] SubscriptionProductKinds = { "Durable" };
