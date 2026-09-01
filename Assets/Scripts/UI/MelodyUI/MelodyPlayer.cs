@@ -1,5 +1,6 @@
 using Assets.Scripts;
 using Assets.Scripts.Domain.Entities;
+using Assets.Scripts.Domain.Modules;
 using Assets.Scripts.Domain.ValueObjects;
 using Assets.Scripts.UI.MelodyUI.PlayStrategies;
 using Assets.Scripts.UI.Piano;
@@ -20,6 +21,10 @@ namespace Assets.Scripts.UI.MelodyUI
         private readonly Subject<PianoNote> _onLoopKeyPlayed = new();
 
         private readonly PlaybackAuthorityCoordinator _authority = new();
+
+        // 音源側が交代した直後に間を空けるルール。音源側・描画側の双方が同じ規則で
+        // 独立に待つため、待っている間も音と鍵盤表示は揃ったままになる。
+        private readonly PlaybackHandoverPolicy _handover = new();
 
         public Observable<bool> OnPlayEnded => _onPlayEnded;
         public Observable<bool> OnMelodyBegan => _onMelodyBegan;
@@ -126,6 +131,10 @@ namespace Assets.Scripts.UI.MelodyUI
                 _playbackCoroutine = null;
             }
 
+            // コルーチンを止めた場合は RunPlayback の末尾を通らないため、ここで閉じる。
+            // 自然終了で既に閉じていれば何も起きない。
+            _handover.EndSession(Time.time);
+
             _isPlayingChord = false;
             _isPlaybackRunning = false;
             _authority.Clear();
@@ -194,12 +203,23 @@ namespace Assets.Scripts.UI.MelodyUI
         /// </summary>
         private IEnumerator RunPlayback(PianoController piano, Melody melody)
         {
+            // 待っている間もこのコルーチンは走っている。先に立てておかないと、
+            // 待機中に届いたバトンが割り込んで二重に再生を始めてしまう。
             _isPlaybackRunning = true;
+
+            float gap = _handover.BeginSession(SoundPlayManager.Instance.IsSoundPlay, Time.time);
+            if (gap > 0f)
+            {
+                yield return new WaitForSeconds(gap);
+            }
 
             // 入れ子は StartCoroutine で回さない（別コルーチンになり、StopCoroutine が
             // 外側にしか効かず内側が鳴り続ける）。IEnumerator を直接 yield して
             // このコルーチンの一部として実行し、1ハンドルで丸ごと止められるようにする。
             yield return PlaySession(piano, melody);
+
+            // 昇格より先に閉じる。バトンを引き継ぐ再生は、この終了時刻から間隔を測る。
+            _handover.EndSession(Time.time);
 
             _isPlaybackRunning = false;
             _playbackCoroutine = null;

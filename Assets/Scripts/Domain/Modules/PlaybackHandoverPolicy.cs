@@ -17,10 +17,18 @@ namespace Assets.Scripts.Domain.Modules
     {
         /// <summary>
         /// 音源側の交代直後に空ける最小間隔（秒）。
-        /// 【暫定】デバッグ用に 2.0。リリース前に 0.3 へ戻すこと。
-        /// エディタ・実機で値を変えてはいけない（両端末で食い違うと表示がズレる）。
+        /// 間の長さを目で追えるよう、デバッグ中だけ長めに取る。
+        ///
+        /// 両端末で必ず同じ値になっていなければならない（食い違うと音と鍵盤表示がズレる）。
+        /// そのため切り替えはエディタ設定ではなくビルド設定に紐づけてある。
+        /// デバッグ時は生徒アプリも Development Build でビルドすること
+        /// （先生＝エディタ／生徒＝リリースビルド の組み合わせでは値が食い違う）。
         /// </summary>
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         private const float HandoverGapSeconds = 2.0f;
+#else
+        private const float HandoverGapSeconds = 0.3f;
+#endif
 
         private bool _isSessionOpen;
         private bool _isCurrentSoundSide;
