@@ -207,7 +207,11 @@ namespace Assets.Scripts.UI.MelodyUI
             // 待機中に届いたバトンが割り込んで二重に再生を始めてしまう。
             _isPlaybackRunning = true;
 
-            float gap = _handover.BeginSession(SoundPlayManager.Instance.IsSoundPlay, Time.time);
+            // 立場の判定はトークンで行う。SoundPlayManager のフラグは先生のトグル操作で
+            // その場で変わるが、実際の交代はループ境界のバトンで初めて起きるため、
+            // 自動キー変更中は1周ぶん食い違う。フラグで判定すると描画中の周が音源側の
+            // セッションとして記録され、次の交代が「交代なし」と見なされて待機が消える。
+            float gap = _handover.BeginSession(_authority.HasToken, Time.time);
             if (gap > 0f)
             {
                 yield return new WaitForSeconds(gap);

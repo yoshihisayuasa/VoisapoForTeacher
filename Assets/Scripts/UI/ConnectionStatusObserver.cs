@@ -9,6 +9,9 @@ namespace Assets.Scripts.UI
     /// Photon のルーム接続状態を購読可能なイベントとして公開する。
     /// コールバックの意味は役割に依存しない（先生・生徒どちらのシーンでも使える）：
     /// 相手が入室した / 相手が退室した / 自分の接続が切れた、の3種。
+    ///
+    /// これは表示用（ポップアップ・ステータス文言・ボタンの活性）の窓口。
+    /// 再生や同期の状態を既定へ戻す処理は PianoNetworkGateway 側のストリームが担当する。
     /// </summary>
     public class ConnectionStatusObserver : MonoBehaviourPunCallbacks
     {

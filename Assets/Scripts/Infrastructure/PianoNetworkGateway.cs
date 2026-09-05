@@ -20,6 +20,11 @@ namespace Assets.Scripts.Infrastructure
     ///
     /// ルームは先生1人＋生徒1人の前提（PhotonRoomCreator が MaxPlayers=2 で強制）。
     /// そのため宛先は常に「自分以外の全員」で足り、個別指定の送信は持たない。
+    ///
+    /// 入退室のコールバックは、再生・同期の状態に影響するものだけをここで扱う
+    /// （StudentJoined / StudentPresenceChanged / SelfLeftRoom / TeacherLeftRoom）。
+    /// 表示用の在室ステータスは ConnectionStatusObserver が別に公開しており、
+    /// 同じ Photon コールバックを両者が独立に受け取る（呼ばれる順序は保証されない）。
     /// </summary>
     public sealed class PianoNetworkGateway : MonoBehaviourPunCallbacks, IOnEventCallback
     {
@@ -54,6 +59,7 @@ namespace Assets.Scripts.Infrastructure
         private readonly Subject<Unit> _studentJoined = new();
         private readonly Subject<bool> _studentPresenceChanged = new();
         private readonly Subject<Unit> _selfLeftRoom = new();
+        private readonly Subject<Unit> _teacherLeftRoom = new();
 
         public Observable<PianoNote> KeyDownReceived => _keyDownReceived;
         public Observable<PianoNote> KeyUpReceived => _keyUpReceived;
@@ -79,6 +85,9 @@ namespace Assets.Scripts.Infrastructure
         /// <summary>自分がルームから出た（自発ログアウト・回線切断の両方）。ルーム由来の状態が無効になったことを意味する。</summary>
         public Observable<Unit> SelfLeftRoom => _selfLeftRoom;
 
+        /// <summary>先生がルームから出た（生徒側でのみ発火）。同じくルーム由来の状態が無効になったことを意味する。</summary>
+        public Observable<Unit> TeacherLeftRoom => _teacherLeftRoom;
+
         /// <summary>
         /// 自分（先生）以外のプレイヤー（生徒）が同じルームに居るか。
         /// </summary>
@@ -95,7 +104,11 @@ namespace Assets.Scripts.Infrastructure
 
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
-            if (!AppMode.IsTeacher) return;
+            if (!AppMode.IsTeacher)
+            {
+                _teacherLeftRoom.OnNext(Unit.Default);
+                return;
+            }
 
             _studentPresenceChanged.OnNext(HasConnectedStudent);
         }
@@ -266,6 +279,7 @@ namespace Assets.Scripts.Infrastructure
             _studentJoined.Dispose();
             _studentPresenceChanged.Dispose();
             _selfLeftRoom.Dispose();
+            _teacherLeftRoom.Dispose();
         }
     }
 }

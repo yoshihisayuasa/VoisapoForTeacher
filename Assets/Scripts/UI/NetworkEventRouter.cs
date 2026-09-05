@@ -31,7 +31,7 @@ namespace Assets.Scripts.UI
             }
             else
             {
-                SubscribeSelfRoomExit();
+                SubscribeRoomStateReset();
             }
         }
 
@@ -146,21 +146,25 @@ namespace Assets.Scripts.UI
         }
 
         /// <summary>
-        /// 自分（生徒）の退室・切断で、ルーム由来の状態をすべて既定へ戻す（生徒のみ）。
+        /// ルームが実質的に終わったとき（自分の退室・切断、または先生の退室）に、
+        /// ルーム由来の状態をすべて既定へ戻す（生徒のみ）。
         /// 自動再生ループの条件はローカル状態だけを見るため、ここで戻さないと
-        /// ログアウト後も再生が回り続け、単独演奏時にも古い状態でループが再発する。
+        /// 相手がいなくなっても再生が回り続け、単独演奏時にも古い状態でループが再発する。
         /// 再入室時の復元は先生側の ResendCurrentState が行う。
         /// </summary>
-        private void SubscribeSelfRoomExit()
+        private void SubscribeRoomStateReset()
         {
             _gateway.SelfLeftRoom
-                .Subscribe(_ =>
-                {
-                    MelodyPlayer.Instance.FinishMelody();
-                    AutoKeyChangeManager.Instance.ApplyRemote(AutoKeyChangeState.None);
-                    SoundPlayManager.Instance.SetState(false);
-                })
+                .Merge(_gateway.TeacherLeftRoom)
+                .Subscribe(_ => ResetRoomDerivedState())
                 .AddTo(this);
+        }
+
+        private static void ResetRoomDerivedState()
+        {
+            MelodyPlayer.Instance.FinishMelody();
+            AutoKeyChangeManager.Instance.ApplyRemote(AutoKeyChangeState.None);
+            SoundPlayManager.Instance.SetState(false);
         }
 
         private void SubscribeStudentPresence()
