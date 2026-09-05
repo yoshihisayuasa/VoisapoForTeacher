@@ -33,13 +33,16 @@ namespace Assets.Scripts.UI.MelodyUI.PlayStrategies
         bool ShouldContinueAutoKeyChange();
 
         /// <summary>周境界で、もう音源側でなければトークンを返上してバトンを渡す。渡したら true。</summary>
-        bool TryPassBatonAtBoundary(PianoNote currentKey);
+        bool TryPassBatonAtBoundary();
 
-        /// <summary>現在のルートから、転調方向に沿った次のルート音を返す。</summary>
-        PianoNote NextAutoKeyChangeRoot(PianoNote currentKey);
+        /// <summary>いま鳴らしているルートから、転調方向に沿った次のルート音を返す。</summary>
+        PianoNote NextAutoKeyChangeRoot();
 
-        /// <summary>周の開始キーを描画側へ送る（ローカル発）。</summary>
-        void NotifyLoopKey(PianoNote key);
+        /// <summary>
+        /// 次の周のルートを確定する（再生位置の更新・鍵盤の選択・描画側への送信）。
+        /// 3つは常にこの順で揃っている必要があるため、呼び出し側に並べさせず1操作にまとめる。
+        /// </summary>
+        void AdvanceTo(PianoNote nextKey);
 
         /// <summary>引き継ぎ待ちのバトンが保留されているか。</summary>
         bool HasPendingBaton { get; }
