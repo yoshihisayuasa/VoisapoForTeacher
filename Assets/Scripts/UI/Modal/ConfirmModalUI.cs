@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System;
 using TMPro;
 using UnityEngine;
@@ -14,6 +15,8 @@ namespace Assets.Scripts.UI.Modal
     {
         private const string ResourcePath =
             "Prefab/UnityScreenNavigator/Modal/pfb_ui_modal_confirm";
+
+        private const string ContainerName = "ModalContainer";
 
         /// <summary>本文左右の余白（px）。本文の希望幅に加えてウィンドウ幅を決める。</summary>
         private const float HorizontalPadding = 64f;
@@ -36,10 +39,20 @@ namespace Assets.Scripts.UI.Modal
 
         /// <summary>
         /// 確認モーダルを表示する。onCancel が null のときは OK のみ（情報表示）になる。
+        /// 別のモーダルの表示中に呼ばれた場合は、その遷移が終わってから表示する。
         /// </summary>
         public static void Show(string body, Action onConfirm = null, Action onCancel = null)
         {
-            ModalContainer.Find("ModalContainer").Push(ResourcePath, true, onLoad: x =>
+            ShowAsync(body, onConfirm, onCancel).Forget();
+        }
+
+        // 遷移アニメーション中に Push すると ModalContainer が例外を投げるため、空くまで待つ。
+        private static async UniTaskVoid ShowAsync(string body, Action onConfirm, Action onCancel)
+        {
+            var container = ModalContainer.Find(ContainerName);
+            await UniTask.WaitWhile(() => container.IsInTransition);
+
+            container.Push(ResourcePath, true, onLoad: x =>
             {
                 x.modal.GetComponentInChildren<ConfirmModalUI>().Setup(body, onConfirm, onCancel);
             });

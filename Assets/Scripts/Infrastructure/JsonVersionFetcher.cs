@@ -23,15 +23,22 @@ namespace Assets.Scripts.Infrastructure
                 await request.SendWebRequest();
 
                 if (request.result != UnityWebRequest.Result.Success)
+                {
+                    Debug.LogWarning($"[VersionCheck] 取得失敗: {_jsonUrl} ({request.error})");
                     return VersionCheckResult.FetchFailed();
+                }
 
                 var data = JsonUtility.FromJson<VersionJson>(request.downloadHandler.text);
 
                 // 該当ストアのバージョンが JSON に無い（未設定）ときは判定できない。
                 if (!AppVersion.TryCreate(data.StoreVersion(), out var storeVersion))
+                {
+                    Debug.LogWarning($"[VersionCheck] JSON のバージョンが未設定または不正: '{data.StoreVersion()}'");
                     return VersionCheckResult.FetchFailed();
+                }
 
                 var currentVersion = CurrentAppVersion.Value;
+                Debug.Log($"[VersionCheck] ストア {storeVersion} / 自分 {currentVersion}");
 
                 if (storeVersion.IsNewerThan(currentVersion))
                 {
