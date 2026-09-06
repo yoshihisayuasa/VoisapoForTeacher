@@ -24,6 +24,12 @@ namespace Assets.Scripts.UI.Modal
         /// <summary>ウィンドウ幅の上限（コンテナ幅に対する比率）。画面からはみ出させない。</summary>
         private const float MaximumWidthRatio = 0.9f;
 
+        /// <summary>ウィンドウ高さの上限（コンテナ高さに対する比率）。ボタンを画面内に残す。</summary>
+        private const float MaximumHeightRatio = 0.9f;
+
+        /// <summary>本文を縮めてよい下限のフォントサイズ。これ以上は読めない。</summary>
+        private const float MinimumFontSize = 20f;
+
         [SerializeField] private RectTransform _container;
         [SerializeField] private RectTransform _window;
         [SerializeField] private RectTransform _bodyRect;
@@ -36,6 +42,7 @@ namespace Assets.Scripts.UI.Modal
 
         private Vector2 _baseWindowSize;
         private Vector2 _baseBodySize;
+        private float _baseFontSize;
 
         /// <summary>
         /// 確認モーダルを表示する。onCancel が null のときは OK のみ（情報表示）になる。
@@ -73,9 +80,14 @@ namespace Assets.Scripts.UI.Modal
         /// <summary>
         /// 本文に合わせてウィンドウの大きさを決める。
         /// 1行で収まるうちは横に伸ばし、コンテナ幅の上限に達したら折り返して縦に伸ばす。
+        /// 縦も上限に達したら、それ以上は広げずに本文のフォントを縮めて収める。
         /// </summary>
         private void ResizeToBody(string body)
         {
+            // 寸法は基準フォントサイズで測る。縮小が残っていると測定結果が前回の表示に左右される。
+            _bodyText.enableAutoSizing = false;
+            _bodyText.fontSize = _baseFontSize;
+
             var maximumWidth = _container.rect.width * MaximumWidthRatio;
 
             _bodyText.textWrappingMode = TextWrappingModes.NoWrap;
@@ -89,16 +101,25 @@ namespace Assets.Scripts.UI.Modal
 
             var bodyWidth = windowWidth - HorizontalPadding;
             var bodyHeight = _bodyText.GetPreferredValues(body, bodyWidth, 0f).y;
-            var extraHeight = Mathf.Max(0f, bodyHeight - _baseBodySize.y);
+
+            var maximumExtraHeight =
+                Mathf.Max(0f, _container.rect.height * MaximumHeightRatio - _baseWindowSize.y);
+            var extraHeight = Mathf.Clamp(bodyHeight - _baseBodySize.y, 0f, maximumExtraHeight);
 
             _window.sizeDelta = new Vector2(windowWidth, _baseWindowSize.y + extraHeight);
             _bodyRect.sizeDelta = new Vector2(_baseBodySize.x, _baseBodySize.y + extraHeight);
+
+            // 上限で切り詰めた分は本文を縮めて吸収する。収まっているときは基準サイズのまま表示される。
+            _bodyText.enableAutoSizing = true;
+            _bodyText.fontSizeMin = MinimumFontSize;
+            _bodyText.fontSizeMax = _baseFontSize;
         }
 
         private void Awake()
         {
             _baseWindowSize = _window.sizeDelta;
             _baseBodySize = _bodyRect.sizeDelta;
+            _baseFontSize = _bodyText.fontSize;
         }
 
         /// <summary>
