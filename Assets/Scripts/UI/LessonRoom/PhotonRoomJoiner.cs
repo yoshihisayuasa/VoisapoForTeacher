@@ -1,3 +1,4 @@
+using Assets.Scripts.Infrastructure;
 using R3;
 using Photon.Pun;
 using Photon.Realtime;
@@ -45,7 +46,7 @@ namespace Assets.Scripts.UI.LessonRoom
 
             var props = new Hashtable
             {
-                { VersionObserver.VersionKey, Application.version }
+                { VersionObserver.VersionKey, CurrentAppVersion.Value.ToString() }
             };
             PhotonNetwork.LocalPlayer.SetCustomProperties(props);
 

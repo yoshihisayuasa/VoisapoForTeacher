@@ -1,14 +1,15 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using Assets.Scripts.UI.Piano;
 using Assets.Scripts.UI.MelodyUI;
 using Assets.Scripts.Infrastructure;
 
 namespace Assets.Scripts.UI
 {
     /// <summary>
-    /// STOPボタンのUI。押下で再生中メロディ/メトロノームの停止を MelodyPlayer に委譲し、
-    /// 先生は停止を生徒へ送信する（色は一切変更しない）。先生シーンにのみ存在する。
+    /// STOPボタンのUI。押下（またはスペースキー）で再生中メロディ/メトロノームの停止を
+    /// MelodyPlayer に委譲し、先生は停止を生徒へ送信する（色は一切変更しない）。
+    /// 先生シーンにのみ存在するため、生徒向けのガードは持たない。
     /// </summary>
     public sealed class StopUI : MonoBehaviour
     {
@@ -20,28 +21,28 @@ namespace Assets.Scripts.UI
 
         private void OnEnable()
         {
-            if (_stopButton != null)
-            {
-                _stopButton.onClick.AddListener(OnClickStop);
-            }
+            _stopButton.onClick.AddListener(Stop);
         }
 
         private void OnDisable()
         {
-            if(_stopButton != null)
+            _stopButton.onClick.RemoveListener(Stop);
+        }
+
+        private void Update()
+        {
+            var kb = Keyboard.current;
+            if (kb == null) return;
+
+            if (kb.spaceKey.wasPressedThisFrame)
             {
-                _stopButton.onClick.RemoveListener(OnClickStop);
+                Stop();
             }
         }
 
-        private void OnClickStop()
+        private void Stop()
         {
-            var player = MelodyPlayer.Instance;
-            if (player == null)
-            {
-                return;
-            }
-            player.FinishMelody();
+            MelodyPlayer.Instance.FinishMelody();
             _network.SendStop();
         }
     }

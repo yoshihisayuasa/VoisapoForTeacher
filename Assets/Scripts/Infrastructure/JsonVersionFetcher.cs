@@ -26,14 +26,16 @@ namespace Assets.Scripts.Infrastructure
                     return VersionCheckResult.FetchFailed();
 
                 var data = JsonUtility.FromJson<VersionJson>(request.downloadHandler.text);
-                bool isMac = Application.platform == RuntimePlatform.OSXPlayer;
-                var storeVersion = new AppVersion(isMac ? data.versionMac : data.versionWindows);
-                var currentVersion = new AppVersion(Application.version);
+
+                // 該当ストアのバージョンが JSON に無い（未設定）ときは判定できない。
+                if (!AppVersion.TryCreate(data.StoreVersion(), out var storeVersion))
+                    return VersionCheckResult.FetchFailed();
+
+                var currentVersion = CurrentAppVersion.Value;
 
                 if (storeVersion.IsNewerThan(currentVersion))
                 {
-                    string downloadUrl = isMac ? data.downloadUrlMac : data.downloadUrlWindows;
-                    return VersionCheckResult.UpdateAvailable(storeVersion, downloadUrl);
+                    return VersionCheckResult.UpdateAvailable(storeVersion, data.DownloadUrl());
                 }
 
                 return VersionCheckResult.UpToDate();
@@ -45,13 +47,40 @@ namespace Assets.Scripts.Infrastructure
             }
         }
 
+        /// <summary>
+        /// 先生用（Mac / Windows）と生徒用（iPhone / Android）はストア上で別プロダクトのため、
+        /// それぞれのバージョンと配布URLを持つ。student～ が生徒用。
+        /// 起動中のビルドと実行OSに対応する値だけを使う。
+        /// </summary>
         [Serializable]
         private class VersionJson
         {
             public string versionMac;
             public string versionWindows;
             public string downloadUrlMac;
-          public string downloadUrlWindows;
+            public string downloadUrlWindows;
+            public string studentVersioniPhone;
+            public string studentVersionAndroid;
+            public string studentDownloadUrliPhone;
+            public string studentDownloadUrlAndroid;
+
+            private static bool IsMac => Application.platform == RuntimePlatform.OSXPlayer;
+
+            private static bool IsIPhone => Application.platform == RuntimePlatform.IPhonePlayer;
+
+            public string StoreVersion()
+            {
+                if (AppMode.IsTeacher)
+                    return IsMac ? versionMac : versionWindows;
+                return IsIPhone ? studentVersioniPhone : studentVersionAndroid;
+            }
+
+            public string DownloadUrl()
+            {
+                if (AppMode.IsTeacher)
+                    return IsMac ? downloadUrlMac : downloadUrlWindows;
+                return IsIPhone ? studentDownloadUrliPhone : studentDownloadUrlAndroid;
+            }
         }
     }
 }

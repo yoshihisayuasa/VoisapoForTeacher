@@ -1,6 +1,10 @@
 {
- "versionMac": "2.00",    
- "versionWindows": "2.00",
- "downloadUrlMac": "https://apps.apple.com/jp/app/voisapo-for-trainer/id6443791224?mt=12",
- "downloadUrlWindows": "https://apps.microsoft.com/detail/9nsn110v1hc2?hl=ja-JP&gl=JP"
+  "versionMac": "2.00",
+  "versionWindows": "2.00",
+  "downloadUrlMac": "https://apps.apple.com/jp/app/voisapo-for-trainer/id6443791224?mt=12",
+  "downloadUrlWindows": "https://apps.microsoft.com/detail/9nsn110v1hc2?hl=ja-JP&gl=JP",
+  "studentVersioniPhone": "2.00",
+  "studentVersionAndroid": "2.00",
+  "studentDownloadUrliPhone": "https://apps.apple.com/jp/app/voisapo-for-student/id6443756207",
+  "studentDownloadUrlAndroid": "https://play.google.com/store/apps/details?id=com.Voisapo.Voisapoforstudent&hl=ja"
 }

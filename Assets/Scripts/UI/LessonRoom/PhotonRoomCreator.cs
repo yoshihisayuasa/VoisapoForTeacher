@@ -1,6 +1,7 @@
 using System;
 using Assets.Scripts.Domain.StaticValues;
 using Assets.Scripts.Domain.ValueObjects;
+using Assets.Scripts.Infrastructure;
 using Assets.Scripts.UI;
 using ExitGames.Client.Photon;
 using Photon.Pun;
@@ -29,7 +30,7 @@ namespace Assets.Scripts.UI.LessonRoom
             // 生徒が入室時に確認できるよう、先生のアプリバージョンを公開する。
             PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable
             {
-                { VersionObserver.VersionKey, Application.version }
+                { VersionObserver.VersionKey, CurrentAppVersion.Value.ToString() }
             });
 
             if (PhotonNetwork.IsConnected)

@@ -29,11 +29,15 @@ namespace Assets.Scripts.UI
             _gate = gate;
             _onAllowed = onAllowed;
 
-            _button.onClick.AddListener(OnClicked);
+            _button.onClick.AddListener(Press);
             _lockIcon.Bind(gate);
         }
 
-        private void OnClicked()
+        /// <summary>
+        /// クリックと同じ経路で発火させる。ショートカットキーからの実行に使う
+        /// （ゲート判定を迂回させないため、呼び出し側は本来の処理を直接呼ばずこれを使う）。
+        /// </summary>
+        public void Press()
         {
             _gate.Gate(
                 EntitlementManager.Instance.Current.CurrentValue,
