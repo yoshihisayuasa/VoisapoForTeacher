@@ -59,7 +59,7 @@ namespace Assets.Scripts.UI.Modal
             var container = ModalContainer.Find(ContainerName);
             await UniTask.WaitWhile(() => container.IsInTransition);
 
-            container.Push(ResourcePath, true, onLoad: x =>
+            await container.Push(ResourcePath, true, onLoad: x =>
             {
                 x.modal.GetComponentInChildren<ConfirmModalUI>().Setup(body, onConfirm, onCancel);
             });

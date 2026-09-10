@@ -1,5 +1,5 @@
-using Assets.Scripts.Domain.StaticValues;
 using Assets.Scripts.Domain.ValueObjects;
+using Assets.Scripts.Infrastructure;
 using Assets.Scripts.UI.MelodyUI;
 using R3;
 using System.Collections;
@@ -13,8 +13,8 @@ namespace Assets.Scripts.UI
 
         [SerializeField] private AudioSource _playbackSource;
 
-        private AudioClip _micClip;
-        private string _selectedDevice = null;
+        private MicrophoneCapture _capture = new(null);
+        private AudioClip _capturedClip;
 
         public string[] AvailableDevices => Microphone.devices;
 
@@ -34,18 +34,21 @@ namespace Assets.Scripts.UI
 
         public void SelectDevice(string deviceName)
         {
-            if (Microphone.IsRecording(_selectedDevice))
+            if (_capture.IsSameDevice(deviceName))
             {
-                Microphone.End(_selectedDevice);
+                return;
             }
-            _selectedDevice = deviceName;
+            // 開きっぱなしのマイクは切り替え前のデバイスを掴んでいるため、閉じて録音から降ろす
+            _capture.Close();
+            _capture = new MicrophoneCapture(deviceName);
+            _state.Value = RecordingState.Disabled;
         }
 
         public void ToggleRecording()
         {
             if (_state.Value == RecordingState.Disabled)
             {
-                if (Microphone.devices.Length == 0)
+                if (!_capture.Open())
                 {
                     _onMicAccessFailed.OnNext(Unit.Default);
                     return;
@@ -54,10 +57,7 @@ namespace Assets.Scripts.UI
                 return;
             }
 
-            if (_state.Value == RecordingState.Recording)
-            {
-                Microphone.End(_selectedDevice);
-            }
+            _capture.Close();
             _state.Value = RecordingState.Disabled;
         }
 
@@ -88,20 +88,7 @@ namespace Assets.Scripts.UI
             {
                 return;
             }
-            try
-            {
-                _micClip = Microphone.Start(_selectedDevice, false, RecordingRules.MaxPhraseSec, RecordingRules.SampleRate);
-            }
-            catch (System.Exception)
-            {
-                _micClip = null;
-            }
-            if (_micClip == null)
-            {
-                _state.Value = RecordingState.Disabled;
-                _onMicAccessFailed.OnNext(Unit.Default);
-                return;
-            }
+            _capture.MarkStart();
             _state.Value = RecordingState.Recording;
         }
 
@@ -117,7 +104,6 @@ namespace Assets.Scripts.UI
             }
             else
             {
-                Microphone.End(_selectedDevice);
                 _state.Value = RecordingState.Standby;
             }
         }
@@ -130,39 +116,18 @@ namespace Assets.Scripts.UI
             {
                 yield break;
             }
-            int recordedSamples = Microphone.GetPosition(_selectedDevice);
-            Microphone.End(_selectedDevice);
-            _micClip = TrimToRecordedLength(_micClip, recordedSamples);
-            _hasCapture.Value = _micClip != null;
+            _capturedClip = _capture.ExtractSinceStart();
+            _hasCapture.Value = _capturedClip != null;
             _state.Value = RecordingState.Standby;
-        }
-
-        private static AudioClip TrimToRecordedLength(AudioClip source, int recordedSamples)
-        {
-            if (source == null)
-            {
-                return null;
-            }
-            if (recordedSamples <= 0 || recordedSamples >= source.samples)
-            {
-                // 上限まで録りきってマイクが自動停止した場合はGetPositionが0を返すため、全長をそのまま採用する
-                return source;
-            }
-            var samples = new float[recordedSamples * source.channels];
-            source.GetData(samples, 0);
-
-            var trimmed = AudioClip.Create(source.name, recordedSamples, source.channels, source.frequency, false);
-            trimmed.SetData(samples, 0);
-            return trimmed;
         }
 
         public void Play()
         {
-            if (_micClip == null)
+            if (_capturedClip == null)
             {
                 return;
             }
-            _playbackSource.clip = _micClip;
+            _playbackSource.clip = _capturedClip;
             _playbackSource.Play();
             _isPlaybackActive.Value = true;
 
@@ -183,7 +148,7 @@ namespace Assets.Scripts.UI
 
         private void OnDestroy()
         {
-            Microphone.End(_selectedDevice);
+            _capture.Close();
             _hasCapture.Dispose();
             _state.Dispose();
             _isPlaybackActive.Dispose();
