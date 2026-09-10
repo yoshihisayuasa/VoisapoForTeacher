@@ -16,6 +16,7 @@ namespace Assets.Scripts.UI
 
         [SerializeField] private Button _playButton;
         [SerializeField] private Button _recordToggleButton;
+        [SerializeField] private GameObject _disabledGuide;
         [SerializeField] private GameObject _standbyGuide;
 
         private Coroutine _blinkCoroutine;
@@ -47,6 +48,7 @@ namespace Assets.Scripts.UI
         private void ApplyState(RecordingState state)
         {
             StopBlink();
+            _disabledGuide.SetActive(state == RecordingState.Disabled);
             _standbyGuide.SetActive(state == RecordingState.Standby);
             switch (state)
             {

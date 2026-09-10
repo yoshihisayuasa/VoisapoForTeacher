@@ -1275,6 +1275,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.PlayingStatusUI
   _statusText: {fileID: 1350098258}
+  _observer: {fileID: 1034282835}
 --- !u!222 &660572356
 CanvasRenderer:
   m_ObjectHideFlags: 0
