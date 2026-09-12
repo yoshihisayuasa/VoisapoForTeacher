@@ -18,10 +18,19 @@ namespace Assets.Scripts.UI.MelodyUI.PlayStrategies
                                             PianoNote pressedKey, PlayModeSettings settings)
         {
             yield return PlayChordOnce(piano, melody.ChordAt(pressedKey), settings);
+
+            // 鳴り切ったらセッションを閉じる。ここで終えないと、開始時に立てた
+            // 「先生が鳴らしている」表示を戻す通知（OnPlayEnded）が誰にも届かない。
+            Context.FinishMelody();
         }
 
         // 離鍵では止めない（既定拍数で鳴り切る）。
         public override void OnKeyUp()
+        {
+        }
+
+        // メロディパートを持たないため、区切るフレーズがない。
+        public override void OnPlaybackFinished()
         {
         }
     }

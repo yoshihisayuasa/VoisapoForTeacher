@@ -14,15 +14,19 @@ namespace Assets.Scripts.UI
         [SerializeField] private AudioSource _playbackSource;
 
         private MicrophoneCapture _capture = new(null);
-        private AudioClip _capturedClip;
+        private readonly ReactiveProperty<AudioClip> _capturedClip = new(null);
 
         public string[] AvailableDevices => Microphone.devices;
 
-        private readonly ReactiveProperty<bool> _hasCapture = new(false);
-        public Observable<bool> HasCapture => _hasCapture;
-
         private readonly ReactiveProperty<RecordingState> _state = new(RecordingState.Disabled);
         public Observable<RecordingState> State => _state;
+
+        /// <summary>
+        /// 再生できるか。録音中は、これから上書きされるクリップを聴くことになるため押させない。
+        /// </summary>
+        public Observable<bool> CanPlay =>
+            _capturedClip.CombineLatest(_state, (clip, state) =>
+                clip != null && state != RecordingState.Recording);
 
         private readonly Subject<Unit> _onMicAccessFailed = new();
         public Observable<Unit> OnMicAccessFailed => _onMicAccessFailed;
@@ -74,15 +78,22 @@ namespace Assets.Scripts.UI
         private void Start()
         {
             MelodyPlayer.Instance.OnMelodyBegan
-                .Subscribe(_ => StartRecording())
+                .Subscribe(_ => StartPhrase())
+                .AddTo(this);
+
+            MelodyPlayer.Instance.OnMelodyEnded
+                .Subscribe(_ => EndPhrase())
                 .AddTo(this);
 
             MelodyPlayer.Instance.OnPlayEnded
-                .Subscribe(shouldCapture => OnPlayEnded(shouldCapture))
+                .Subscribe(_ => EndSession())
                 .AddTo(this);
         }
 
-        private void StartRecording()
+        /// <summary>
+        /// 1フレーズの録音を始める。自動転調では周ごとに呼ばれ、そのたびに録り直しになる。
+        /// </summary>
+        private void StartPhrase()
         {
             if (_state.Value == RecordingState.Disabled)
             {
@@ -92,42 +103,45 @@ namespace Assets.Scripts.UI
             _state.Value = RecordingState.Recording;
         }
 
-        private void OnPlayEnded(bool shouldCapture)
+        /// <summary>1フレーズを弾き終えた。ここまでを切り出して録音済みにする。</summary>
+        private void EndPhrase()
+        {
+            if (_state.Value != RecordingState.Recording)
+            {
+                return;
+            }
+            Capture();
+        }
+
+        /// <summary>再生が終わった。録音は待機に戻す。</summary>
+        private void EndSession()
         {
             if (_state.Value == RecordingState.Disabled)
             {
                 return;
             }
-            if (shouldCapture)
-            {
-                StartCoroutine(CaptureAfterDelay(0.5f));
-            }
-            else
-            {
-                _state.Value = RecordingState.Standby;
-            }
+            _state.Value = RecordingState.Standby;
         }
 
-        private IEnumerator CaptureAfterDelay(float delaySec)
+        // 切り出せなかったときは録音済みの中身を触らない（直前のフレーズを残す）。
+        private void Capture()
         {
-            yield return new WaitForSeconds(delaySec);
-
-            if (_state.Value == RecordingState.Disabled)
+            var clip = _capture.ExtractSinceStart();
+            if (clip == null)
             {
-                yield break;
+                return;
             }
-            _capturedClip = _capture.ExtractSinceStart();
-            _hasCapture.Value = _capturedClip != null;
-            _state.Value = RecordingState.Standby;
+            _capturedClip.Value = clip;
         }
 
         public void Play()
         {
-            if (_capturedClip == null)
+            var clip = _capturedClip.Value;
+            if (clip == null)
             {
                 return;
             }
-            _playbackSource.clip = _capturedClip;
+            _playbackSource.clip = clip;
             _playbackSource.Play();
             _isPlaybackActive.Value = true;
 
@@ -149,7 +163,7 @@ namespace Assets.Scripts.UI
         private void OnDestroy()
         {
             _capture.Close();
-            _hasCapture.Dispose();
+            _capturedClip.Dispose();
             _state.Dispose();
             _isPlaybackActive.Dispose();
             _onMicAccessFailed.Dispose();

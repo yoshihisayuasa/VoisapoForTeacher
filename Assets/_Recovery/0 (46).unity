@@ -1544,8 +1544,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19d4bd71246d35d4784f52b0f9959852, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.LessonRoom.LocalizedText
-  _japanese: "\u30AF\u30EA\u30C3\u30AF\u3067\u9332\u97F3\u5F85\u6A5F"
-  _english: Click to enable recording
+  _japanese: "\u30DC\u30BF\u30F3\u30AF\u30EA\u30C3\u30AF\u3067\u9332\u97F3\u5F85\u6A5F"
+  _english: Click the button to enable recording
 --- !u!114 &322076201
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1566,7 +1566,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u30AF\u30EA\u30C3\u30AF\u3067\u9332\u97F3\u5F85\u6A5F"
+  m_text: "\u30DC\u30BF\u30F3\u30AF\u30EA\u30C3\u30AF\u3067\u9332\u97F3\u5F85\u6A5F"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
   m_sharedMaterial: {fileID: 1779099136830915230, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
@@ -8611,6 +8611,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.MelodyDropSlot
   _slotIndex: 14
+--- !u!1 &1626113651
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1626113652}
+  m_Layer: 0
+  m_Name: UnityScreenNavigator.CoroutineManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1626113652
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1626113651}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1630067379
 GameObject:
   m_ObjectHideFlags: 0
@@ -10806,7 +10837,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 167546690534104974, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_Volume
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 250395510915974079, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_Volume
@@ -11302,7 +11333,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6039329133557161571, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_Volume
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6085403711091820326, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_AnchorMax.y
@@ -11322,7 +11353,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6154184905764634492, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_Volume
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6188120398069880983, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_Volume
@@ -11721,3 +11752,4 @@ SceneRoots:
   - {fileID: 298719250}
   - {fileID: 506816639}
   - {fileID: 400595951}
+  - {fileID: 1626113652}

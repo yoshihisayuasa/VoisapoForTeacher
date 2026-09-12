@@ -23,10 +23,8 @@ namespace Assets.Scripts.UI
 
         private void Start()
         {
-            _playButton.interactable = false;
-
-            PhraseRecorder.Instance.HasCapture
-                .Subscribe(hasCapture => _playButton.interactable = hasCapture)
+            PhraseRecorder.Instance.CanPlay
+                .Subscribe(canPlay => _playButton.interactable = canPlay)
                 .AddTo(this);
 
             PhraseRecorder.Instance.State

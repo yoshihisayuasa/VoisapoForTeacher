@@ -15,8 +15,9 @@ namespace Assets.Scripts.UI.MelodyUI
 {
     public sealed class MelodyPlayer : MonoBehaviour, IMelodyPlaybackContext
     {
-        private readonly Subject<bool> _onPlayEnded = new();
+        private readonly Subject<Unit> _onPlayEnded = new();
         private readonly Subject<bool> _onMelodyBegan = new();
+        private readonly Subject<Unit> _onMelodyEnded = new();
         private readonly Subject<bool> _onTeacherPlayStatus = new();
         private readonly Subject<PianoNote> _onLoopKeyPlayed = new();
 
@@ -26,8 +27,11 @@ namespace Assets.Scripts.UI.MelodyUI
         // 独立に待つため、待っている間も音と鍵盤表示は揃ったままになる。
         private readonly PlaybackHandoverPolicy _handover = new();
 
-        public Observable<bool> OnPlayEnded => _onPlayEnded;
+        public Observable<Unit> OnPlayEnded => _onPlayEnded;
         public Observable<bool> OnMelodyBegan => _onMelodyBegan;
+
+        /// <summary>メロディを1回弾き終えた。録音はここまでを1フレーズとして切り出す。</summary>
+        public Observable<Unit> OnMelodyEnded => _onMelodyEnded;
         public Observable<bool> OnTeacherPlayStatus => _onTeacherPlayStatus;
 
         /// <summary>トークン保持者（音源側）が周・再スタートの開始キーを弾いた。描画側への送信用（ローカル発のみ）。</summary>
@@ -115,24 +119,31 @@ namespace Assets.Scripts.UI.MelodyUI
         }
 
         /// <summary>
-        /// 再生を中断し、鍵盤の色をすべてリセットして録音も即時停止する。
+        /// 再生を中断し、鍵盤の色をすべてリセットする。弾き終わりとしては扱わないため、
+        /// 中断されたフレーズは録音されない（次の再生開始で起点を引き直す）。
         /// メロディ切替・新規再生の前処理・移調による再スタートに使う。
         /// </summary>
         public void StopMelodyAndReset()
         {
-            StopMelodyCore(setKeyVisual: true, shouldDelayRecordStop: false);
+            StopMelodyCore(setKeyVisual: true);
         }
 
         /// <summary>
-        /// 演奏として終了する。演奏済み色を保持し、録音停止は余韻のため遅延させる。
+        /// 演奏として終了する。演奏済み色を保持する。
         /// 停止ボタン・離鍵・ネットワーク停止受信から使う。
         /// </summary>
         public void FinishMelody()
         {
-            StopMelodyCore(setKeyVisual: false, shouldDelayRecordStop: true);
+            // 弾き終わりをどう区切るかは種別ごとに違う。周ごとに区切る種別はここでは何もしない。
+            // まだ一度も再生していなければ種別が決まらない（起動直後の停止操作など）。
+            if (_currentMelody != null)
+            {
+                GetStrategy(_currentMelody).OnPlaybackFinished();
+            }
+            StopMelodyCore(setKeyVisual: false);
         }
 
-        private void StopMelodyCore(bool setKeyVisual, bool shouldDelayRecordStop)
+        private void StopMelodyCore(bool setKeyVisual)
         {
             var piano = PianoController.Instance;
             piano.StopAllKeys(setKeyVisual);
@@ -154,7 +165,7 @@ namespace Assets.Scripts.UI.MelodyUI
 
             _metronomePlayer.Stop();
 
-            _onPlayEnded.OnNext(shouldDelayRecordStop);
+            _onPlayEnded.OnNext(Unit.Default);
         }
 
         private MelodyPlayStrategy GetStrategy(Melody melody) =>
@@ -167,6 +178,11 @@ namespace Assets.Scripts.UI.MelodyUI
         void IMelodyPlaybackContext.NotifyMelodyBegan()
         {
             _onMelodyBegan.OnNext(SoundPlayManager.Instance.IsSoundPlay);
+        }
+
+        void IMelodyPlaybackContext.NotifyMelodyEnded()
+        {
+            _onMelodyEnded.OnNext(Unit.Default);
         }
 
         void IMelodyPlaybackContext.BeginChordSection()
@@ -460,6 +476,7 @@ namespace Assets.Scripts.UI.MelodyUI
 
             _onPlayEnded.Dispose();
             _onMelodyBegan.Dispose();
+            _onMelodyEnded.Dispose();
             _onTeacherPlayStatus.Dispose();
             _onLoopKeyPlayed.Dispose();
             _authority.Dispose();

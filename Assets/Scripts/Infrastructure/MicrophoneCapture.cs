@@ -18,6 +18,9 @@ namespace Assets.Scripts.Infrastructure
         private int _startPosition;
         private double _startTime;
 
+        // 切り出しは周ごとに走る。リングバッファ全体（上限秒ぶん）の読み出し先は使い回す。
+        private float[] _whole;
+
         public MicrophoneCapture(string deviceName)
         {
             _deviceName = deviceName;
@@ -83,8 +86,11 @@ namespace Assets.Scripts.Infrastructure
         private AudioClip CreateClip(int start, int length, int total)
         {
             int channels = _buffer.channels;
-            var whole = new float[total * channels];
-            _buffer.GetData(whole, 0);
+            if (_whole == null || _whole.Length != total * channels)
+            {
+                _whole = new float[total * channels];
+            }
+            _buffer.GetData(_whole, 0);
 
             var samples = new float[length * channels];
             for (int i = 0; i < length; i++)
@@ -92,7 +98,7 @@ namespace Assets.Scripts.Infrastructure
                 int source = ((start + i) % total) * channels;
                 for (int channel = 0; channel < channels; channel++)
                 {
-                    samples[i * channels + channel] = whole[source + channel];
+                    samples[i * channels + channel] = _whole[source + channel];
                 }
             }
 

@@ -27,6 +27,12 @@ namespace Assets.Scripts.UI.MelodyUI.PlayStrategies
         public abstract void OnKeyUp();
 
         /// <summary>
+        /// 演奏として終わるときに、その終わりを1フレーズの区切りとして扱うか。
+        /// 各種別が実装する（自前の区切りを持たない種別だけ Context.NotifyMelodyEnded を呼ぶ）。
+        /// </summary>
+        public abstract void OnPlaybackFinished();
+
+        /// <summary>
         /// 和音を拍数ぶん鳴らして止める共通手順。
         /// </summary>
         protected IEnumerator PlayChordOnce(PianoController piano, ChordVoicing chord, PlayModeSettings settings)

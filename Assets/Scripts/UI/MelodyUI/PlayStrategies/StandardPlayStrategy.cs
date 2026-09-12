@@ -66,6 +66,12 @@ namespace Assets.Scripts.UI.MelodyUI.PlayStrategies
         {
         }
 
+        // 周ごとに PlayOnePass の末尾で区切っているため、停止では区切らない。
+        // 弾きかけの周を拾うと、止めた位置しだいで録音の中身が変わってしまう。
+        public override void OnPlaybackFinished()
+        {
+        }
+
         // 和音パート → メロディパートを開始キーで1周鳴らす。
         private IEnumerator PlayOnePass(PianoController piano, Melody melody,
                                         PianoNote key, PlayModeSettings settings)
@@ -83,6 +89,7 @@ namespace Assets.Scripts.UI.MelodyUI.PlayStrategies
                 yield return new WaitForSeconds(BPMManager.Instance.SecondPerBeat * note.Beats);
                 piano.StopAndMarkPlayed(note.Key);
             }
+            Context.NotifyMelodyEnded();
         }
     }
 }

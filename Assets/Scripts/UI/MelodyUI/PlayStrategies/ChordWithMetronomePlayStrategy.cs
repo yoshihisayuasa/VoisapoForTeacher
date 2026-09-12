@@ -30,5 +30,11 @@ namespace Assets.Scripts.UI.MelodyUI.PlayStrategies
         public override void OnKeyUp()
         {
         }
+
+        // 自分では終わらない種別なので、停止までが1フレーズになる。
+        public override void OnPlaybackFinished()
+        {
+            Context.NotifyMelodyEnded();
+        }
     }
 }

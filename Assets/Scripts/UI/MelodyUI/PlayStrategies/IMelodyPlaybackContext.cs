@@ -12,6 +12,12 @@ namespace Assets.Scripts.UI.MelodyUI.PlayStrategies
         void NotifyMelodyBegan();
 
         /// <summary>
+        /// メロディを1回弾き終えたことを購読者へ通知する（録音はここまでを1フレーズとして切り出す）。
+        /// 自動転調では周ごとに呼ばれ、周の途中で止まった演奏では呼ばれない。
+        /// </summary>
+        void NotifyMelodyEnded();
+
+        /// <summary>
         /// 和音セクションに入った。この区間だけ Up↔Down 反転時の即時移調（±2半音）を受け付ける。
         /// 呼ぶのは自動転調ループを持つ戦略（Standard）のみ。対応しない戦略は呼ばない。
         /// </summary>

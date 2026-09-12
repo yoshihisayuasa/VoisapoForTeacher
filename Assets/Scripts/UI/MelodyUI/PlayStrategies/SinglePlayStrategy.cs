@@ -28,5 +28,11 @@ namespace Assets.Scripts.UI.MelodyUI.PlayStrategies
         {
             Context.FinishMelody();
         }
+
+        // 自前の区切りを持たない。鳴らし始めから演奏の終わりまでが1フレーズ。
+        public override void OnPlaybackFinished()
+        {
+            Context.NotifyMelodyEnded();
+        }
     }
 }
