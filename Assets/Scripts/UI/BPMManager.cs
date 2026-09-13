@@ -15,6 +15,12 @@ namespace Assets.Scripts.UI
         public float KeyFadeOutSeconds => _bpm.KeyFadeOutSeconds;
         public int Value => _bpm.Value;
 
+        /// <summary>
+        /// 現在のテンポ。あとで同じ速さを再現する側（録音など）が、その時点の値を
+        /// 持ち帰るために使う。不変なので、以降ここが変わっても持ち帰った値は動かない。
+        /// </summary>
+        public BPM Current => _bpm;
+
 
         public void Increment(int step = 10)
         {

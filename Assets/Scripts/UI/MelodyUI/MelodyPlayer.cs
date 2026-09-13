@@ -17,7 +17,7 @@ namespace Assets.Scripts.UI.MelodyUI
     {
         private readonly Subject<Unit> _onPlayEnded = new();
         private readonly Subject<bool> _onMelodyBegan = new();
-        private readonly Subject<Unit> _onMelodyEnded = new();
+        private readonly Subject<PlayedPhrase> _onMelodyEnded = new();
         private readonly Subject<bool> _onTeacherPlayStatus = new();
         private readonly Subject<PianoNote> _onLoopKeyPlayed = new();
 
@@ -30,8 +30,13 @@ namespace Assets.Scripts.UI.MelodyUI
         public Observable<Unit> OnPlayEnded => _onPlayEnded;
         public Observable<bool> OnMelodyBegan => _onMelodyBegan;
 
-        /// <summary>メロディを1回弾き終えた。録音はここまでを1フレーズとして切り出す。</summary>
-        public Observable<Unit> OnMelodyEnded => _onMelodyEnded;
+        /// <summary>
+        /// メロディを1回弾き終えた。録音はここまでを1フレーズとして切り出す。
+        /// 運ぶのは「何を・どのキーで弾いたか」。自動転調では周ごとにキーが変わり、
+        /// メロディも演奏中に差し替えられるため、録音の伴奏をあとから復元するには
+        /// 弾き終えた時点の組み合わせを確定させておく必要がある。
+        /// </summary>
+        public Observable<PlayedPhrase> OnMelodyEnded => _onMelodyEnded;
         public Observable<bool> OnTeacherPlayStatus => _onTeacherPlayStatus;
 
         /// <summary>トークン保持者（音源側）が周・再スタートの開始キーを弾いた。描画側への送信用（ローカル発のみ）。</summary>
@@ -182,7 +187,7 @@ namespace Assets.Scripts.UI.MelodyUI
 
         void IMelodyPlaybackContext.NotifyMelodyEnded()
         {
-            _onMelodyEnded.OnNext(Unit.Default);
+            _onMelodyEnded.OnNext(new PlayedPhrase(_currentMelody, _playingRoot));
         }
 
         void IMelodyPlaybackContext.BeginChordSection()

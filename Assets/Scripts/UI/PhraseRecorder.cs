@@ -1,6 +1,8 @@
+using Assets.Scripts.Domain.StaticValues;
 using Assets.Scripts.Domain.ValueObjects;
 using Assets.Scripts.Infrastructure;
 using Assets.Scripts.UI.MelodyUI;
+using Assets.Scripts.UI.Piano;
 using R3;
 using System.Collections;
 using UnityEngine;
@@ -14,7 +16,8 @@ namespace Assets.Scripts.UI
         [SerializeField] private AudioSource _playbackSource;
 
         private MicrophoneCapture _capture = new(null);
-        private readonly ReactiveProperty<AudioClip> _capturedClip = new(null);
+        private CaptureStart _phraseStart;
+        private readonly ReactiveProperty<RecordedPhrase> _recordedPhrase = new(null);
 
         public string[] AvailableDevices => Microphone.devices;
 
@@ -25,8 +28,8 @@ namespace Assets.Scripts.UI
         /// 再生できるか。録音中は、これから上書きされるクリップを聴くことになるため押させない。
         /// </summary>
         public Observable<bool> CanPlay =>
-            _capturedClip.CombineLatest(_state, (clip, state) =>
-                clip != null && state != RecordingState.Recording);
+            _recordedPhrase.CombineLatest(_state, (phrase, state) =>
+                phrase != null && state != RecordingState.Recording);
 
         private readonly Subject<Unit> _onMicAccessFailed = new();
         public Observable<Unit> OnMicAccessFailed => _onMicAccessFailed;
@@ -34,7 +37,7 @@ namespace Assets.Scripts.UI
         private readonly ReactiveProperty<bool> _isPlaybackActive = new(false);
         public Observable<bool> IsPlaybackActive => _isPlaybackActive;
 
-        private Coroutine _playbackWatch;
+        private Coroutine _playbackRoutine;
 
         public void SelectDevice(string deviceName)
         {
@@ -82,7 +85,7 @@ namespace Assets.Scripts.UI
                 .AddTo(this);
 
             MelodyPlayer.Instance.OnMelodyEnded
-                .Subscribe(_ => EndPhrase())
+                .Subscribe(phrase => EndPhrase(phrase))
                 .AddTo(this);
 
             MelodyPlayer.Instance.OnPlayEnded
@@ -99,18 +102,35 @@ namespace Assets.Scripts.UI
             {
                 return;
             }
-            _capture.MarkStart();
+            _phraseStart = _capture.MarkStart();
             _state.Value = RecordingState.Recording;
         }
 
-        /// <summary>1フレーズを弾き終えた。ここまでを切り出して録音済みにする。</summary>
-        private void EndPhrase()
+        /// <summary>
+        /// 1フレーズを弾き終えた。Zoom 越しに遅れて届く歌い終わりまで待ってから切り出す。
+        /// 起点はここで確定させて渡すため、待っている間に次のフレーズが始まっても影響しない。
+        /// </summary>
+        private void EndPhrase(PlayedPhrase phrase)
         {
             if (_state.Value != RecordingState.Recording)
             {
                 return;
             }
-            Capture();
+            StartCoroutine(CaptureAfterTail(_phraseStart, phrase));
+        }
+
+        // 切り出せなかったときは録音済みの中身を触らない（直前のフレーズを残す）。
+        // テンポは録音した時点のものを持ち帰る。あとで変えられても鍵盤の動きが声からずれない。
+        private IEnumerator CaptureAfterTail(CaptureStart start, PlayedPhrase phrase)
+        {
+            yield return new WaitForSeconds(RecordingRules.CaptureTailSec);
+
+            var clip = start.ExtractUntilNow();
+            if (clip == null)
+            {
+                yield break;
+            }
+            _recordedPhrase.Value = new RecordedPhrase(clip, phrase, BPMManager.Instance.Current);
         }
 
         /// <summary>再生が終わった。録音は待機に戻す。</summary>
@@ -123,47 +143,48 @@ namespace Assets.Scripts.UI
             _state.Value = RecordingState.Standby;
         }
 
-        // 切り出せなかったときは録音済みの中身を触らない（直前のフレーズを残す）。
-        private void Capture()
-        {
-            var clip = _capture.ExtractSinceStart();
-            if (clip == null)
-            {
-                return;
-            }
-            _capturedClip.Value = clip;
-        }
-
         public void Play()
         {
-            var clip = _capturedClip.Value;
-            if (clip == null)
+            var phrase = _recordedPhrase.Value;
+            if (phrase == null)
             {
                 return;
             }
-            _playbackSource.clip = clip;
-            _playbackSource.Play();
-            _isPlaybackActive.Value = true;
 
-            if (_playbackWatch != null)
-            {
-                StopCoroutine(_playbackWatch);
-            }
-            _playbackWatch = StartCoroutine(WatchPlaybackEnd());
+            StopPlayback();
+            _isPlaybackActive.Value = true;
+            _playbackRoutine = StartCoroutine(PlayPhrase(phrase));
         }
 
-        private IEnumerator WatchPlaybackEnd()
+        // 録音は MelodyPlayer を通さず自前で鳴らす。通すと転調ループ・権限の受け渡し・
+        // 生徒への送信まで動いてしまい、さらに OnMelodyBegan で録音が録り直しになる。
+        private IEnumerator PlayPhrase(RecordedPhrase phrase)
         {
-            yield return new WaitWhile(() => _playbackSource.isPlaying);
+            var piano = PianoController.Instance;
+            piano.StopAllKeys(true);
+
+            yield return phrase.Replay(piano, _playbackSource);
 
             _isPlaybackActive.Value = false;
-            _playbackWatch = null;
+            _playbackRoutine = null;
+        }
+
+        // 鳴っている途中でもう一度押されたときのために、伴奏と声の両方を降ろす。
+        // コルーチンを止めるだけでは、先に鳴らし始めた声が残って二重に重なる。
+        private void StopPlayback()
+        {
+            if (_playbackRoutine != null)
+            {
+                StopCoroutine(_playbackRoutine);
+                _playbackRoutine = null;
+            }
+            _playbackSource.Stop();
         }
 
         private void OnDestroy()
         {
             _capture.Close();
-            _capturedClip.Dispose();
+            _recordedPhrase.Dispose();
             _state.Dispose();
             _isPlaybackActive.Dispose();
             _onMicAccessFailed.Dispose();

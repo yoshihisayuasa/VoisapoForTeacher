@@ -15,8 +15,6 @@ namespace Assets.Scripts.Infrastructure
         private readonly string _deviceName;
 
         private AudioClip _buffer;
-        private int _startPosition;
-        private double _startTime;
 
         // 切り出しは周ごとに走る。リングバッファ全体（上限秒ぶん）の読み出し先は使い回す。
         private float[] _whole;
@@ -52,25 +50,24 @@ namespace Assets.Scripts.Infrastructure
             _buffer = null;
         }
 
-        /// <summary>これ以降を1フレーズとして切り出す起点にする。</summary>
-        public void MarkStart()
+        /// <summary>これ以降を1フレーズとして切り出す起点を返す。</summary>
+        public CaptureStart MarkStart()
         {
-            _startPosition = Microphone.GetPosition(_deviceName);
-            _startTime = Time.realtimeSinceStartupAsDouble;
+            return new CaptureStart(this, Microphone.GetPosition(_deviceName), Time.realtimeSinceStartupAsDouble);
         }
 
         /// <summary>起点から現在までを切り出す。長さが無ければ null。</summary>
-        public AudioClip ExtractSinceStart()
+        internal AudioClip ExtractSince(int startPosition, double startTime)
         {
             int total = _buffer.samples;
             int end = Microphone.GetPosition(_deviceName);
-            int start = _startPosition;
+            int start = startPosition;
             int length = end - start;
             if (length < 0)
             {
                 length += total;
             }
-            if (Time.realtimeSinceStartupAsDouble - _startTime >= RecordingRules.MaxPhraseSec)
+            if (Time.realtimeSinceStartupAsDouble - startTime >= RecordingRules.MaxPhraseSec)
             {
                 // 上限を超えた分はリングバッファ上で上書き済みなので、直近の上限秒ぶんだけを残す
                 start = end;
