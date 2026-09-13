@@ -9,16 +9,17 @@ namespace Assets.Scripts.UI
     /// </summary>
     public sealed class TeacherVersionPopupUI : MonoBehaviour
     {
-        [SerializeField] private VersionObserver _observer;
+        private static readonly LocalizedMessage Message = new(
+            japanese: "先生のアプリが古いバージョンです。アップデートを依頼してください。",
+            english: "Your teacher's app is out of date. Please ask your teacher to update it.");
 
-        [SerializeField]
-        private string _message = "先生のアプリが古いバージョンです。アップデートを依頼してください。";
+        [SerializeField] private VersionObserver _observer;
 
         private void Start()
         {
             _observer.OnPeerVersionOutdated
                 .Where(isOutdated => isOutdated)
-                .Subscribe(_ => ConfirmModalUI.Show(_message))
+                .Subscribe(_ => ConfirmModalUI.Show(Message.ForCurrentLanguage()))
                 .AddTo(this);
         }
     }

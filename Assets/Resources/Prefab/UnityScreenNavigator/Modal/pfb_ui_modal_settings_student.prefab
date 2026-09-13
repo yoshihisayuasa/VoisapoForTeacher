@@ -396,6 +396,7 @@ GameObject:
   - component: {fileID: 5583185494194739924}
   - component: {fileID: 9186715590010074487}
   - component: {fileID: 8455309016320245572}
+  - component: {fileID: 3940236769183958376}
   m_Layer: 0
   m_Name: PianoZoomLabel
   m_TagString: Untagged
@@ -450,7 +451,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Piano Scale
+  m_text: "\u30D4\u30A2\u30CE\u306E\u5927\u304D\u3055"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
   m_sharedMaterial: {fileID: 1779099136830915230, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
@@ -522,6 +523,20 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &3940236769183958376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1838834395343579622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19d4bd71246d35d4784f52b0f9959852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.LessonRoom.LocalizedText
+  _japanese: "\u30D4\u30A2\u30CE\u306E\u5927\u304D\u3055"
+  _english: Piano Scale
 --- !u!1 &1948803243089379002
 GameObject:
   m_ObjectHideFlags: 0

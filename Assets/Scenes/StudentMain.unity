@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 104758135}
   - component: {fileID: 104758137}
   - component: {fileID: 104758136}
+  - component: {fileID: 104758138}
   m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -154,7 +155,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: -25}
-  m_SizeDelta: {x: 100, y: 30}
+  m_SizeDelta: {x: 120, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &104758136
 MonoBehaviour:
@@ -176,10 +177,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Setting
+  m_text: "\u8A2D\u5B9A"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 39af8d954768e1e45979c40c6bba403b, type: 2}
-  m_sharedMaterial: {fileID: 449121999275897781, guid: 39af8d954768e1e45979c40c6bba403b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
+  m_sharedMaterial: {fileID: 1779099136830915230, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -256,6 +257,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 104758134}
   m_CullTransparentMesh: 1
+--- !u!114 &104758138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 104758134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19d4bd71246d35d4784f52b0f9959852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.LessonRoom.LocalizedText
+  _japanese: "\u8A2D\u5B9A"
+  _english: Setting
 --- !u!1 &281615706
 GameObject:
   m_ObjectHideFlags: 0
@@ -4548,6 +4563,7 @@ GameObject:
   - component: {fileID: 1157437739}
   - component: {fileID: 1157437741}
   - component: {fileID: 1157437740}
+  - component: {fileID: 1157437742}
   m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -4572,7 +4588,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: -25}
-  m_SizeDelta: {x: 90, y: 30}
+  m_SizeDelta: {x: 100, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1157437740
 MonoBehaviour:
@@ -4594,10 +4610,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Help
+  m_text: "\u30D8\u30EB\u30D7"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 39af8d954768e1e45979c40c6bba403b, type: 2}
-  m_sharedMaterial: {fileID: 449121999275897781, guid: 39af8d954768e1e45979c40c6bba403b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
+  m_sharedMaterial: {fileID: 1779099136830915230, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4674,6 +4690,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1157437738}
   m_CullTransparentMesh: 1
+--- !u!114 &1157437742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1157437738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19d4bd71246d35d4784f52b0f9959852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.LessonRoom.LocalizedText
+  _japanese: "\u30D8\u30EB\u30D7"
+  _english: Help
 --- !u!1 &1289402353
 GameObject:
   m_ObjectHideFlags: 0
@@ -5442,7 +5472,6 @@ MonoBehaviour:
   _joinButton: {fileID: 1289402355}
   _buttonLabel: {fileID: 730083652}
   _photonRoomJoiner: {fileID: 1503278405}
-  _roomNotFoundBody: Login failed. Please check the ID.
 --- !u!1 &1731833570
 GameObject:
   m_ObjectHideFlags: 0

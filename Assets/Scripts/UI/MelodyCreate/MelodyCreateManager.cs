@@ -104,7 +104,10 @@ namespace Assets.Scripts.UI.MelodyCreate
 
             if (MelodyManager.Instance.ContainsMelodyWithName(name))
             {
-                ConfirmModalUI.Show($"A melody named \"{name}\" already exists.");
+                var body = new LocalizedMessage(
+                    japanese: $"「{name}」という名前のメロディはすでにあります。",
+                    english: $"A melody named \"{name}\" already exists.");
+                ConfirmModalUI.Show(body.ForCurrentLanguage());
                 return;
             }
 

@@ -12,12 +12,14 @@ namespace Assets.Scripts.UI.LessonRoom
         private const string _loginLabel = "Login";
         private const string _logoutLabel = "Logout";
 
+        private static readonly LocalizedMessage RoomNotFoundBody = new(
+            japanese: "ログインできませんでした。IDを確認してください。",
+            english: "Login failed. Please check the ID.");
+
         [SerializeField] private TMP_InputField _inputField;
         [SerializeField] private Button _joinButton;
         [SerializeField] private TMP_Text _buttonLabel;
         [SerializeField] private PhotonRoomJoiner _photonRoomJoiner;
-
-        [SerializeField] private string _roomNotFoundBody = "Login failed. Please check the ID.";
 
         private bool _isJoined;
         private bool _isBusy = false;
@@ -105,7 +107,7 @@ namespace Assets.Scripts.UI.LessonRoom
         {
             _isBusy = false;
             RefreshButton();
-            ConfirmModalUI.Show(_roomNotFoundBody);
+            ConfirmModalUI.Show(RoomNotFoundBody.ForCurrentLanguage());
         }
 
         private void OnDisconnected()

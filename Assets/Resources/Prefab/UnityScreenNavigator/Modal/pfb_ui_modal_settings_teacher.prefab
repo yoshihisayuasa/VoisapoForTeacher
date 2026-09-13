@@ -260,6 +260,7 @@ GameObject:
   - component: {fileID: 4137069734434746357}
   - component: {fileID: 6871099299231541857}
   - component: {fileID: 299364991310620329}
+  - component: {fileID: 8939186680968127828}
   m_Layer: 0
   m_Name: SoundSourceLabel
   m_TagString: Untagged
@@ -314,7 +315,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Sound Source
+  m_text: "\u4F7F\u7528\u97F3\u6E90"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
   m_sharedMaterial: {fileID: 1779099136830915230, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
@@ -386,6 +387,20 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8939186680968127828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 799688164192691081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19d4bd71246d35d4784f52b0f9959852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.LessonRoom.LocalizedText
+  _japanese: "\u4F7F\u7528\u97F3\u6E90"
+  _english: Sound Source
 --- !u!1 &1055288090449789507
 GameObject:
   m_ObjectHideFlags: 0
@@ -1109,6 +1124,7 @@ GameObject:
   - component: {fileID: 5583185494194739924}
   - component: {fileID: 9186715590010074487}
   - component: {fileID: 8455309016320245572}
+  - component: {fileID: 4813057710401241541}
   m_Layer: 0
   m_Name: PianoZoomLabel
   m_TagString: Untagged
@@ -1163,7 +1179,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Piano Scale
+  m_text: "\u30D4\u30A2\u30CE\u306E\u5927\u304D\u3055"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
   m_sharedMaterial: {fileID: 1779099136830915230, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
@@ -1235,6 +1251,20 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4813057710401241541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1838834395343579622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19d4bd71246d35d4784f52b0f9959852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.LessonRoom.LocalizedText
+  _japanese: "\u30D4\u30A2\u30CE\u306E\u5927\u304D\u3055"
+  _english: Piano Scale
 --- !u!1 &1948803243089379002
 GameObject:
   m_ObjectHideFlags: 0
@@ -1977,6 +2007,7 @@ GameObject:
   - component: {fileID: 7133453655668345851}
   - component: {fileID: 7585803114680776889}
   - component: {fileID: 5228118185618343475}
+  - component: {fileID: 5974363632461936572}
   m_Layer: 0
   m_Name: RecordingDeviceLabel
   m_TagString: Untagged
@@ -2031,7 +2062,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Microphone
+  m_text: "\u9332\u97F3\u30C7\u30D0\u30A4\u30B9"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
   m_sharedMaterial: {fileID: 1779099136830915230, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
@@ -2103,6 +2134,20 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5974363632461936572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3173715272809889410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19d4bd71246d35d4784f52b0f9959852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.LessonRoom.LocalizedText
+  _japanese: "\u9332\u97F3\u30C7\u30D0\u30A4\u30B9"
+  _english: Microphone
 --- !u!1 &3295510329203773638
 GameObject:
   m_ObjectHideFlags: 0

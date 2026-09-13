@@ -19,11 +19,16 @@ namespace Assets.Scripts.UI
 
         // ── 先生専用：再生側の「意図」（トグル選択）と接続相手の有無から実効状態を決める ──
         private bool _teacherIntent = false;
-        private bool _studentConnected = false;
+        private readonly ReactiveProperty<bool> _studentConnected = new(false);
         private readonly Subject<bool> _onIntentChanged = new();
 
         public bool TeacherIntent => _teacherIntent;
         public Observable<bool> OnIntentChanged => _onIntentChanged;
+
+        /// <summary>
+        /// 再生側を選べるか。生徒がいなければ鳴らせるのは先生だけなので、選択そのものが成り立たない。
+        /// </summary>
+        public ReadOnlyReactiveProperty<bool> CanChooseSide => _studentConnected;
 
         /// <summary>
         /// 受信した再生状態をそのまま実効状態へ反映する（生徒ビルドの受信、および内部の再計算から呼ぶ）。
@@ -40,9 +45,24 @@ namespace Assets.Scripts.UI
         }
 
         /// <summary>
-        /// 先生が選んだ再生側（トグル）の意図を設定する。実際に鳴る側は接続相手の有無を加味して決まる。
+        /// 先生が選んだ再生側（トグル）の意図を設定する。生徒がいない間は選べないため、意図は常にオフになる。
         /// </summary>
         public void SetTeacherIntent(bool value)
+        {
+            ApplyTeacherIntent(value && _studentConnected.Value);
+        }
+
+        /// <summary>
+        /// 生徒が接続しているかを反映する。生徒がいなければ先生自身が鳴らす。
+        /// 退室時は意図もオフに戻す。残すと、再入室した瞬間に先生側で鳴る状態から始まってしまう。
+        /// </summary>
+        public void SetStudentConnected(bool connected)
+        {
+            _studentConnected.Value = connected;
+            ApplyTeacherIntent(_teacherIntent && connected);
+        }
+
+        private void ApplyTeacherIntent(bool value)
         {
             if (_teacherIntent != value)
             {
@@ -54,20 +74,11 @@ namespace Assets.Scripts.UI
         }
 
         /// <summary>
-        /// 生徒が接続しているかを反映する。生徒がいなければ先生自身が鳴らす。
-        /// </summary>
-        public void SetStudentConnected(bool connected)
-        {
-            _studentConnected = connected;
-            RecomputeForTeacher();
-        }
-
-        /// <summary>
         /// 生徒がいれば先生の意図に従い、いなければ先生が鳴らす。
         /// </summary>
         private void RecomputeForTeacher()
         {
-            SetState(!_studentConnected || _teacherIntent);
+            SetState(!_studentConnected.Value || _teacherIntent);
         }
     }
 }

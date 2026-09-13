@@ -33,6 +33,10 @@ namespace Assets.Scripts.UI
         /// <summary>
         /// 声とメロディの鍵盤の動きを同時に走らせる。録音区間はメロディパートと一致しているため、
         /// 同時に始めれば最後まで重なる。和音パートは録音に入っていないので飛ばす。
+        ///
+        /// 終わりは声のクリップが鳴り終わるまで待つ。クリップには歌い終わりの遅れを見込んだ余白が
+        /// 付いており、Single のように長さを音符で持たない種別では鍵盤の動きがすぐ終わるため、
+        /// 音符の長さで終えると声がまだ鳴っているのに聴き直しが終わったことになる。
         /// </summary>
         public IEnumerator Replay(PianoController piano, AudioSource source)
         {
@@ -45,6 +49,8 @@ namespace Assets.Scripts.UI
                 yield return new WaitForSeconds(_bpm.SecondPerBeat * note.Beats);
                 piano.StopAndMarkPlayed(note.Key);
             }
+
+            yield return new WaitWhile(() => source.isPlaying);
         }
     }
 }

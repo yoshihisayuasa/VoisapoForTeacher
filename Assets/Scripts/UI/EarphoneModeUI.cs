@@ -6,56 +6,42 @@ namespace Assets.Scripts.UI
 {
     /// <summary>
     /// イヤホンモードボタンUI制御
-    /// 他のクラスにボタンのオンオフ状態を通知する
+    /// 状態は <see cref="EarphoneModeManager"/> が保持し、ここはそれを駆動・表示するだけ。
     /// 生徒が入室していない間はグレーアウトして操作不可にする
     /// </summary>
     public sealed class EarphoneModeUI : MonoBehaviour
     {
         [SerializeField] private Button _earphoneModeButton;
         [SerializeField] private Image _targetImage;                // 色を変える対象（必ず割り当てる）
-        [SerializeField] private ConnectionStatusObserver _observer;
-
-        private bool _isEarphoneModeOn = false;
-        private bool _isParticipantPresent = false;
 
         void Start()
         {
-            if (EarphoneModeManager.Instance != null)
-            {
-                _isEarphoneModeOn = EarphoneModeManager.Instance.EarphoneMode;
-            }
             _earphoneModeButton.onClick.AddListener(OnButtonClicked);
 
-            _observer.OnParticipantJoined.Subscribe(_ => SetParticipantPresent(true)).AddTo(this);
-            _observer.OnParticipantLeft.Subscribe(_ => SetParticipantPresent(false)).AddTo(this);
-            _observer.OnSelfDisconnected.Subscribe(_ => SetParticipantPresent(false)).AddTo(this);
+            EarphoneModeManager.Instance.OnModeChanged
+                .Subscribe(_ => UpdateVisual())
+                .AddTo(this);
 
-            SetParticipantPresent(false);
+            EarphoneModeManager.Instance.CanToggle
+                .Subscribe(SetInteractable)
+                .AddTo(this);
         }
 
-        // ボタンがクリックされたときにオンオフを切り替えて通知
         public void OnButtonClicked()
         {
-            _isEarphoneModeOn = !_isEarphoneModeOn;
-            // Infra へ伝達（UI -> Infra のみ）
-            if (EarphoneModeManager.Instance != null)
-            {
-                EarphoneModeManager.Instance.SetMode(_isEarphoneModeOn);
-            }
-            UpdateVisual();
+            EarphoneModeManager.Instance.Toggle();
         }
 
-        private void SetParticipantPresent(bool isPresent)
+        private void SetInteractable(bool canToggle)
         {
-            _isParticipantPresent = isPresent;
-            _earphoneModeButton.interactable = isPresent;
+            _earphoneModeButton.interactable = canToggle;
             UpdateVisual();
         }
 
         private void UpdateVisual()
         {
-            _targetImage.color = _isParticipantPresent
-                ? AppColors.ActiveOrWhite(_isEarphoneModeOn)
+            _targetImage.color = _earphoneModeButton.interactable
+                ? AppColors.ActiveOrWhite(EarphoneModeManager.Instance.EarphoneMode)
                 : AppColors.Disabled;
         }
     }

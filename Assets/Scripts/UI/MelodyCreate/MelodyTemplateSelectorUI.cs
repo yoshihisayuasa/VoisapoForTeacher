@@ -7,6 +7,10 @@ namespace Assets.Scripts.UI.MelodyCreate
 {
     public sealed class MelodyTemplateSelectorUI : MonoBehaviour
     {
+        private static readonly LocalizedMessage CaptionLabel = new(
+            japanese: "テンプレート",
+            english: "Template");
+
         [SerializeField] private TMP_Dropdown _dropdown;
 
         private void Start()
@@ -27,7 +31,7 @@ namespace Assets.Scripts.UI.MelodyCreate
             _dropdown.AddOptions(options);
             _dropdown.value = 0;
             _dropdown.RefreshShownValue();
-            _dropdown.captionText.text = "Template";
+            _dropdown.captionText.text = CaptionLabel.ForCurrentLanguage();
         }
 
         private void OnValueChanged(int index)
@@ -39,7 +43,7 @@ namespace Assets.Scripts.UI.MelodyCreate
         public void ResetSelection()
         {
             _dropdown.value = 0; _dropdown.RefreshShownValue();
-            _dropdown.captionText.text = "Template";
+            _dropdown.captionText.text = CaptionLabel.ForCurrentLanguage();
         }
     }
 }

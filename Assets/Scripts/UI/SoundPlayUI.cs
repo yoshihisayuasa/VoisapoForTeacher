@@ -11,6 +11,7 @@ namespace Assets.Scripts.UI
     /// 音再生側トグルの UI と入力（トグル・Shift・キーリリース）を担当する先生専用クラス。
     /// 実際の状態は <see cref="SoundPlayManager"/> が保持し、ここはそれを駆動・表示するだけ。
     /// 生徒ビルドには配置しない（生徒は受信状態のみで駆動する）。
+    /// 生徒が入室していない間はグレーアウトして操作不可にする。
     /// </summary>
     [RequireComponent(typeof(Toggle))]
     public sealed class SoundPlayUI : MonoBehaviour
@@ -37,6 +38,16 @@ namespace Assets.Scripts.UI
                 .AddTo(this);
 
             SyncToggle(SoundPlayManager.Instance.TeacherIntent);
+
+            SoundPlayManager.Instance.CanChooseSide
+                .Subscribe(SetInteractable)
+                .AddTo(this);
+        }
+
+        private void SetInteractable(bool canChoose)
+        {
+            _toggle.interactable = canChoose;
+            UpdateVisual();
         }
 
         private void RequestState(bool value)
@@ -56,7 +67,14 @@ namespace Assets.Scripts.UI
             {
                 _toggle.isOn = isOn;
             }
-            _graphic.color = AppColors.ActiveOrWhite(isOn);
+            UpdateVisual();
+        }
+
+        private void UpdateVisual()
+        {
+            _graphic.color = _toggle.interactable
+                ? AppColors.ActiveOrWhite(_toggle.isOn)
+                : AppColors.Disabled;
         }
 
         private void Update()

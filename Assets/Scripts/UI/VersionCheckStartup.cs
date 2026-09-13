@@ -26,8 +26,12 @@ namespace Assets.Scripts.UI
 
         private void ShowUpdatePopup(AppVersion latestVersion, string downloadUrl)
         {
+            var body = new LocalizedMessage(
+                japanese: $"バージョン {latestVersion} にアップデートしてください。",
+                english: $"Please update to version {latestVersion}.");
+
             ConfirmModalUI.Show(
-                $"Version {latestVersion} is available",
+                body.ForCurrentLanguage(),
                 onConfirm: () => Application.OpenURL(downloadUrl),
                 onCancel: () => { });
         }

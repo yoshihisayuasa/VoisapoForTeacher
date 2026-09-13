@@ -14,6 +14,10 @@ namespace Assets.Scripts.UI
         private static readonly Color RecordingDimColor = new(0.55f, 0.15f, 0.15f);
         private const float BlinkIntervalSec = 0.5f;
 
+        private static readonly LocalizedMessage MicAccessFailedBody = new(
+            japanese: "マイクへのアクセスが許可されていません。OSのプライバシー設定を確認してください。",
+            english: "Microphone access is not allowed. Please check your OS privacy settings.");
+
         [SerializeField] private Button _playButton;
         [SerializeField] private Button _recordToggleButton;
         [SerializeField] private GameObject _disabledGuide;
@@ -96,8 +100,7 @@ namespace Assets.Scripts.UI
 
         private void OnMicAccessFailed()
         {
-            ConfirmModalUI.Show(
-                "Microphone access is not allowed. Please check your OS privacy settings.");
+            ConfirmModalUI.Show(MicAccessFailedBody.ForCurrentLanguage());
         }
     }
 }

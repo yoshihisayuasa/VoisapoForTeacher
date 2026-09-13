@@ -66,6 +66,23 @@ namespace Assets.Scripts.UI.LessonRoom
             PhotonNetwork.LeaveRoom();
         }
 
+        /// <summary>
+        /// バックグラウンドに入ったら自分から切断する。
+        /// 接続を残すと、アプリが止まって音が鳴らないのに先生側では在室に見え続け、
+        /// iOS ではサーバーのタイムアウト待ちで双方の表示が遅れる。即座に切ることで
+        /// 先生側には退室、生徒側には復帰時に切断を、確実に表示させる。
+        /// LeaveRoom はサーバーとの往復が要り停止前に終わらないため Disconnect を使う。
+        /// </summary>
+        private void OnApplicationPause(bool pauseStatus)
+        {
+            if (!pauseStatus)
+            {
+                return;
+            }
+
+            PhotonNetwork.Disconnect();
+        }
+
         public override void OnConnectedToMaster()
         {
             // LeaveRoom後のマスター再接続でも本コールバックは発火するため、

@@ -2118,10 +2118,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.ParticipantStatusUI
   _statusText: {fileID: 450142769}
   _observer: {fileID: 506816638}
-  _waitingText: Waiting for the student
-  _loggedInText: The student has logged in
-  _loggedOutText: The  student has logged out
-  _selfDisconnectedText: You have logged out
+  _waitingTextJapanese: "\u76F8\u624B\u306E\u53C2\u52A0\u3092\u5F85\u3063\u3066\u3044\u307E\u3059"
+  _waitingTextEnglish: Waiting for the student
+  _loggedInTextJapanese: "\u76F8\u624B\u304C\u30ED\u30B0\u30A4\u30F3\u3057\u307E\u3057\u305F"
+  _loggedInTextEnglish: The student has logged in
+  _loggedOutTextJapanese: "\u76F8\u624B\u304C\u30ED\u30B0\u30A2\u30A6\u30C8\u3057\u307E\u3057\u305F"
+  _loggedOutTextEnglish: The  student has logged out
+  _selfDisconnectedTextJapanese: "\u30ED\u30B0\u30A2\u30A6\u30C8\u3057\u307E\u3057\u305F"
+  _selfDisconnectedTextEnglish: You have logged out
   _loggedInColor: {r: 0, g: 0, b: 1, a: 1}
 --- !u!1 &398015904
 GameObject:
@@ -2484,8 +2488,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: New Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
+  m_sharedMaterial: {fileID: 1779099136830915230, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2930,6 +2934,7 @@ GameObject:
   - component: {fileID: 520700385}
   - component: {fileID: 520700387}
   - component: {fileID: 520700386}
+  - component: {fileID: 520700388}
   m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -2976,10 +2981,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Teacher Side '
+  m_text: "\u5148\u751F\u5074\u3067\u518D\u751F"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 39af8d954768e1e45979c40c6bba403b, type: 2}
-  m_sharedMaterial: {fileID: 449121999275897781, guid: 39af8d954768e1e45979c40c6bba403b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
+  m_sharedMaterial: {fileID: 1779099136830915230, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3056,6 +3061,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 520700384}
   m_CullTransparentMesh: 1
+--- !u!114 &520700388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 520700384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19d4bd71246d35d4784f52b0f9959852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.LessonRoom.LocalizedText
+  _japanese: "\u5148\u751F\u5074\u3067\u518D\u751F"
+  _english: 'Teacher Side '
 --- !u!1 &568207489
 GameObject:
   m_ObjectHideFlags: 0
@@ -3549,6 +3568,7 @@ GameObject:
   - component: {fileID: 635445885}
   - component: {fileID: 635445887}
   - component: {fileID: 635445886}
+  - component: {fileID: 635445888}
   m_Layer: 0
   m_Name: IconText
   m_TagString: Untagged
@@ -3595,10 +3615,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Record & Play
+  m_text: "\u9332\u97F3\uFF06\u518D\u751F"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 39af8d954768e1e45979c40c6bba403b, type: 2}
-  m_sharedMaterial: {fileID: 449121999275897781, guid: 39af8d954768e1e45979c40c6bba403b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
+  m_sharedMaterial: {fileID: 1779099136830915230, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3675,6 +3695,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 635445884}
   m_CullTransparentMesh: 1
+--- !u!114 &635445888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 635445884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19d4bd71246d35d4784f52b0f9959852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.LessonRoom.LocalizedText
+  _japanese: "\u9332\u97F3\uFF06\u518D\u751F"
+  _english: Record & Play
 --- !u!1 &655111460
 GameObject:
   m_ObjectHideFlags: 0
@@ -4615,6 +4649,7 @@ GameObject:
   - component: {fileID: 864489662}
   - component: {fileID: 864489664}
   - component: {fileID: 864489663}
+  - component: {fileID: 864489665}
   m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -4661,10 +4696,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Volume
+  m_text: "\u97F3\u91CF"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 39af8d954768e1e45979c40c6bba403b, type: 2}
-  m_sharedMaterial: {fileID: 449121999275897781, guid: 39af8d954768e1e45979c40c6bba403b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
+  m_sharedMaterial: {fileID: 1779099136830915230, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4741,6 +4776,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 864489661}
   m_CullTransparentMesh: 1
+--- !u!114 &864489665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 864489661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19d4bd71246d35d4784f52b0f9959852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.LessonRoom.LocalizedText
+  _japanese: "\u97F3\u91CF"
+  _english: Volume
 --- !u!1 &895249744
 GameObject:
   m_ObjectHideFlags: 0
@@ -4901,6 +4950,7 @@ GameObject:
   - component: {fileID: 918160136}
   - component: {fileID: 918160138}
   - component: {fileID: 918160137}
+  - component: {fileID: 918160139}
   m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -4947,10 +4997,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Stop
+  m_text: "\u505C\u6B62"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 39af8d954768e1e45979c40c6bba403b, type: 2}
-  m_sharedMaterial: {fileID: 449121999275897781, guid: 39af8d954768e1e45979c40c6bba403b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
+  m_sharedMaterial: {fileID: 1779099136830915230, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5027,6 +5077,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 918160135}
   m_CullTransparentMesh: 1
+--- !u!114 &918160139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 918160135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19d4bd71246d35d4784f52b0f9959852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.LessonRoom.LocalizedText
+  _japanese: "\u505C\u6B62"
+  _english: Stop
 --- !u!1 &935428091
 GameObject:
   m_ObjectHideFlags: 0
@@ -5119,7 +5183,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _earphoneModeButton: {fileID: 935428097}
   _targetImage: {fileID: 935428093}
-  _observer: {fileID: 506816638}
 --- !u!114 &935428097
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6656,6 +6719,7 @@ GameObject:
   - component: {fileID: 1341503016}
   - component: {fileID: 1341503018}
   - component: {fileID: 1341503017}
+  - component: {fileID: 1341503019}
   m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -6702,10 +6766,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Exit
+  m_text: "\u9000\u5BA4"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 39af8d954768e1e45979c40c6bba403b, type: 2}
-  m_sharedMaterial: {fileID: 449121999275897781, guid: 39af8d954768e1e45979c40c6bba403b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
+  m_sharedMaterial: {fileID: 1779099136830915230, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -6782,6 +6846,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1341503015}
   m_CullTransparentMesh: 1
+--- !u!114 &1341503019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1341503015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19d4bd71246d35d4784f52b0f9959852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.LessonRoom.LocalizedText
+  _japanese: "\u9000\u5BA4"
+  _english: Exit
 --- !u!1 &1347447425
 GameObject:
   m_ObjectHideFlags: 0
@@ -7827,8 +7905,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: New Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
+  m_sharedMaterial: {fileID: 1779099136830915230, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -8005,6 +8083,7 @@ GameObject:
   - component: {fileID: 1551121443}
   - component: {fileID: 1551121445}
   - component: {fileID: 1551121444}
+  - component: {fileID: 1551121446}
   m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -8051,10 +8130,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Help
+  m_text: "\u30D8\u30EB\u30D7"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 39af8d954768e1e45979c40c6bba403b, type: 2}
-  m_sharedMaterial: {fileID: 449121999275897781, guid: 39af8d954768e1e45979c40c6bba403b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
+  m_sharedMaterial: {fileID: 1779099136830915230, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -8131,6 +8210,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1551121442}
   m_CullTransparentMesh: 1
+--- !u!114 &1551121446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1551121442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19d4bd71246d35d4784f52b0f9959852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.LessonRoom.LocalizedText
+  _japanese: "\u30D8\u30EB\u30D7"
+  _english: Help
 --- !u!1 &1557550721
 GameObject:
   m_ObjectHideFlags: 0
@@ -8306,6 +8399,7 @@ GameObject:
   - component: {fileID: 1589422044}
   - component: {fileID: 1589422046}
   - component: {fileID: 1589422045}
+  - component: {fileID: 1589422047}
   m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -8352,10 +8446,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Listen key
+  m_text: "\u30AD\u30FC\u78BA\u8A8D"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 39af8d954768e1e45979c40c6bba403b, type: 2}
-  m_sharedMaterial: {fileID: 449121999275897781, guid: 39af8d954768e1e45979c40c6bba403b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
+  m_sharedMaterial: {fileID: 1779099136830915230, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -8432,6 +8526,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1589422043}
   m_CullTransparentMesh: 1
+--- !u!114 &1589422047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1589422043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19d4bd71246d35d4784f52b0f9959852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.LessonRoom.LocalizedText
+  _japanese: "\u30AD\u30FC\u78BA\u8A8D"
+  _english: Listen Key
 --- !u!1 &1599419321
 GameObject:
   m_ObjectHideFlags: 0
@@ -8797,7 +8905,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -8851,6 +8959,7 @@ GameObject:
   - component: {fileID: 1651182631}
   - component: {fileID: 1651182633}
   - component: {fileID: 1651182632}
+  - component: {fileID: 1651182634}
   m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -8897,10 +9006,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Auto Key Change
+  m_text: "\u81EA\u52D5\u30AD\u30FC\u5909\u66F4"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 39af8d954768e1e45979c40c6bba403b, type: 2}
-  m_sharedMaterial: {fileID: 449121999275897781, guid: 39af8d954768e1e45979c40c6bba403b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
+  m_sharedMaterial: {fileID: 1779099136830915230, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -8977,6 +9086,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1651182630}
   m_CullTransparentMesh: 1
+--- !u!114 &1651182634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1651182630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19d4bd71246d35d4784f52b0f9959852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.LessonRoom.LocalizedText
+  _japanese: "\u81EA\u52D5\u30AD\u30FC\u5909\u66F4"
+  _english: Auto Key Change
 --- !u!1 &1695996755
 GameObject:
   m_ObjectHideFlags: 0
@@ -10185,6 +10308,7 @@ GameObject:
   - component: {fileID: 1945573931}
   - component: {fileID: 1945573933}
   - component: {fileID: 1945573932}
+  - component: {fileID: 1945573934}
   m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -10231,10 +10355,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Create Melody
+  m_text: "\u30E1\u30ED\u30C7\u30A3\u30FC\u4F5C\u6210"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 39af8d954768e1e45979c40c6bba403b, type: 2}
-  m_sharedMaterial: {fileID: 449121999275897781, guid: 39af8d954768e1e45979c40c6bba403b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
+  m_sharedMaterial: {fileID: 1779099136830915230, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -10311,6 +10435,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1945573930}
   m_CullTransparentMesh: 1
+--- !u!114 &1945573934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1945573930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19d4bd71246d35d4784f52b0f9959852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.LessonRoom.LocalizedText
+  _japanese: "\u30E1\u30ED\u30C7\u30A3\u30FC\u4F5C\u6210"
+  _english: Create Melody
 --- !u!1 &1950537204
 GameObject:
   m_ObjectHideFlags: 0
@@ -10581,6 +10719,7 @@ GameObject:
   - component: {fileID: 2045183678}
   - component: {fileID: 2045183680}
   - component: {fileID: 2045183679}
+  - component: {fileID: 2045183681}
   m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -10627,10 +10766,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Setting
+  m_text: "\u8A2D\u5B9A"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 39af8d954768e1e45979c40c6bba403b, type: 2}
-  m_sharedMaterial: {fileID: 449121999275897781, guid: 39af8d954768e1e45979c40c6bba403b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
+  m_sharedMaterial: {fileID: 1779099136830915230, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -10707,6 +10846,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2045183677}
   m_CullTransparentMesh: 1
+--- !u!114 &2045183681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2045183677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19d4bd71246d35d4784f52b0f9959852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.LessonRoom.LocalizedText
+  _japanese: "\u8A2D\u5B9A"
+  _english: Setting
 --- !u!1 &2101695090
 GameObject:
   m_ObjectHideFlags: 0

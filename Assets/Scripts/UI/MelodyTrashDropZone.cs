@@ -10,6 +10,14 @@ namespace Assets.Scripts.UI
 {
     public class MelodyTrashDropZone : MonoBehaviour, IDropHandler
     {
+        private static readonly LocalizedMessage ProtectedMelodyBody = new(
+            japanese: "このメロディは削除できません。",
+            english: "You cannot delete this melody.");
+
+        private static readonly LocalizedMessage DeleteConfirmBody = new(
+            japanese: "このメロディを削除しますか？",
+            english: "May I delete this melody?");
+
         [SerializeField] private PremiumLockIcon _lockIcon;
 
         private MelodyListBuilder _builder;
@@ -36,7 +44,7 @@ namespace Assets.Scripts.UI
             if (item.Entry.IsProtected)
             {
                 item.ResetToDragStart();
-                ConfirmModalUI.Show("You cannot delete this melody.");
+                ConfirmModalUI.Show(ProtectedMelodyBody.ForCurrentLanguage());
                 return;
             }
 
@@ -50,7 +58,7 @@ namespace Assets.Scripts.UI
         private void ConfirmDelete(DraggableMelodyButton item)
         {
             ConfirmModalUI.Show(
-                "May I delete this melody?",
+                DeleteConfirmBody.ForCurrentLanguage(),
                 onConfirm: () => _builder.HandleTrashDrop(item),
                 onCancel: () => item.ResetToDragStart());
         }

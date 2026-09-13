@@ -176,10 +176,15 @@ namespace Assets.Scripts.UI
             // 理由2: Photon では自分の入室時、既存メンバーについて OnPlayerEnteredRoom が発火しない
             //        （生徒が先に入室して待っているケースはイベントでは検知できない）。
             SoundPlayManager.Instance.SetStudentConnected(_gateway.HasConnectedStudent);
+            EarphoneModeManager.Instance.SetStudentConnected(_gateway.HasConnectedStudent);
 
             // 生徒ありに切り替えると、実効状態が先生の意図（トグル）に戻る。
             _gateway.StudentPresenceChanged
                 .Subscribe(connected => SoundPlayManager.Instance.SetStudentConnected(connected))
+                .AddTo(this);
+
+            _gateway.StudentPresenceChanged
+                .Subscribe(connected => EarphoneModeManager.Instance.SetStudentConnected(connected))
                 .AddTo(this);
 
             // 再生権限（バトン）を持つ生徒が切断すると委譲が永遠に完了しないため、先生が自己回収する。
