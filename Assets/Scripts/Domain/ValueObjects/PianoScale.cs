@@ -7,11 +7,11 @@ namespace Assets.Scripts.Domain.ValueObjects
     /// </summary>
     public sealed class PianoScale : ValueObject<PianoScale>
     {
-        public const float Min = 0.8f;
-        public const float Max = 3.0f;
+        public const float Min = 0.5f;
+        public const float Max = 2.0f;
 
         /// <summary>保存された倍率が無いときに使う既定の倍率。</summary>
-        public const float Default = 2.0f;
+        public const float Default = 1.0f;
 
         public float Value { get; }
 
