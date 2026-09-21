@@ -18,6 +18,6 @@ namespace Assets.Scripts.Domain.StaticValues
         /// 遅延は回線しだいで揺れるので長めに取る（伸びても末尾に余白が入るだけ）。
         /// 内訳：Zoom 0.5 ＋ マイク入力 0.1 ＋ Bluetooth スピーカー 0.3 ＋ 余裕 0.1。
         /// </summary>
-        public const float CaptureTailSec = 1.0f;
+        public const float CaptureTailSec = 5.0f;
     }
 }
