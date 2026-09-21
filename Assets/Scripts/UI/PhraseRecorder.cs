@@ -38,6 +38,7 @@ namespace Assets.Scripts.UI
         public Observable<bool> IsPlaybackActive => _isPlaybackActive;
 
         private Coroutine _playbackRoutine;
+        private Coroutine _sessionEndRoutine;
 
         public void SelectDevice(string deviceName)
         {
@@ -102,6 +103,7 @@ namespace Assets.Scripts.UI
             {
                 return;
             }
+            CancelSessionEnd();
             _phraseStart = _capture.MarkStart();
             _state.Value = RecordingState.Recording;
         }
@@ -133,14 +135,42 @@ namespace Assets.Scripts.UI
             _recordedPhrase.Value = new RecordedPhrase(clip, phrase, BPMManager.Instance.Current);
         }
 
-        /// <summary>再生が終わった。録音は待機に戻す。</summary>
+        /// <summary>
+        /// 再生が終わった。録音は待機に戻す。
+        /// 弾き終わりのあとも歌い終わりを待って録り続けているため、その間は録音中のまま見せる。
+        /// </summary>
         private void EndSession()
         {
             if (_state.Value == RecordingState.Disabled)
             {
                 return;
             }
+            CancelSessionEnd();
+            _sessionEndRoutine = StartCoroutine(StandbyAfterTail());
+        }
+
+        private IEnumerator StandbyAfterTail()
+        {
+            yield return new WaitForSeconds(RecordingRules.CaptureTailSec);
+
+            _sessionEndRoutine = null;
+            // 待っている間に録音を切られていたら、待機に戻さない
+            if (_state.Value == RecordingState.Disabled)
+            {
+                yield break;
+            }
             _state.Value = RecordingState.Standby;
+        }
+
+        // 待っている間に次の再生が始まったら、そちらの録音中を待機で上書きしないよう取り消す。
+        private void CancelSessionEnd()
+        {
+            if (_sessionEndRoutine == null)
+            {
+                return;
+            }
+            StopCoroutine(_sessionEndRoutine);
+            _sessionEndRoutine = null;
         }
 
         public void Play()
