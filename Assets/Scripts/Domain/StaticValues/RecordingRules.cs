@@ -16,7 +16,8 @@ namespace Assets.Scripts.Domain.StaticValues
         /// 生徒の声は Zoom を経由して遅れて先生のスピーカーから出るため、
         /// 弾き終わりで即座に切ると歌い終わりが欠ける。
         /// 遅延は回線しだいで揺れるので長めに取る（伸びても末尾に余白が入るだけ）。
+        /// 内訳：Zoom 0.5 ＋ マイク入力 0.1 ＋ Bluetooth スピーカー 0.3 ＋ 余裕 0.1。
         /// </summary>
-        public const float CaptureTailSec = 0.3f;
+        public const float CaptureTailSec = 1.0f;
     }
 }
