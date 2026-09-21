@@ -103,6 +103,7 @@ namespace Assets.Scripts.UI
             {
                 return;
             }
+            // 前の再生の「待機へ戻す」予約が残っていると、この録音中が待機で上書きされるため取り消す
             CancelSessionEnd();
             _phraseStart = _capture.MarkStart();
             _state.Value = RecordingState.Recording;
@@ -141,10 +142,6 @@ namespace Assets.Scripts.UI
         /// </summary>
         private void EndSession()
         {
-            if (_state.Value == RecordingState.Disabled)
-            {
-                return;
-            }
             CancelSessionEnd();
             _sessionEndRoutine = StartCoroutine(StandbyAfterTail());
         }
@@ -162,7 +159,7 @@ namespace Assets.Scripts.UI
             _state.Value = RecordingState.Standby;
         }
 
-        // 待っている間に次の再生が始まったら、そちらの録音中を待機で上書きしないよう取り消す。
+        // 予約中の「待機へ戻す」を取り消す。
         private void CancelSessionEnd()
         {
             if (_sessionEndRoutine == null)
