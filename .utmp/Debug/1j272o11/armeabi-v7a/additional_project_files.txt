@@ -1,1 +1,0 @@
-C:\Users\yuasa\source\repos\VoisapoForTeacher\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\FramePacing\UnitySwappyWrapper.h
