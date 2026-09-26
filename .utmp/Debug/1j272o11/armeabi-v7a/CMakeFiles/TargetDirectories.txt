@@ -1,0 +1,5 @@
+C:/Users/yuasa/source/repos/VoisapoForTeacher/.utmp/Debug/1j272o11/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/yuasa/source/repos/VoisapoForTeacher/.utmp/Debug/1j272o11/armeabi-v7a/CMakeFiles/rebuild_cache.dir
+C:/Users/yuasa/source/repos/VoisapoForTeacher/.utmp/Debug/1j272o11/armeabi-v7a/FramePacing/CMakeFiles/swappywrapper.dir
+C:/Users/yuasa/source/repos/VoisapoForTeacher/.utmp/Debug/1j272o11/armeabi-v7a/FramePacing/CMakeFiles/edit_cache.dir
+C:/Users/yuasa/source/repos/VoisapoForTeacher/.utmp/Debug/1j272o11/armeabi-v7a/FramePacing/CMakeFiles/rebuild_cache.dir
