@@ -21,8 +21,8 @@ namespace Assets.Scripts.UI
 
         void Awake()
         {
-            _upGate.Bind(new FeatureGate(PremiumFeature.AutoKeyChange), OnUpClicked);
-            _downGate.Bind(new FeatureGate(PremiumFeature.AutoKeyChange), OnDownClicked);
+            _upGate.Bind(new FeatureGate(), OnUpClicked);
+            _downGate.Bind(new FeatureGate(), OnDownClicked);
             AutoKeyChangeManager.Instance.State.Subscribe(HandleStateChanged).AddTo(this);
         }
 

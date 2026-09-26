@@ -116,7 +116,7 @@ namespace Assets.Scripts.Domain.Entities
                 onAllowed();
                 return;
             }
-            entitlement.Gate(PremiumFeature.PremiumMelodySelect, onAllowed, onDenied);
+            entitlement.Gate(onAllowed, onDenied);
         }
 
         private (Interval min, Interval max) CalculateIntervalRange()

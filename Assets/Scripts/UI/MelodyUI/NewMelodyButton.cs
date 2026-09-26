@@ -1,5 +1,4 @@
 using Assets.Scripts.Domain.Modules;
-using Assets.Scripts.Domain.ValueObjects;
 using UnityEngine;
 
 namespace Assets.Scripts.UI.MelodyUI
@@ -14,7 +13,7 @@ namespace Assets.Scripts.UI.MelodyUI
 
         private void Start()
         {
-            _gate.Bind(new FeatureGate(PremiumFeature.MelodyCreate), OnClicked);
+            _gate.Bind(new FeatureGate(), OnClicked);
         }
 
         private void OnClicked()

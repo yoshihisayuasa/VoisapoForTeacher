@@ -29,11 +29,10 @@ namespace Assets.Scripts.Domain.ValueObjects
         private bool IsActive => DateTimeOffset.UtcNow < _expiresAt;
 
         /// <summary>
-        /// feature が今使えるなら onAllowed、使えないなら onDenied を呼ぶ。
-        /// <see cref="PremiumFeature"/> に挙げた機能はすべてプレミアム限定であり、
-        /// 期限内かどうかだけが可否を決める。
+        /// プレミアム機能が今使えるなら onAllowed、使えないなら onDenied を呼ぶ。
+        /// プレミアム機能はすべて、期限内かどうかだけで可否が決まる。
         /// </summary>
-        public void Gate(PremiumFeature feature, Action onAllowed, Action onDenied)
+        public void Gate(Action onAllowed, Action onDenied)
         {
             if (IsActive)
             {

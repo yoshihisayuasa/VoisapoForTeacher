@@ -1,6 +1,5 @@
 
 using Assets.Scripts.Domain.Modules;
-using Assets.Scripts.Domain.ValueObjects;
 using Assets.Scripts.UI.MelodyUI;
 using Assets.Scripts.UI.Modal;
 using UnityEngine;
@@ -30,8 +29,8 @@ namespace Assets.Scripts.UI
         private void Start()
         {
             // ゴミ箱はボタンではないので PremiumGateButton は付けられない。
-            // 鍵の表示だけ PremiumLockIcon に任せ、ドロップ確定のゲートと同じ MelodyDelete で判定する。
-            _lockIcon.Bind(new FeatureGate(PremiumFeature.MelodyDelete));
+            // 鍵の表示だけ PremiumLockIcon に任せ、ドロップ確定と同じ課金状態で判定する。
+            _lockIcon.Bind(new FeatureGate());
         }
 
         public void OnDrop(PointerEventData eventData)
@@ -50,7 +49,6 @@ namespace Assets.Scripts.UI
 
             // 削除はプレミアム限定。ドロップ確定のここでゲートする。
             EntitlementManager.Instance.Current.CurrentValue.Gate(
-                PremiumFeature.MelodyDelete,
                 onAllowed: () => ConfirmDelete(item),
                 onDenied: () => DenyDelete(item));
         }
