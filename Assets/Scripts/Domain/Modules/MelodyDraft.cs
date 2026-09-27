@@ -37,9 +37,9 @@ namespace Assets.Scripts.Domain.Modules
         /// <summary>
         /// 使用済みステップ数。コード延長分の矢印と、メロディ音符（延長の矢印含む）を合算する。
         /// </summary>
-        public int UsedSteps => (_chordBeats - 1) + _melodyNotes.Sum(n => n.Beats);
+        private int UsedSteps => (_chordBeats - 1) + _melodyNotes.Sum(n => n.Beats);
 
-        public bool CanAddMelodyNote => UsedSteps < MaxMelodySteps;
+        private bool CanAddMelodyNote => UsedSteps < MaxMelodySteps;
 
         private PianoNote _root;
         public PianoNote Root => _root;
@@ -148,15 +148,12 @@ namespace Assets.Scripts.Domain.Modules
 
         private void ShrinkLastMelodyNote()
         {
-            if (_melodyNotes.Count == 0) return;
             var last = _melodyNotes[^1];
-            if (last.Beats <= 1) return;
             _melodyNotes[^1] = last.WithBeats(last.Beats - 1);
         }
 
         private void RemoveLastMelodyNote()
         {
-            if (_melodyNotes.Count == 0) return;
             _melodyNotes.RemoveAt(_melodyNotes.Count - 1);
             _root = _melodyNotes.Count > 0 ? _melodyNotes[0].Key : null;
         }

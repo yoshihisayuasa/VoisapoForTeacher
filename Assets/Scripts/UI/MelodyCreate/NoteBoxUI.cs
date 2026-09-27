@@ -12,11 +12,9 @@ namespace Assets.Scripts.UI.MelodyCreate
         [SerializeField] private TMP_Text _label;
 
         public DraftNote Entry { get; private set; }
-        public bool IsChordBox { get; private set; }
 
-        public void Initialize(bool isChordBox)
+        public void Initialize()
         {
-            IsChordBox = isChordBox;
             Entry = null;
             RefreshDisplay();
         }

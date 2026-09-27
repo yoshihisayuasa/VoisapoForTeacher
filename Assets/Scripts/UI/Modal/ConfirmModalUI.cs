@@ -68,7 +68,7 @@ namespace Assets.Scripts.UI.Modal
         /// <summary>
         /// 表示内容と押下時の振る舞いを設定する。onCancel が null のときは Cancel ボタンを隠す。
         /// </summary>
-        public void Setup(string body, Action onConfirm, Action onCancel = null)
+        private void Setup(string body, Action onConfirm, Action onCancel = null)
         {
             _bodyText.text = body;
             _onConfirm = onConfirm;

@@ -5,7 +5,7 @@ namespace Assets.Scripts.Domain.ValueObjects
     public sealed class VersionCheckResult : ValueObject<VersionCheckResult>
     {
         public bool HasUpdate { get; }
-        public bool IsError { get; }
+        private bool IsError { get; }
         public AppVersion LatestVersion { get; }
         public string DownloadUrl { get; }
 

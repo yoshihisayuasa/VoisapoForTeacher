@@ -58,7 +58,7 @@ namespace Assets.Scripts.UI.MelodyCreate
         {
             for (int i = 0; i < Chord.Length; i++)
             {
-                var box = CreateBox(_chordContainer, isChordBox: true);
+                var box = CreateBox(_chordContainer);
                 _chordBoxes.Add(box);
             }
         }
@@ -67,7 +67,7 @@ namespace Assets.Scripts.UI.MelodyCreate
         {
             for (int i = 0; i < MelodyBoxCount; i++)
             {
-                var box = CreateBox(_noteContainer, isChordBox: false);
+                var box = CreateBox(_noteContainer);
                 _melodyBoxes.Add(box);
             }
         }
@@ -140,11 +140,11 @@ namespace Assets.Scripts.UI.MelodyCreate
 
         // ── ヘルパー ─────────────────────────────────────────────────────
 
-        private NoteBoxUI CreateBox(Transform parent, bool isChordBox)
+        private NoteBoxUI CreateBox(Transform parent)
         {
             var obj = Instantiate(_boxPrefab, parent);
             var box = obj.GetComponent<NoteBoxUI>();
-            box.Initialize(isChordBox);
+            box.Initialize();
             return box;
         }
     }

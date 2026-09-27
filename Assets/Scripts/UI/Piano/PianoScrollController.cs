@@ -121,8 +121,8 @@ public sealed class PianoScrollController : MonoBehaviour, IPointerDownHandler, 
         UpdateViewRect();
     }
 
-    public void ScrollOctaveUp() => ScrollByKeys(12);
-    public void ScrollOctaveDown() => ScrollByKeys(-12);
+    private void ScrollOctaveUp() => ScrollByKeys(12);
+    private void ScrollOctaveDown() => ScrollByKeys(-12);
 
     private void ScrollByKeys(int keyCount)
     {

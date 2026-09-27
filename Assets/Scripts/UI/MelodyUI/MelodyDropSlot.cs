@@ -15,8 +15,6 @@ namespace Assets.Scripts.UI
             _slotIndex = slotIndex;
         }
 
-        public int SlotIndex => _slotIndex;
-
         /// <summary>
         ///ドラッグ中のオブジェクトがこのスロット上でドロップされた瞬間に呼ばれる。
         ///Unity の IDropHandler によって、EventSystem が自動で呼び出します。
