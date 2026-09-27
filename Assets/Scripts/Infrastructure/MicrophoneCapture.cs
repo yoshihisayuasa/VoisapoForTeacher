@@ -1,3 +1,4 @@
+using Assets.Scripts.Domain.Modules;
 using Assets.Scripts.Domain.StaticValues;
 using UnityEngine;
 
@@ -56,7 +57,7 @@ namespace Assets.Scripts.Infrastructure
             return new CaptureStart(this, Microphone.GetPosition(_deviceName), Time.realtimeSinceStartupAsDouble);
         }
 
-        /// <summary>起点から現在までを切り出す。長さが無ければ null。</summary>
+        /// <summary>起点から現在までを、頭の無音を落として切り出す。長さが無ければ null。</summary>
         internal AudioClip ExtractSince(int startPosition, double startTime)
         {
             int total = _buffer.samples;
@@ -99,8 +100,20 @@ namespace Assets.Scripts.Infrastructure
                 }
             }
 
+            return CreateClipFromOnset(samples, channels);
+        }
+
+        // 頭の無音（スピーカーとマイクの遅れぶん）を落とし、音の出だしから始まるクリップにする。
+        // 聴き直しでは声と鍵盤を同時に走らせるため、無音が残ると鍵盤が声より先に進む。
+        private AudioClip CreateClipFromOnset(float[] samples, int channels)
+        {
+            int onset = SoundOnset.FindFrame(samples, channels, _buffer.frequency);
+            int length = samples.Length / channels - onset;
+            var trimmed = new float[length * channels];
+            System.Array.Copy(samples, onset * channels, trimmed, 0, trimmed.Length);
+
             var clip = AudioClip.Create(_buffer.name, length, channels, _buffer.frequency, false);
-            clip.SetData(samples, 0);
+            clip.SetData(trimmed, 0);
             return clip;
         }
     }
