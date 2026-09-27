@@ -13,6 +13,10 @@
 # Android ビルド時に作られる一時ファイル
 /.utmp/
 
+# Unity がクラッシュ時に書き出す未保存シーンのバックアップ
+/[Aa]ssets/_Recovery/
+/[Aa]ssets/_Recovery.meta
+
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
 /[Mm]emoryCaptures/
