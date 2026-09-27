@@ -17,6 +17,10 @@
 /[Aa]ssets/_Recovery/
 /[Aa]ssets/_Recovery.meta
 
+# Microsoft GDK パッケージが自動生成する設定（中身は未設定値のみで、消しても作り直される）
+/[Aa]ssets/[Rr]esources/GDKEditionAutoGen/
+/[Aa]ssets/[Rr]esources/GDKEditionAutoGen.meta
+
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
 /[Mm]emoryCaptures/
