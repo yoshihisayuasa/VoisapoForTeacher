@@ -33,6 +33,13 @@ namespace Assets.Scripts.Domain.Modules
         private const float HandoverGapSeconds = 0.3f;
 #endif
 
+        // BeginSession で始めたセッションを、まだ EndSession で閉じていないか（交代待ちの間も含む）。
+        // セッションの後の最初の EndSession だけが終了を記録し、2回目以降は何もしない。
+        //   再生が最後まで鳴り終わった → 再生側の終了処理の EndSession が記録する
+        //   再生中（交代待ち中も含む）に停止した → 停止処理の EndSession が記録する
+        //   鳴り終わった後に停止・再生開始した → 停止処理の EndSession は何もしない
+        // 最後のケースで記録すると、本当の終了時刻が停止操作の時刻で上書きされ、
+        // 間が空いているのに交代待ちが長くなる。
         private bool _isSessionOpen;
         private bool _isCurrentSoundSide;
 
