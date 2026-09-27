@@ -16,7 +16,7 @@ namespace Assets.Scripts.Domain.StaticValues
 
         public static void Initialize(IReadOnlyList<Melody> templates)
         {
-            _templates = templates ?? Array.Empty<Melody>();
+            _templates = templates;
         }
     }
 }
