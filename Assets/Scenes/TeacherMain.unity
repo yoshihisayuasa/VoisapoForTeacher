@@ -1180,7 +1180,7 @@ GameObject:
   - component: {fileID: 211419270}
   - component: {fileID: 211419269}
   m_Layer: 0
-  m_Name: OcterveDown
+  m_Name: OctaveDown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5937,7 +5937,7 @@ GameObject:
   - component: {fileID: 1147503453}
   - component: {fileID: 1147503452}
   m_Layer: 0
-  m_Name: OcterveUp
+  m_Name: OctaveUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14317,7 +14317,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9008306001989273675, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -75.40027
+      value: -75.40039
       objectReference: {fileID: 0}
     - target: {fileID: 9008306001989273675, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_AnchoredPosition.y

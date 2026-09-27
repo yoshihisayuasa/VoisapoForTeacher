@@ -84,14 +84,6 @@ namespace Assets.Scripts.Domain.Modules
 
         public bool HasAnyInput => _chordEntries.Count > 0;
 
-        private void SetChordNotes(IEnumerable<PianoNote> notes)
-        {
-            _chordEntries.Clear();
-            // 表示順は BuildChordSlots が決めるため、このソートは表示用ではない。
-            // 取り消し（DeleteLast）が低い音から消えるよう、保持順を音高降順にしている。
-            _chordEntries.AddRange(notes.OrderByDescending(n => n.Index));
-        }
-
         private void ExtendChord()
         {
             _chordBeats++;
@@ -99,7 +91,7 @@ namespace Assets.Scripts.Domain.Modules
 
         private void ShrinkChord()
         {
-            _chordBeats = Math.Max(1, _chordBeats - 1);
+            _chordBeats--;
         }
 
         private void AddChordEntry(PianoNote key)
@@ -173,7 +165,11 @@ namespace Assets.Scripts.Domain.Modules
         {
             ClearAll();
 
-            SetChordNotes(template.Chord.Intervals.Select(interval => root + interval));
+            // 取り消したとき、表示の一番下（最も低い音）から消えるよう、音高の高い順に入力する。
+            foreach (var interval in template.Chord.Intervals.OrderByDescending(i => i.Value))
+            {
+                AddChordEntry(root + interval);
+            }
             for (int b = 1; b < template.Chord.Beats; b++)
             {
                 ExtendChord();
@@ -228,9 +224,7 @@ namespace Assets.Scripts.Domain.Modules
                 throw new InvalidOperationException("メロディに音符がありません");
             }
 
-            // 保存されるインターバル順（＝再生・表示順）を従来どおり音高降順に保つ。
             var chordIntervals = _chordEntries
-                .OrderByDescending(n => n.Index)
                 .Select(n => new Interval(n.Index - _root.Index))
                 .ToList();
 
