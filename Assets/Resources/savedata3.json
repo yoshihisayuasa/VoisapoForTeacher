@@ -295,7 +295,7 @@
             ]
         },
         {
-            "Name": "[↓]Octave Rpeat",
+            "Name": "[↓]Octave Repeat",
             "Position": 8,
             "Kind": "Standard",
             "IsProtected": false,
@@ -592,7 +592,7 @@
             ]
         },
         {
-            "Name": " 5tone",
+            "Name": "5tone",
             "Position": 13,
             "Kind": "Standard",
             "IsProtected": false,

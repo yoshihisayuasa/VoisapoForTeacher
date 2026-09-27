@@ -43,7 +43,12 @@ namespace Assets.Scripts.Infrastructure
             var type = typeof(LegacyScaleDataWrapper);
             for (int i = 0; i < legacy.ScaleName.Count; i++)
             {
-                string name = legacy.ScaleName[i].Replace("～", "~").Replace("*", "");
+                // 旧フォーマットの表記をシードに揃える。揃わないと組み込みとの重複を弾けず、同じメロディが2つ並ぶ。
+                string name = legacy.ScaleName[i]
+                    .Replace("～", "~")
+                    .Replace("*", "")
+                    .Replace("Octave Rpeat", "Octave Repeat")
+                    .Replace(" 5tone", "5tone");
                 if (string.IsNullOrEmpty(name)) continue;
 
                 int position = legacy.ScalePos[i];
