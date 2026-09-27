@@ -206,10 +206,10 @@ namespace Assets.Scripts.Domain.Modules
             else ExtendLastMelodyNote();
         }
 
-        public void ShrinkLastStep()
+        // メロディが1音以上あるときだけ DeleteLast から呼ばれる。
+        private void ShrinkLastStep()
         {
-            if (_melodyNotes.Count == 0) ShrinkChord();
-            else if (_melodyNotes[^1].Beats > 1) ShrinkLastMelodyNote();
+            if (_melodyNotes[^1].Beats > 1) ShrinkLastMelodyNote();
             else RemoveLastMelodyNote();
         }
 
