@@ -70,7 +70,7 @@ namespace Assets.Scripts.Infrastructure
                     notes.Add(new Note(n.Interval, n.Beats));
                 }
             }
-            return new Melody(data.Name, ParseKind(data.Kind), chord, notes, data.IsProtected, data.IsPremiumOnly);
+            return Melody.Create(data.Name, ParseKind(data.Kind), chord, notes, data.IsProtected, data.IsPremiumOnly);
         }
 
         // 種別はJSONに文字列で持つ（intだとenumの並び替えでデータが壊れるため）。

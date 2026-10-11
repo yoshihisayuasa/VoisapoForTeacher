@@ -13,12 +13,12 @@ namespace Assets.Scripts.UI.MelodyUI
         public void RefreshHighlight(PianoController piano, Melody melody)
         {
             var rootKey = piano.SelectedKey;
-            if (rootKey == null || !melody.IsPlayableAt(rootKey, piano.KeyCount))
+            if (rootKey == null || !melody.CanHighlightAt(rootKey, piano.KeyCount))
             {
                 piano.ClearHighlight();
                 return;
             }
-            piano.SetHighlight(melody.KeyRangeAt(rootKey));
+            piano.SetHighlight(melody.HighlightRangeAt(rootKey));
         }
 
         public void EnsureVisible(PianoController piano, Melody melody)
@@ -28,7 +28,7 @@ namespace Assets.Scripts.UI.MelodyUI
             {
                 return;
             }
-            piano.EnsureRangeVisible(melody.KeyRangeAt(rootKey));
+            piano.EnsureRangeVisible(melody.VisibleRangeAt(rootKey, piano.KeyCount));
         }
     }
 }

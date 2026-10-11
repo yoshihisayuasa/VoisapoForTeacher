@@ -1,3 +1,4 @@
+using Assets.Scripts.Domain.Modules;
 using Assets.Scripts.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -91,9 +92,25 @@ namespace Assets.Scripts.Domain.Entities
         public IReadOnlyList<Note> Notes { get; }
         private readonly Interval _minInterval;
         private readonly Interval _maxInterval;
+        private readonly IHighlightRule _highlightRule;
 
 
-        public Melody(string name, MelodyKind kind, Chord chord, List<Note> notes, bool isProtected, bool isPremiumOnly)
+        /// <summary>
+        /// 再生種別に合ったメロディを組み立てる。保存データが持つのは種別だけなので、
+        /// 種別から目印の出し方への対応づけはここ1箇所で行う（生成は必ずここを通す）。
+        /// </summary>
+        public static Melody Create(string name, MelodyKind kind, Chord chord, List<Note> notes, bool isProtected, bool isPremiumOnly)
+        {
+            IHighlightRule highlightRule = kind switch
+            {
+                MelodyKind.Chord or MelodyKind.ChordWithMetronome => new OctaveHighlightRule(),
+                _ => new RangeHighlightRule(),
+            };
+            return new Melody(name, kind, chord, notes, isProtected, isPremiumOnly, highlightRule);
+        }
+
+        private Melody(string name, MelodyKind kind, Chord chord, List<Note> notes, bool isProtected, bool isPremiumOnly,
+                       IHighlightRule highlightRule)
         {
             Name = name;
             Kind = kind;
@@ -101,6 +118,7 @@ namespace Assets.Scripts.Domain.Entities
             Notes = notes;
             IsProtected = isProtected;
             IsPremiumOnly = isPremiumOnly;
+            _highlightRule = highlightRule;
             (_minInterval, _maxInterval) = CalculateIntervalRange();
         }
 
@@ -131,7 +149,7 @@ namespace Assets.Scripts.Domain.Entities
         /// <summary>
         /// 根音を与えたとき、このメロディが使う鍵盤範囲（音域）を返す。
         /// </summary>
-        public PianoKeyRange KeyRangeAt(PianoNote rootKey)
+        private PianoKeyRange KeyRangeAt(PianoNote rootKey)
         {
             return new PianoKeyRange(rootKey + _minInterval, rootKey + _maxInterval);
         }
@@ -142,6 +160,33 @@ namespace Assets.Scripts.Domain.Entities
         public bool IsPlayableAt(PianoNote rootKey, int keyCount)
         {
             return KeyRangeAt(rootKey).IsWithinKeyboard(keyCount);
+        }
+
+        /// <summary>
+        /// 根音を与えたとき、鍵盤上で目印にする範囲（下端と上端）を返す。
+        /// </summary>
+        public PianoKeyRange HighlightRangeAt(PianoNote rootKey)
+        {
+            return new PianoKeyRange(rootKey + _minInterval, rootKey + _highlightRule.Top(_minInterval, _maxInterval));
+        }
+
+        /// <summary>
+        /// 根音を rootKey にしたとき、目印を keyCount 鍵の鍵盤に表示できるか。
+        /// 演奏できない位置では出さない。演奏はできても、目印の上端（1オクターブ上）が
+        /// 鍵盤からはみ出す位置でも出さない。
+        /// </summary>
+        public bool CanHighlightAt(PianoNote rootKey, int keyCount)
+        {
+            return IsPlayableAt(rootKey, keyCount) && HighlightRangeAt(rootKey).IsWithinKeyboard(keyCount);
+        }
+
+        /// <summary>
+        /// 根音を与えたとき、画面内に収めておきたい鍵盤範囲を返す。
+        /// 目印を出せる位置では目印の範囲（目印の鍵盤が画面外に隠れないように）、出せない位置では音域。
+        /// </summary>
+        public PianoKeyRange VisibleRangeAt(PianoNote rootKey, int keyCount)
+        {
+            return CanHighlightAt(rootKey, keyCount) ? HighlightRangeAt(rootKey) : KeyRangeAt(rootKey);
         }
         /// <summary>
         /// 根音を与えたとき、和音が使う鍵盤と拍数を返す。
