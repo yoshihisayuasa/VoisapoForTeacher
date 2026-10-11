@@ -4,7 +4,7 @@ using UnityEditor;
 namespace Assets.Scripts.Editor
 {
     /// <summary>
-    /// エディタ実行時の課金状態（EditorFakePurchaseGateway）の切り替え。
+    /// エディタ実行時の課金状態（FakePurchaseGateway）の切り替え。
     /// 再生中に切り替えた場合は、次の照会（起動 or 復元）から反映される。
     /// </summary>
     public static class FakeEntitlementMenu
@@ -15,31 +15,31 @@ namespace Assets.Scripts.Editor
 
         [MenuItem(NotPurchasedPath)]
         private static void SetNotPurchased()
-            => EditorFakePurchaseGateway.State = EditorFakePurchaseGateway.FakeState.NotPurchased;
+            => FakePurchaseGateway.State = FakePurchaseGateway.FakeState.NotPurchased;
 
         [MenuItem(PurchasedPath)]
         private static void SetPurchased()
-            => EditorFakePurchaseGateway.State = EditorFakePurchaseGateway.FakeState.Purchased;
+            => FakePurchaseGateway.State = FakePurchaseGateway.FakeState.Purchased;
 
         [MenuItem(ExpiredPath)]
         private static void SetExpired()
-            => EditorFakePurchaseGateway.State = EditorFakePurchaseGateway.FakeState.Expired;
+            => FakePurchaseGateway.State = FakePurchaseGateway.FakeState.Expired;
 
         [MenuItem(NotPurchasedPath, isValidateFunction: true)]
         private static bool ValidateNotPurchased()
-            => Check(NotPurchasedPath, EditorFakePurchaseGateway.FakeState.NotPurchased);
+            => Check(NotPurchasedPath, FakePurchaseGateway.FakeState.NotPurchased);
 
         [MenuItem(PurchasedPath, isValidateFunction: true)]
         private static bool ValidatePurchased()
-            => Check(PurchasedPath, EditorFakePurchaseGateway.FakeState.Purchased);
+            => Check(PurchasedPath, FakePurchaseGateway.FakeState.Purchased);
 
         [MenuItem(ExpiredPath, isValidateFunction: true)]
         private static bool ValidateExpired()
-            => Check(ExpiredPath, EditorFakePurchaseGateway.FakeState.Expired);
+            => Check(ExpiredPath, FakePurchaseGateway.FakeState.Expired);
 
-        private static bool Check(string menuPath, EditorFakePurchaseGateway.FakeState state)
+        private static bool Check(string menuPath, FakePurchaseGateway.FakeState state)
         {
-            Menu.SetChecked(menuPath, EditorFakePurchaseGateway.State == state);
+            Menu.SetChecked(menuPath, FakePurchaseGateway.State == state);
             return true;
         }
     }

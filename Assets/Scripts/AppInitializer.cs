@@ -47,5 +47,9 @@ public sealed class AppInitializer : MonoBehaviour
             return;
         }
         await EntitlementManager.Instance.InitializeAsync(PurchaseGatewayFactory.Create());
+
+#if DEVELOPMENT_BUILD && !UNITY_EDITOR
+        FakeEntitlementOverlay.Spawn();
+#endif
     }
 }

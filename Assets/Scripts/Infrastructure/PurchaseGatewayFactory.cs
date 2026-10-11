@@ -10,8 +10,8 @@ namespace Assets.Scripts.Infrastructure
     {
         public static IPurchaseGateway Create()
         {
-#if UNITY_EDITOR
-            return new EditorFakePurchaseGateway();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            return new FakePurchaseGateway();
 #elif UNITY_STANDALONE_OSX
             return new MacAppStorePurchaseGateway();
 #elif UNITY_WSA

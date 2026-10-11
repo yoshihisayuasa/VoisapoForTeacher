@@ -1,17 +1,18 @@
-#if UNITY_EDITOR
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
 using Assets.Scripts.Domain.Modules;
 using Assets.Scripts.Domain.ValueObjects;
 using Cysharp.Threading.Tasks;
 using System;
-using UnityEditor;
+using UnityEngine;
 
 namespace Assets.Scripts.Infrastructure
 {
     /// <summary>
-    /// 開発用のフェイク。未購入 / 購入済み / 期限切れ を切り替えて動作を確認する。
-    /// 切り替えは Tools > Voisapo > 課金状態 メニューから行い、EditorPrefs に保存する。
+    /// 開発用のフェイク（エディタと Development Build で使う）。未購入 / 購入済み / 期限切れ を切り替えて動作を確認する。
+    /// 切り替えはエディタでは Tools > Voisapo > 課金状態 メニュー、Development Build では画面右下のデバッグ表示から行い、
+    /// PlayerPrefs に保存する。
     /// </summary>
-    public sealed class EditorFakePurchaseGateway : IPurchaseGateway
+    public sealed class FakePurchaseGateway : IPurchaseGateway
     {
         public enum FakeState
         {
@@ -27,8 +28,12 @@ namespace Assets.Scripts.Infrastructure
 
         public static FakeState State
         {
-            get => (FakeState)EditorPrefs.GetInt(StateKey, (int)FakeState.NotPurchased);
-            set => EditorPrefs.SetInt(StateKey, (int)value);
+            get => (FakeState)PlayerPrefs.GetInt(StateKey, (int)FakeState.NotPurchased);
+            set
+            {
+                PlayerPrefs.SetInt(StateKey, (int)value);
+                PlayerPrefs.Save();
+            }
         }
 
         public string ManagementUrl => "https://example.com/fake-subscription-management";
