@@ -1,4 +1,3 @@
-using System;
 using Assets.Scripts.Domain.StaticValues;
 using Assets.Scripts.Domain.ValueObjects;
 using Assets.Scripts.Infrastructure;
@@ -11,6 +10,11 @@ using UnityEngine;
 
 namespace Assets.Scripts.UI.LessonRoom
 {
+    /// <summary>
+    /// 先生が発行を求めたときだけ Photon に接続してルームを作る。
+    /// Photon の同時接続数（CCU）はルーム数ではなく接続数で数えられるため、
+    /// 対面レッスン（ID を発行しない）ではそもそも接続しない。
+    /// </summary>
     public sealed class PhotonRoomCreator : MonoBehaviourPunCallbacks
     {
         private const string _gameVersion = "0.1";
@@ -33,35 +37,55 @@ namespace Assets.Scripts.UI.LessonRoom
                 { VersionObserver.VersionKey, CurrentAppVersion.Value.ToString() }
             });
 
+            // レッスンから戻ってきたときは前回の接続を手放し、同時接続数の枠を空ける。
             if (PhotonNetwork.IsConnected)
             {
                 PhotonNetwork.Disconnect();
-            }
-            else
-            {
-                PhotonNetwork.ConnectUsingSettings();
             }
         }
 
         private void OnDestroy()
         {
+            // 発行が終わる前に Start された場合、接続だけが残って同時接続数の枠を使い続けてしまう。
+            // ルームに入れていない接続はここで手放し、対面レッスンとして始めさせる。
+            if (!PhotonNetwork.InRoom)
+            {
+                PhotonNetwork.Disconnect();
+            }
+
             _onRoomCreated.Dispose();
             _onConnectionError.Dispose();
         }
 
+        /// <summary>
+        /// ルームIDの発行を求める。結果は OnRoomCreated か OnConnectionError で通知する。
+        /// 発行済みのときは今のルームを捨てて新しいIDで作り直す（再発行）。
+        /// 失敗時の再試行は自動では行わず、もう一度これを呼んでもらう
+        /// （勝手に再接続すると、対面で始めた先生が接続枠を使い続けてしまうため）。
+        /// </summary>
+        public void Issue()
+        {
+            // 再発行。ルームを出るとマスターサーバーへ戻り、OnConnectedToMaster で新しいルームを作る。
+            if (PhotonNetwork.InRoom)
+            {
+                PhotonNetwork.LeaveRoom();
+                return;
+            }
+
+            // 接続中・切断中に呼ばれた場合、Photon はこの要求を断るだけで何も起きない。
+            // 接続中なら進行中の発行がそのまま続き、切断中ならもう一度押してもらう。
+            PhotonNetwork.ConnectUsingSettings();
+        }
+
         public override void OnDisconnected(DisconnectCause cause)
         {
+            // Start で前回の接続を手放した結果。エラーではない。
             if (cause == DisconnectCause.DisconnectByClientLogic)
             {
-                PhotonNetwork.ConnectUsingSettings();
                 return;
             }
 
             _onConnectionError.OnNext(cause.ToString());
-
-            Observable.Timer(TimeSpan.FromSeconds(3))
-                .Subscribe(_ => PhotonNetwork.ConnectUsingSettings())
-                .AddTo(this);
         }
 
         public override void OnConnectedToMaster()

@@ -2440,8 +2440,9 @@ GameObject:
   - component: {fileID: 450142768}
   - component: {fileID: 450142770}
   - component: {fileID: 450142769}
+  - component: {fileID: 450142771}
   m_Layer: 0
-  m_Name: RoomIDText
+  m_Name: ParticipantStatusText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2486,7 +2487,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
   m_sharedMaterial: {fileID: 1779099136830915230, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
@@ -2566,6 +2567,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 450142767}
   m_CullTransparentMesh: 1
+--- !u!114 &450142771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 450142767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cabd090dbe0da504994e80f7d9b5ab96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.OnlineLessonOnly
 --- !u!1 &469903759
 GameObject:
   m_ObjectHideFlags: 0
@@ -7971,8 +7984,9 @@ GameObject:
   - component: {fileID: 1530421181}
   - component: {fileID: 1530421183}
   - component: {fileID: 1530421182}
+  - component: {fileID: 1530421184}
   m_Layer: 0
-  m_Name: ParticipantStatusText
+  m_Name: RoomIDText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8017,7 +8031,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
   m_sharedMaterial: {fileID: 1779099136830915230, guid: f70c4e430d45bdb42941ac408e5c93d3, type: 2}
@@ -8097,6 +8111,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1530421180}
   m_CullTransparentMesh: 1
+--- !u!114 &1530421184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1530421180}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cabd090dbe0da504994e80f7d9b5ab96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.OnlineLessonOnly
 --- !u!1 &1549675438
 GameObject:
   m_ObjectHideFlags: 0
@@ -14317,7 +14343,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9008306001989273675, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -75.40039
+      value: 754
       objectReference: {fileID: 0}
     - target: {fileID: 9008306001989273675, guid: 07406441a45b1e34a8e2a496a12d60c5, type: 3}
       propertyPath: m_AnchoredPosition.y
