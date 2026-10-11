@@ -7,7 +7,7 @@ namespace Assets.Scripts.UI
     /// <summary>
     /// イヤホンモードボタンUI制御
     /// 状態は <see cref="EarphoneModeManager"/> が保持し、ここはそれを駆動・表示するだけ。
-    /// 生徒が入室していない間はグレーアウトして操作不可にする
+    /// 生徒が入室する前から押せる。対面レッスンでは OnlineLessonOnly でボタンごと非表示にする。
     /// </summary>
     public sealed class EarphoneModeUI : MonoBehaviour
     {
@@ -22,9 +22,7 @@ namespace Assets.Scripts.UI
                 .Subscribe(_ => UpdateVisual())
                 .AddTo(this);
 
-            EarphoneModeManager.Instance.CanToggle
-                .Subscribe(SetInteractable)
-                .AddTo(this);
+            UpdateVisual();
         }
 
         public void OnButtonClicked()
@@ -32,17 +30,9 @@ namespace Assets.Scripts.UI
             EarphoneModeManager.Instance.Toggle();
         }
 
-        private void SetInteractable(bool canToggle)
-        {
-            _earphoneModeButton.interactable = canToggle;
-            UpdateVisual();
-        }
-
         private void UpdateVisual()
         {
-            _targetImage.color = _earphoneModeButton.interactable
-                ? AppColors.ActiveOrWhite(EarphoneModeManager.Instance.EarphoneMode)
-                : AppColors.Disabled;
+            _targetImage.color = AppColors.ActiveOrWhite(EarphoneModeManager.Instance.EarphoneMode);
         }
     }
 }

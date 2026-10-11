@@ -20,5 +20,14 @@ namespace Assets.Scripts.UI
             }
         }
 
+        /// <summary>ルームIDを発行している（＝オンラインレッスン）とき、対象を非表示にする。</summary>
+        public static void HideIfIssued(GameObject target)
+        {
+            if (Current != null)
+            {
+                target.SetActive(false);
+            }
+        }
+
     }
 }
