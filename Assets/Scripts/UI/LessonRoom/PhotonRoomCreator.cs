@@ -2,6 +2,7 @@ using Assets.Scripts.Domain.StaticValues;
 using Assets.Scripts.Domain.ValueObjects;
 using Assets.Scripts.Infrastructure;
 using Assets.Scripts.UI;
+using Cysharp.Threading.Tasks;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
@@ -20,6 +21,8 @@ namespace Assets.Scripts.UI.LessonRoom
         private const string _gameVersion = "0.1";
 
         private RoomId _pendingRoomId;
+
+        private UniTaskCompletionSource _abandonment;
 
         private readonly Subject<RoomId> _onRoomCreated = new();
         public Observable<RoomId> OnRoomCreated => _onRoomCreated;
@@ -46,8 +49,8 @@ namespace Assets.Scripts.UI.LessonRoom
 
         private void OnDestroy()
         {
-            // 発行が終わる前に Start された場合、接続だけが残って同時接続数の枠を使い続けてしまう。
-            // ルームに入れていない接続はここで手放し、対面レッスンとして始めさせる。
+            // 発行が終わる前に画面を離れた場合、接続だけが残って同時接続数の枠を使い続けてしまう。
+            // ルームに入れていない接続はここで手放す。
             if (!PhotonNetwork.InRoom)
             {
                 PhotonNetwork.Disconnect();
@@ -77,9 +80,33 @@ namespace Assets.Scripts.UI.LessonRoom
             PhotonNetwork.ConnectUsingSettings();
         }
 
+        /// <summary>
+        /// 発行済みのルームごと接続を手放し、切断が終わるまで待つ。ID を発行したあとで対面レッスンを選んだとき、
+        /// ルームに入ったまま同時接続数の枠を使い続けないようにするため。
+        /// 切断は非同期で、待たずにシーンを移ると切断の通知がレッスン画面に届き
+        /// 「接続が切れました」と出てしまうので、終わってから移ってもらう。
+        /// </summary>
+        public UniTask AbandonAsync()
+        {
+            var state = PhotonNetwork.NetworkClientState;
+            if (state == ClientState.PeerCreated || state == ClientState.Disconnected)
+            {
+                return UniTask.CompletedTask;
+            }
+
+            _abandonment = new UniTaskCompletionSource();
+
+            // 前回のレッスンから戻ってきたときの切断がまだ終わっていなければ、Photon はこの要求を断る。
+            // その場合も、進行中の切断が終われば OnDisconnected が呼ばれる。
+            PhotonNetwork.Disconnect();
+            return _abandonment.Task;
+        }
+
         public override void OnDisconnected(DisconnectCause cause)
         {
-            // Start で前回の接続を手放した結果。エラーではない。
+            _abandonment?.TrySetResult();
+
+            // Start や AbandonAsync で接続を手放した結果。エラーではない。
             if (cause == DisconnectCause.DisconnectByClientLogic)
             {
                 return;

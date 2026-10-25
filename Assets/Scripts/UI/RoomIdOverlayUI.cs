@@ -9,8 +9,7 @@ namespace Assets.Scripts.UI
 
         private void Start()
         {
-            if (RoomIdHolder.Current == null) return;
-            _roomIdText.text = "Room ID : " + RoomIdHolder.Current.Value;
+            LessonModeHolder.ShowRoomId(_roomIdText);
         }
     }
 }
