@@ -27,6 +27,15 @@ namespace Assets.Scripts.UI
         {
         }
 
+        public void RestrictInPersonOnly(UnavailableFeature feature)
+        {
+            feature.Disable();
+        }
+
+        public void RestrictOnlineOnly(UnavailableFeature feature)
+        {
+        }
+
         public void ShowRoomId(TMP_Text text)
         {
             text.text = _roomIdLabel + _roomId.Value;

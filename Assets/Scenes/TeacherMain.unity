@@ -356,9 +356,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 35852281}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1071f6ca4c7dbbf4eba0a9bd3ab1c021, type: 3}
+  m_Script: {fileID: 11500000, guid: c5100dd0b046d3e40a7f86d2e0a6c036, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.InPersonLessonOnly
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.InPersonLessonFeature
 --- !u!1 &46728757
 GameObject:
   m_ObjectHideFlags: 0
@@ -5429,9 +5429,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 935428091}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cabd090dbe0da504994e80f7d9b5ab96, type: 3}
+  m_Script: {fileID: 11500000, guid: 8914e371006df064e98362f0d9611c77, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.OnlineLessonOnly
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.OnlineLessonFeature
 --- !u!1 &963622474
 GameObject:
   m_ObjectHideFlags: 0
@@ -9290,9 +9290,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1637814614}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cabd090dbe0da504994e80f7d9b5ab96, type: 3}
+  m_Script: {fileID: 11500000, guid: 8914e371006df064e98362f0d9611c77, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.OnlineLessonOnly
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.UI.OnlineLessonFeature
 --- !u!1 &1651182630
 GameObject:
   m_ObjectHideFlags: 0

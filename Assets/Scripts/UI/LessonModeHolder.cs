@@ -17,6 +17,10 @@ namespace Assets.Scripts.UI
 
         public static void HideOnlineOnly(GameObject target) => _current.HideOnlineOnly(target);
 
+        public static void RestrictInPersonOnly(UnavailableFeature feature) => _current.RestrictInPersonOnly(feature);
+
+        public static void RestrictOnlineOnly(UnavailableFeature feature) => _current.RestrictOnlineOnly(feature);
+
         public static void ShowRoomId(TMP_Text text) => _current.ShowRoomId(text);
     }
 }

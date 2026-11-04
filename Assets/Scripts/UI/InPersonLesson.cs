@@ -17,6 +17,15 @@ namespace Assets.Scripts.UI
             target.SetActive(false);
         }
 
+        public void RestrictInPersonOnly(UnavailableFeature feature)
+        {
+        }
+
+        public void RestrictOnlineOnly(UnavailableFeature feature)
+        {
+            feature.Disable();
+        }
+
         public void ShowRoomId(TMP_Text text)
         {
         }
