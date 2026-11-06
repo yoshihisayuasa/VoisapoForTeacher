@@ -8,16 +8,7 @@ namespace Assets.Scripts.Domain.ValueObjects
 
         public AppVersion(string versionString)
         {
-            _version = Parse(versionString);
-        }
-
-        private static Version Parse(string versionString)
-        {
-            if (!Version.TryParse(versionString, out var parsed))
-            {
-                throw new ArgumentException($"無効なバージョン形式: {versionString}");
-            }
-            return parsed;
+            _version = Version.Parse(versionString);
         }
 
         public static bool TryCreate(string versionString, out AppVersion result)
