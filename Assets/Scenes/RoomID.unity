@@ -1274,7 +1274,7 @@ MonoBehaviour:
   _roomIdText: {fileID: 763316623}
   _issueButton: {fileID: 1010472379}
   _inPersonStartButton: {fileID: 818188297}
-  _onlineStartButton: {fileID: 0}
+  _onlineStartButton: {fileID: 502467307}
   _photonRoomCreator: {fileID: 1111180440}
 --- !u!1 &1292922266
 GameObject:
