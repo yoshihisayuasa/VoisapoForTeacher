@@ -61,7 +61,7 @@ public sealed class BPMUI : MonoBehaviour
 
     private void RefreshBpmText()
     {
-        _bpmText.text = BPMManager.Instance.Value.ToString();
+        _bpmText.text = BPMManager.Instance.Current.ToString();
     }
 
     private void StartBlink()

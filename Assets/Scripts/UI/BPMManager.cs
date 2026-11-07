@@ -22,14 +22,14 @@ namespace Assets.Scripts.UI
         public BPM Current => _bpm;
 
 
-        public void Increment(int step = 10)
+        public void Increment()
         {
-            _bpm = _bpm.Increment(step);
+            _bpm = _bpm.Increment();
             _bpmChanged.OnNext(_bpm.Value);
         }
-        public void Decrement(int step = 10)
+        public void Decrement()
         {
-            _bpm = _bpm.Decrement(step);
+            _bpm = _bpm.Decrement();
             _bpmChanged.OnNext(_bpm.Value);
         }
 
