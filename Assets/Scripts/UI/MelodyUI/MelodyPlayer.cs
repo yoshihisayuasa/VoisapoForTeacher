@@ -391,13 +391,13 @@ namespace Assets.Scripts.UI.MelodyUI
                 return;
             }
 
-            if (!current.IsOppositeOf(previous))
+            if (!current.TryGetDirectionSwapStep(previous, out var swapStep))
             {
                 return;
             }
 
             var piano = PianoController.Instance;
-            var transposed = _playingRoot + current.DirectionSwapStep();
+            var transposed = _playingRoot + swapStep;
 
             if (!_currentMelody.IsPlayableAt(transposed, piano.KeyCount))
             {
