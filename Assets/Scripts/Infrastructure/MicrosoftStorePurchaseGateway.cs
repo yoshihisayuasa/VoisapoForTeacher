@@ -39,11 +39,11 @@ namespace Assets.Scripts.Infrastructure
             catch (Exception ex)
             {
                 Debug.LogWarning($"[Entitlement] ストア照会に失敗: {ex.Message}");
-                return EntitlementResult.Unavailable();
+                return EntitlementResult.Unavailable;
             }
 #else
             await UniTask.CompletedTask;
-            return EntitlementResult.Unavailable();
+            return EntitlementResult.Unavailable;
 #endif
         }
 
@@ -59,12 +59,12 @@ namespace Assets.Scripts.Infrastructure
             catch (Exception ex)
             {
                 Debug.LogWarning($"[Entitlement] 購入フローに失敗: {ex.Message}");
-                return EntitlementResult.Unavailable();
+                return EntitlementResult.Unavailable;
             }
             return await FetchEntitlementAsync();
 #else
             await UniTask.CompletedTask;
-            return EntitlementResult.Unavailable();
+            return EntitlementResult.Unavailable;
 #endif
         }
 

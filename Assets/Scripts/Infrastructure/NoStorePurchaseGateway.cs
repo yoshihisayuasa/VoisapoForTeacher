@@ -22,12 +22,12 @@ namespace Assets.Scripts.Infrastructure
 
         public UniTask<EntitlementResult> PurchaseAsync(SubscriptionPlan plan)
         {
-            return UniTask.FromResult(EntitlementResult.Unavailable());
+            return UniTask.FromResult(EntitlementResult.Unavailable);
         }
 
         public UniTask<EntitlementResult> RestoreAsync()
         {
-            return UniTask.FromResult(EntitlementResult.Unavailable());
+            return UniTask.FromResult(EntitlementResult.Unavailable);
         }
 
         public UniTask<PlanPrices> GetPlanPricesAsync()

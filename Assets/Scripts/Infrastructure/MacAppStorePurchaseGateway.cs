@@ -38,7 +38,7 @@ namespace Assets.Scripts.Infrastructure
         {
             if (!await EnsureInitializedAsync())
             {
-                return EntitlementResult.Unavailable();
+                return EntitlementResult.Unavailable;
             }
             return EntitlementResult.Fetched(CurrentEntitlement());
         }
@@ -47,7 +47,7 @@ namespace Assets.Scripts.Infrastructure
         {
             if (!await EnsureInitializedAsync())
             {
-                return EntitlementResult.Unavailable();
+                return EntitlementResult.Unavailable;
             }
 
             _purchase = new UniTaskCompletionSource<EntitlementResult>();
@@ -62,7 +62,7 @@ namespace Assets.Scripts.Infrastructure
         {
             if (!await EnsureInitializedAsync())
             {
-                return EntitlementResult.Unavailable();
+                return EntitlementResult.Unavailable;
             }
 
             _restoration = new UniTaskCompletionSource<EntitlementResult>();
@@ -160,7 +160,7 @@ namespace Assets.Scripts.Infrastructure
             if (!success)
             {
                 Debug.LogWarning($"[Entitlement] 購入の復元に失敗: {error}");
-                _restoration.TrySetResult(EntitlementResult.Unavailable());
+                _restoration.TrySetResult(EntitlementResult.Unavailable);
                 return;
             }
             _restoration.TrySetResult(EntitlementResult.Fetched(CurrentEntitlement()));
@@ -198,7 +198,7 @@ namespace Assets.Scripts.Infrastructure
         public void OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
         {
             Debug.LogWarning($"[Entitlement] 購入に失敗: {failureReason}");
-            _purchase?.TrySetResult(EntitlementResult.Unavailable());
+            _purchase?.TrySetResult(EntitlementResult.Unavailable);
         }
     }
 }
