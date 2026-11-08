@@ -134,14 +134,7 @@ namespace Assets.Scripts.Domain.Modules
         private void ExtendLastMelodyNote()
         {
             if (_melodyNotes.Count == 0) return;
-            var last = _melodyNotes[^1];
-            _melodyNotes[^1] = last.WithBeats(last.Beats + 1);
-        }
-
-        private void ShrinkLastMelodyNote()
-        {
-            var last = _melodyNotes[^1];
-            _melodyNotes[^1] = last.WithBeats(last.Beats - 1);
+            _melodyNotes[^1] = _melodyNotes[^1].Extend();
         }
 
         private void RemoveLastMelodyNote()
@@ -202,8 +195,14 @@ namespace Assets.Scripts.Domain.Modules
         // メロディが1音以上あるときだけ DeleteLast から呼ばれる。
         private void ShrinkLastStep()
         {
-            if (_melodyNotes[^1].Beats > 1) ShrinkLastMelodyNote();
-            else RemoveLastMelodyNote();
+            if (_melodyNotes[^1].TryShrink(out var shrunk))
+            {
+                _melodyNotes[^1] = shrunk;
+            }
+            else
+            {
+                RemoveLastMelodyNote();
+            }
         }
 
         // ── 検証 ────────────────────────────────────────────────────────────
@@ -231,7 +230,7 @@ namespace Assets.Scripts.Domain.Modules
             var chord = new Chord(chordIntervals, _chordBeats);
 
             var notes = _melodyNotes
-                .Select(n => new Note(n.Key.Index - _root.Index, n.Beats))
+                .Select(n => n.ToNote(_root))
                 .ToList();
 
             return Melody.Create(name, MelodyKind.Standard, chord, notes, isProtected: false, isPremiumOnly: true);
