@@ -67,7 +67,7 @@ namespace Assets.Scripts.Infrastructure
             {
                 foreach (var n in data.Notes)
                 {
-                    notes.Add(new Note(n.Interval, n.Beats));
+                    notes.Add(new Note(new Interval(n.Interval), n.Beats));
                 }
             }
             return Melody.Create(data.Name, ParseKind(data.Kind), chord, notes, data.IsProtected, data.IsPremiumOnly);

@@ -49,7 +49,7 @@ namespace Assets.Scripts.Domain.ValueObjects
         /// <summary>
         /// root からのインターバルで表した音符に変換する。
         /// </summary>
-        public Note ToNote(PianoNote root) => new(Key.Index - root.Index, Beats);
+        public Note ToNote(PianoNote root) => new(Key - root, Beats);
 
         protected override bool EqualsCore(DraftNote other)
         {

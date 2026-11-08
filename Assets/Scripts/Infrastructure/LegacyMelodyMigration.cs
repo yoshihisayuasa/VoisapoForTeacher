@@ -73,7 +73,7 @@ namespace Assets.Scripts.Infrastructure
                     else
                     {
                         if (beat == 0) break;
-                        notes.Add(new Note(interval, beat));
+                        notes.Add(new Note(new Interval(interval), beat));
                     }
                 }
 

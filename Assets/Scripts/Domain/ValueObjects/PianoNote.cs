@@ -50,6 +50,12 @@ namespace Assets.Scripts.Domain.ValueObjects
             return new PianoNote((PianoNoteEnum)(baseNote.Index + interval.Value));
         }
 
+        /// <summary>root から見たこの音のインターバルを返す（この音のほうが高ければ正）。</summary>
+        public static Interval operator -(PianoNote note, PianoNote root)
+        {
+            return new Interval(note.Index - root.Index);
+        }
+
         protected override bool EqualsCore(PianoNote other)
         {
             return Index == other.Index;

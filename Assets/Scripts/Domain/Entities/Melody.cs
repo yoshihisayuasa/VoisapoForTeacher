@@ -64,9 +64,9 @@ namespace Assets.Scripts.Domain.Entities
         public Interval Interval { get; }
         public int Beats { get; }
 
-        public Note(int interval, int beats)
+        public Note(Interval interval, int beats)
         {
-            Interval = new Interval(interval);
+            Interval = interval;
             Beats = beats;
         }
     }
@@ -139,11 +139,9 @@ namespace Assets.Scripts.Domain.Entities
 
         private (Interval min, Interval max) CalculateIntervalRange()
         {
-            var chordValues = Chord.Intervals.Select(i => i.Value);
-            var noteValues = Notes.Select(n => n.Interval.Value);
-            var all = chordValues.Concat(noteValues);
+            var all = Chord.Intervals.Concat(Notes.Select(n => n.Interval)).ToList();
 
-            return (new Interval(all.Min()), new Interval(all.Max()));
+            return (all.Min(), all.Max());
         }
 
         /// <summary>

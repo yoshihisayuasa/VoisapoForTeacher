@@ -159,7 +159,7 @@ namespace Assets.Scripts.Domain.Modules
             ClearAll();
 
             // 取り消したとき、表示の一番下（最も低い音）から消えるよう、音高の高い順に入力する。
-            foreach (var interval in template.Chord.Intervals.OrderByDescending(i => i.Value))
+            foreach (var interval in template.Chord.Intervals.OrderByDescending(i => i))
             {
                 AddChordEntry(root + interval);
             }
@@ -224,7 +224,7 @@ namespace Assets.Scripts.Domain.Modules
             }
 
             var chordIntervals = _chordEntries
-                .Select(n => new Interval(n.Index - _root.Index))
+                .Select(n => n - _root)
                 .ToList();
 
             var chord = new Chord(chordIntervals, _chordBeats);
