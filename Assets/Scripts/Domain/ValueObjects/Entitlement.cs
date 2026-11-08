@@ -3,8 +3,11 @@ using System;
 namespace Assets.Scripts.Domain.ValueObjects
 {
     /// <summary>
-    /// 課金状態。有効期限を内部に持ち、現在時刻が期限内ならプレミアムとして扱う
+    /// 課金状態。有効期限を内部に持ち、作られた時点で期限内ならプレミアムとして扱う
     /// （トライアル中も期限付きプレミアムとして同一に扱う）。
+    /// 判定は作られた時点で固定し、その後に期限の時刻を迎えても変えない。
+    /// 作り直されるのは起動・購入・復元のときだけなので、起動中に期限をまたいでも
+    /// レッスンの途中で機能が止まらない（解約した場合も次の起動から無料に戻る）。
     /// 「どの機能がプレミアムか」というドメインルールもここが持ち、
     /// 外へは Gate / Describe という振る舞いだけを提供する（期限やフラグは公開しない）。
     /// </summary>
@@ -14,10 +17,12 @@ namespace Assets.Scripts.Domain.ValueObjects
         public static Entitlement Free { get; } = new Entitlement(DateTimeOffset.MinValue);
 
         private readonly DateTimeOffset _expiresAt;
+        private readonly bool _isActive;
 
         private Entitlement(DateTimeOffset expiresAt)
         {
             _expiresAt = expiresAt;
+            _isActive = DateTimeOffset.UtcNow < expiresAt;
         }
 
         /// <summary>期限付きのプレミアム。無料トライアル中もこれで表す。</summary>
@@ -26,15 +31,13 @@ namespace Assets.Scripts.Domain.ValueObjects
             return new Entitlement(expiresAt);
         }
 
-        private bool IsActive => DateTimeOffset.UtcNow < _expiresAt;
-
         /// <summary>
-        /// プレミアム機能が今使えるなら onAllowed、使えないなら onDenied を呼ぶ。
-        /// プレミアム機能はすべて、期限内かどうかだけで可否が決まる。
+        /// プレミアム機能が使えるなら onAllowed、使えないなら onDenied を呼ぶ。
+        /// プレミアム機能はすべて、作られた時点で期限内だったかどうかだけで可否が決まる。
         /// </summary>
         public void Gate(Action onAllowed, Action onDenied)
         {
-            if (IsActive)
+            if (_isActive)
             {
                 onAllowed();
                 return;
@@ -48,7 +51,7 @@ namespace Assets.Scripts.Domain.ValueObjects
         /// </summary>
         public void Describe(Action onFree, Action<DateTimeOffset> onPremium)
         {
-            if (IsActive)
+            if (_isActive)
             {
                 onPremium(_expiresAt);
                 return;
@@ -58,12 +61,12 @@ namespace Assets.Scripts.Domain.ValueObjects
 
         protected override bool EqualsCore(Entitlement other)
         {
-            return _expiresAt == other._expiresAt;
+            return _expiresAt == other._expiresAt && _isActive == other._isActive;
         }
 
         protected override int GetHashCodeCore()
         {
-            return _expiresAt.GetHashCode();
+            return (_expiresAt.GetHashCode() * 397) ^ _isActive.GetHashCode();
         }
     }
 }

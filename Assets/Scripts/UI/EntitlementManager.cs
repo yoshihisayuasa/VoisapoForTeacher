@@ -65,7 +65,7 @@ namespace Assets.Scripts.UI
 
         /// <summary>
         /// ストアへ届かなかった場合。Free へ落とさずキャッシュの状態を維持する
-        /// （期限切れならキャッシュ自体がプレミアムとして働かないため、放置で Free に落ちる）。
+        /// （キャッシュの期限が切れていれば、読み込んだ時点でプレミアムとして働かない）。
         /// </summary>
         private void KeepCached()
         {
