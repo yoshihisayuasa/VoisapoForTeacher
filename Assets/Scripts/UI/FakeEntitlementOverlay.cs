@@ -10,6 +10,7 @@ namespace Assets.Scripts.UI
     /// エディタの Tools > Voisapo > 課金状態 メニューの代わり。シーンに置かず、起動時にコードから生成する。
     /// TeacherMain は読み込み直されるたびに生成されるため、重ならないようシーンと一緒に破棄させる。
     /// 切り替えると照会し直すため、その場で各画面の解錠状態に反映される。
+    /// 「通信できない」をオンにすると照会が届かなくなるため、購入状態を切り替えても反映されない（それが確認したい動き）。
     /// </summary>
     public sealed class FakeEntitlementOverlay : MonoBehaviour
     {
@@ -31,8 +32,15 @@ namespace Assets.Scripts.UI
 
         private void OnGUI()
         {
-            var x = Screen.width - (ButtonWidth + Margin) * Choices.Length;
+            var x = Screen.width - (ButtonWidth + Margin) * (Choices.Length + 1);
             var y = Screen.height - ButtonHeight - Margin;
+
+            var offlineLabel = FakePurchaseGateway.Offline ? "● 通信できない" : "通信できない";
+            if (GUI.Button(new Rect(x, y, ButtonWidth, ButtonHeight), offlineLabel))
+            {
+                FakePurchaseGateway.Offline = !FakePurchaseGateway.Offline;
+            }
+            x += ButtonWidth + Margin;
 
             foreach (var choice in Choices)
             {
