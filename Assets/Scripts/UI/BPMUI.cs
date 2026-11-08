@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.UI;
+﻿using Assets.Scripts.Domain.ValueObjects;
+using Assets.Scripts.UI;
 using R3;
 using System.Collections;
 using TMPro;
@@ -26,10 +27,10 @@ public sealed class BPMUI : MonoBehaviour
 
         // 先生からの同期受信を含むBPM変更をテキストへ反映する。
         BPMManager.Instance.BpmChanged
-            .Subscribe(_ => RefreshBpmText())
+            .Subscribe(RefreshBpmText)
             .AddTo(this);
 
-        RefreshBpmText();
+        RefreshBpmText(BPMManager.Instance.Current);
     }
 
     private void OnDestroy()
@@ -59,9 +60,9 @@ public sealed class BPMUI : MonoBehaviour
         StartBlink();
     }
 
-    private void RefreshBpmText()
+    private void RefreshBpmText(BPM bpm)
     {
-        _bpmText.text = BPMManager.Instance.Current.ToString();
+        _bpmText.text = bpm.ToString();
     }
 
     private void StartBlink()

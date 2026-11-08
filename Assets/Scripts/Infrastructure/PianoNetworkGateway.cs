@@ -131,10 +131,10 @@ namespace Assets.Scripts.Infrastructure
             RaiseToOthers(EventCode.MelodySelection, MelodyNetworkSerializer.Serialize(melody));
         }
 
-        public void SendBpm(int bpm)
+        public void SendBpm(BPM bpm)
         {
             if (!CanSend()) return;
-            RaiseToOthers(EventCode.Bpm, bpm);
+            RaiseToOthers(EventCode.Bpm, bpm.Value);
         }
 
         public void SendStop()

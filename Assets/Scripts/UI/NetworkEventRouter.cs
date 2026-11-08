@@ -210,7 +210,7 @@ namespace Assets.Scripts.UI
             }
 
             _gateway.SendSoundPlayState(SoundPlayManager.Instance.IsSoundPlay);
-            _gateway.SendBpm(BPMManager.Instance.Value);
+            _gateway.SendBpm(BPMManager.Instance.Current);
             _gateway.SendAutoKeyChange(AutoKeyChangeManager.Instance.Current);
 
             if (SoundSourceSwitcher.Instance != null)
