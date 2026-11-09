@@ -78,8 +78,10 @@ namespace Assets.Scripts.Infrastructure
                 }
 
                 var chord = new Chord(chordIntervals, LegacyChordBeats);
+                // 旧フォーマットは種別を持たない。組み込み（Single / Major Code）は MergeLegacyWithSeed で
+                // シードと同名のため捨てられ、残るのは自作メロディだけなので、常に通常再生として移行する。
                 entries.Add(new SavedMelody(
-                    Melody.Create(name, MelodyKinds.FromDisplayName(name), chord, notes, isProtected: false, isPremiumOnly: true),
+                    Melody.Create(name, MelodyKind.Standard, chord, notes, isProtected: false, isPremiumOnly: true),
                     position));
             }
             return entries;
