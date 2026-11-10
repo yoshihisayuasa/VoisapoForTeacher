@@ -92,25 +92,16 @@ namespace Assets.Scripts.Domain.Entities
         public IReadOnlyList<Note> Notes { get; }
         private readonly Interval _minInterval;
         private readonly Interval _maxInterval;
-        private readonly IHighlightRule _highlightRule;
-
 
         /// <summary>
-        /// 再生種別に合ったメロディを組み立てる。保存データが持つのは種別だけなので、
-        /// 種別から目印の出し方への対応づけはここ1箇所で行う（生成は必ずここを通す）。
+        /// メロディを組み立てる。目印の出し方など種別ごとに決まることは kind 自身が持つ。
         /// </summary>
         public static Melody Create(string name, MelodyKind kind, Chord chord, List<Note> notes, bool isProtected, bool isPremiumOnly)
         {
-            IHighlightRule highlightRule = kind switch
-            {
-                MelodyKind.Chord or MelodyKind.ChordWithMetronome => new OctaveHighlightRule(),
-                _ => new RangeHighlightRule(),
-            };
-            return new Melody(name, kind, chord, notes, isProtected, isPremiumOnly, highlightRule);
+            return new Melody(name, kind, chord, notes, isProtected, isPremiumOnly);
         }
 
-        private Melody(string name, MelodyKind kind, Chord chord, List<Note> notes, bool isProtected, bool isPremiumOnly,
-                       IHighlightRule highlightRule)
+        private Melody(string name, MelodyKind kind, Chord chord, List<Note> notes, bool isProtected, bool isPremiumOnly)
         {
             Name = name;
             Kind = kind;
@@ -118,7 +109,6 @@ namespace Assets.Scripts.Domain.Entities
             Notes = notes;
             IsProtected = isProtected;
             IsPremiumOnly = isPremiumOnly;
-            _highlightRule = highlightRule;
             (_minInterval, _maxInterval) = CalculateIntervalRange();
         }
 
@@ -165,7 +155,7 @@ namespace Assets.Scripts.Domain.Entities
         /// </summary>
         public PianoKeyRange HighlightRangeAt(PianoNote rootKey)
         {
-            return new PianoKeyRange(rootKey + _minInterval, rootKey + _highlightRule.Top(_minInterval, _maxInterval));
+            return new PianoKeyRange(rootKey + _minInterval, rootKey + Kind.HighlightTop(_minInterval, _maxInterval));
         }
 
         /// <summary>

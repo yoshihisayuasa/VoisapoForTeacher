@@ -70,13 +70,9 @@ namespace Assets.Scripts.Infrastructure
                     notes.Add(new Note(new Interval(n.Interval), n.Beats));
                 }
             }
-            return Melody.Create(data.Name, ParseKind(data.Kind), chord, notes, data.IsProtected, data.IsPremiumOnly);
+            // 種別はJSONに保存名（文字列）で持つ。名前と種別の対応は MelodyKind が持つ。
+            return Melody.Create(data.Name, MelodyKind.Parse(data.Kind), chord, notes, data.IsProtected, data.IsPremiumOnly);
         }
-
-        // 種別はJSONに文字列で持つ（intだとenumの並び替えでデータが壊れるため）。
-        // 欠損・不明な値は Standard（通常再生）として扱う。
-        private static MelodyKind ParseKind(string kindName) =>
-            Enum.TryParse(kindName, out MelodyKind kind) ? kind : MelodyKind.Standard;
 
         internal static MelodyData ToData(Melody melody, int position)
         {
@@ -94,7 +90,7 @@ namespace Assets.Scripts.Infrastructure
             {
                 Name = melody.Name,
                 Position = position,
-                Kind = melody.Kind.ToString(),
+                Kind = melody.Kind.SavedName,
                 IsProtected = melody.IsProtected,
                 IsPremiumOnly = melody.IsPremiumOnly,
                 Chord = chordData,

@@ -173,10 +173,9 @@ namespace Assets.Scripts.UI.MelodyUI
             _onPlayEnded.OnNext(Unit.Default);
         }
 
+        // 種別を足したら Awake の登録にも足すこと。登録漏れは別の種別で鳴らさず、ここで例外にして気づかせる。
         private MelodyPlayStrategy GetStrategy(Melody melody) =>
-            _strategies.TryGetValue(melody.Kind, out var strategy)
-                ? strategy
-                : _strategies[MelodyKind.Standard];
+            _strategies[melody.Kind];
 
         // ── IMelodyPlaybackContext（再生戦略からの通知窓口） ──
 

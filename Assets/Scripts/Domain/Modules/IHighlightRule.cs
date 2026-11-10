@@ -3,7 +3,7 @@ using Assets.Scripts.Domain.ValueObjects;
 namespace Assets.Scripts.Domain.Modules
 {
     /// <summary>
-    /// メロディが鍵盤に出す目印の決め方。メロディごとに1つ持ち、種別を見て分岐しないための入り口。
+    /// メロディが鍵盤に出す目印の決め方。種別（MelodyKind）ごとに1つ持ち、種別を見て分岐しないための入り口。
     /// 下端は常に音域の最低音で、上端だけがメロディによって変わる。
     /// </summary>
     public interface IHighlightRule
