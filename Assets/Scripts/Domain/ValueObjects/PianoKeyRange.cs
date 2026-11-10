@@ -13,8 +13,14 @@ namespace Assets.Scripts.Domain.ValueObjects
 
         public PianoKeyRange(PianoNote key1, PianoNote key2)
         {
-            if (key1 is null) throw new ArgumentNullException(nameof(key1));
-            if (key2 is null) throw new ArgumentNullException(nameof(key2));
+            if (key1 is null)
+            {
+                throw new ArgumentNullException(nameof(key1));
+            }
+            if (key2 is null)
+            {
+                throw new ArgumentNullException(nameof(key2));
+            }
 
             bool ordered = key1.Index <= key2.Index;
             Min = ordered ? key1 : key2;

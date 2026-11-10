@@ -228,20 +228,12 @@ namespace Assets.Scripts.UI.Piano
 
         /// <summary>
         /// 指定したキー範囲が viewport に収まるよう ScrollRect をスクロールする。
+        /// range は鍵盤内であること（呼び出し元が演奏可能な位置でだけ呼ぶ）。
         /// </summary>
         public void EnsureRangeVisible(PianoKeyRange range)
         {
-            if (!range.IsWithinKeyboard(KeyCount))
-            {
-                return;
-            }
-
-            var minRT = GetKeyUI(range.Min).transform as RectTransform;
-            var maxRT = GetKeyUI(range.Max).transform as RectTransform;
-            if (minRT == null || maxRT == null)
-            {
-                return;
-            }
+            var minRT = (RectTransform)GetKeyUI(range.Min).transform;
+            var maxRT = (RectTransform)GetKeyUI(range.Max).transform;
 
             _scrollRect.horizontalNormalizedPosition =
                 ScrollRectRangeVisualizer.CalcNormalizedPosition(
