@@ -1,0 +1,253 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0edd4d6dec9974f11ba4b078ca3a0e1e, type: 3}
+  m_Name: PaletteStore
+  m_EditorClassIdentifier: 
+  _colorPalette:
+    _entries:
+      _keys:
+      - 27c192e7-8731-4145-b2d5-b34d2014f21f
+      - d8ff0950-09f1-42c4-a012-5a2220af9a1d
+      - 012bbd84-fe2c-4299-86bb-97e659c69330
+      - ba7a9c0b-9f10-4f99-a00b-5fed520773db
+      - e380e34f-cd57-43cd-973c-cc56c043af56
+      - 67d93b97-abb7-427e-8ced-8be16d43cee6
+      - 7b791c5c-5ebe-4964-a43c-a799fd66a3b9
+      - 052a7f14-16e9-4e5d-bebc-bfb6e3568be9
+      - f6199d1a-d02a-4b00-b20a-bfbb3ce97799
+      - 16611ce4-ac5c-478d-8a1c-4d3df9f54995
+      - 0d82a012-5607-4825-80ae-afd2bbe8404f
+      - 2dca326f-672d-4e4f-af9a-e00e3f8bb546
+      - cd4dd2d9-6e54-48a3-ac33-1c3e8121b908
+      - 64d7b113-3d39-4ec5-8e3a-ff0d2ad972fc
+      - 95f79e48-87ce-42c3-9eb3-cb5bdef74ba2
+      - c370aa39-b1ac-46d7-82ef-f770708ed977
+      - 6178b56e-b742-41b5-8b7a-bb7f32a0232c
+      _values:
+      - _id: 27c192e7-8731-4145-b2d5-b34d2014f21f
+        _name:
+          _value: Piano/0
+        _values:
+          _keys:
+          - e77a7653-c521-4b16-a656-afd6e279e8e8
+          _values:
+          - _value: {r: 0.5764706, g: 0.77254903, b: 0.99215686, a: 1}
+      - _id: d8ff0950-09f1-42c4-a012-5a2220af9a1d
+        _name:
+          _value: Piano/1
+        _values:
+          _keys:
+          - e77a7653-c521-4b16-a656-afd6e279e8e8
+          _values:
+          - _value: {r: 0.23137255, g: 0.50980395, b: 0.9647059, a: 1}
+      - _id: 012bbd84-fe2c-4299-86bb-97e659c69330
+        _name:
+          _value: Piano/2
+        _values:
+          _keys:
+          - e77a7653-c521-4b16-a656-afd6e279e8e8
+          _values:
+          - _value: {r: 0, g: 0.8, b: 0.72156864, a: 1}
+      - _id: ba7a9c0b-9f10-4f99-a00b-5fed520773db
+        _name:
+          _value: Piano/3
+        _values:
+          _keys:
+          - e77a7653-c521-4b16-a656-afd6e279e8e8
+          _values:
+          - _value: {r: 0.3019608, g: 0.9843137, b: 0.8862745, a: 1}
+      - _id: e380e34f-cd57-43cd-973c-cc56c043af56
+        _name:
+          _value: Piano/4
+        _values:
+          _keys:
+          - e77a7653-c521-4b16-a656-afd6e279e8e8
+          _values:
+          - _value: {r: 0.39215687, g: 0.45490196, b: 0.54509807, a: 1}
+      - _id: 67d93b97-abb7-427e-8ced-8be16d43cee6
+        _name:
+          _value: Piano/5
+        _values:
+          _keys:
+          - e77a7653-c521-4b16-a656-afd6e279e8e8
+          _values:
+          - _value: {r: 0.5803922, g: 0.6392157, b: 0.72156864, a: 1}
+      - _id: 7b791c5c-5ebe-4964-a43c-a799fd66a3b9
+        _name:
+          _value: Piano/6
+        _values:
+          _keys:
+          - e77a7653-c521-4b16-a656-afd6e279e8e8
+          _values:
+          - _value: {r: 1, g: 0.90472275, b: 0.43867922, a: 1}
+      - _id: 052a7f14-16e9-4e5d-bebc-bfb6e3568be9
+        _name:
+          _value: Piano/7
+        _values:
+          _keys:
+          - e77a7653-c521-4b16-a656-afd6e279e8e8
+          _values:
+          - _value: {r: 1, g: 0.6843333, b: 0.3443396, a: 1}
+      - _id: f6199d1a-d02a-4b00-b20a-bfbb3ce97799
+        _name:
+          _value: Piano/8
+        _values:
+          _keys:
+          - e77a7653-c521-4b16-a656-afd6e279e8e8
+          _values:
+          - _value: {r: 1, g: 0.41037738, b: 0.858692, a: 1}
+      - _id: 16611ce4-ac5c-478d-8a1c-4d3df9f54995
+        _name:
+          _value: Piano/White/Normal
+        _values:
+          _keys:
+          - e77a7653-c521-4b16-a656-afd6e279e8e8
+          _values:
+          - _value: {r: 1, g: 1, b: 1, a: 1}
+      - _id: 0d82a012-5607-4825-80ae-afd2bbe8404f
+        _name:
+          _value: Piano/White/Pressed
+        _values:
+          _keys:
+          - e77a7653-c521-4b16-a656-afd6e279e8e8
+          _values:
+          - _value: {r: 1, g: 0, b: 0, a: 1}
+      - _id: 2dca326f-672d-4e4f-af9a-e00e3f8bb546
+        _name:
+          _value: Piano/White/Selected
+        _values:
+          _keys:
+          - e77a7653-c521-4b16-a656-afd6e279e8e8
+          _values:
+          - _value: {r: 1, g: 0.61960787, b: 0.61960787, a: 1}
+      - _id: cd4dd2d9-6e54-48a3-ac33-1c3e8121b908
+        _name:
+          _value: Piano/White/Highlighted
+        _values:
+          _keys:
+          - e77a7653-c521-4b16-a656-afd6e279e8e8
+          _values:
+          - _value: {r: 1, g: 0.76862746, b: 0, a: 1}
+      - _id: 64d7b113-3d39-4ec5-8e3a-ff0d2ad972fc
+        _name:
+          _value: Piano/Black/Normal
+        _values:
+          _keys:
+          - e77a7653-c521-4b16-a656-afd6e279e8e8
+          _values:
+          - _value: {r: 0, g: 0, b: 0, a: 1}
+      - _id: 95f79e48-87ce-42c3-9eb3-cb5bdef74ba2
+        _name:
+          _value: Piano/Black/Highlighted
+        _values:
+          _keys:
+          - e77a7653-c521-4b16-a656-afd6e279e8e8
+          _values:
+          - _value: {r: 1, g: 0.76862746, b: 0, a: 1}
+      - _id: c370aa39-b1ac-46d7-82ef-f770708ed977
+        _name:
+          _value: Piano/Black/Pressed
+        _values:
+          _keys:
+          - e77a7653-c521-4b16-a656-afd6e279e8e8
+          _values:
+          - _value: {r: 1, g: 0, b: 0, a: 1}
+      - _id: 6178b56e-b742-41b5-8b7a-bb7f32a0232c
+        _name:
+          _value: Piano/Black/Selected
+        _values:
+          _keys:
+          - e77a7653-c521-4b16-a656-afd6e279e8e8
+          _values:
+          - _value: {r: 1, g: 0.61960787, b: 0.61960787, a: 1}
+    _themes:
+      _keys:
+      - e77a7653-c521-4b16-a656-afd6e279e8e8
+      _values:
+      - _id: e77a7653-c521-4b16-a656-afd6e279e8e8
+        _name:
+          _value: Default
+    _entryOrders:
+      _ids:
+      - 27c192e7-8731-4145-b2d5-b34d2014f21f
+      - d8ff0950-09f1-42c4-a012-5a2220af9a1d
+      - 012bbd84-fe2c-4299-86bb-97e659c69330
+      - ba7a9c0b-9f10-4f99-a00b-5fed520773db
+      - e380e34f-cd57-43cd-973c-cc56c043af56
+      - 67d93b97-abb7-427e-8ced-8be16d43cee6
+      - 7b791c5c-5ebe-4964-a43c-a799fd66a3b9
+      - 052a7f14-16e9-4e5d-bebc-bfb6e3568be9
+      - f6199d1a-d02a-4b00-b20a-bfbb3ce97799
+      - 16611ce4-ac5c-478d-8a1c-4d3df9f54995
+      - 0d82a012-5607-4825-80ae-afd2bbe8404f
+      - 2dca326f-672d-4e4f-af9a-e00e3f8bb546
+      - cd4dd2d9-6e54-48a3-ac33-1c3e8121b908
+      - 64d7b113-3d39-4ec5-8e3a-ff0d2ad972fc
+      - 95f79e48-87ce-42c3-9eb3-cb5bdef74ba2
+      - c370aa39-b1ac-46d7-82ef-f770708ed977
+      - 6178b56e-b742-41b5-8b7a-bb7f32a0232c
+    _themeOrders:
+      _ids:
+      - e77a7653-c521-4b16-a656-afd6e279e8e8
+    _activeThemeId: e77a7653-c521-4b16-a656-afd6e279e8e8
+  _gradientPalette:
+    _entries:
+      _keys: []
+      _values: []
+    _themes:
+      _keys:
+      - a1846429-39dd-48c2-b814-55a9f69515ef
+      _values:
+      - _id: a1846429-39dd-48c2-b814-55a9f69515ef
+        _name:
+          _value: Default
+    _entryOrders:
+      _ids: []
+    _themeOrders:
+      _ids:
+      - a1846429-39dd-48c2-b814-55a9f69515ef
+    _activeThemeId: a1846429-39dd-48c2-b814-55a9f69515ef
+  _characterStylePalette:
+    _entries:
+      _keys: []
+      _values: []
+    _themes:
+      _keys:
+      - 1b362496-8b93-4c8b-b2f8-433c070dfc8f
+      _values:
+      - _id: 1b362496-8b93-4c8b-b2f8-433c070dfc8f
+        _name:
+          _value: Default
+    _entryOrders:
+      _ids: []
+    _themeOrders:
+      _ids:
+      - 1b362496-8b93-4c8b-b2f8-433c070dfc8f
+    _activeThemeId: 1b362496-8b93-4c8b-b2f8-433c070dfc8f
+  _characterStyleTMPPalette:
+    _entries:
+      _keys: []
+      _values: []
+    _themes:
+      _keys:
+      - 7f442c37-5e74-4e57-8f73-113fd9bac009
+      _values:
+      - _id: 7f442c37-5e74-4e57-8f73-113fd9bac009
+        _name:
+          _value: Default
+    _entryOrders:
+      _ids: []
+    _themeOrders:
+      _ids:
+      - 7f442c37-5e74-4e57-8f73-113fd9bac009
+    _activeThemeId: 7f442c37-5e74-4e57-8f73-113fd9bac009
+  _missingEntryErrorLevel: 1

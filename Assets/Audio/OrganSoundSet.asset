@@ -1,0 +1,137 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05752864f2b18ca458718474edc2fcf6, type: 3}
+  m_Name: OrganSoundSet
+  m_EditorClassIdentifier: Assembly-CSharp::Scripts.Infrastructure.PianoSoundSet
+  _setName: Organ
+  _entries:
+  - Note: 0
+    Clip: {fileID: 8300000, guid: 7ed30b29a7314a2498f264ecdf48ed31, type: 3}
+  - Note: 1
+    Clip: {fileID: 8300000, guid: 941ee2403d8347a44b41e1516fe0c68d, type: 3}
+  - Note: 2
+    Clip: {fileID: 8300000, guid: 6f474d8da4a8ffc44b0d7652b03a2302, type: 3}
+  - Note: 3
+    Clip: {fileID: 8300000, guid: eed60e02e4439bc4ab3dc3f8e7840310, type: 3}
+  - Note: 4
+    Clip: {fileID: 8300000, guid: 78f0da82527beb140bc0a81cf797d283, type: 3}
+  - Note: 5
+    Clip: {fileID: 8300000, guid: 601f6d90ea5809f4985d33a90879d9b3, type: 3}
+  - Note: 6
+    Clip: {fileID: 8300000, guid: f24f42d38e6533846822fb27b4d122a5, type: 3}
+  - Note: 7
+    Clip: {fileID: 8300000, guid: d4e0a9af375749241b4e10fe92b8e4b4, type: 3}
+  - Note: 8
+    Clip: {fileID: 8300000, guid: 852201cc23661a146a9eb044f7c346f5, type: 3}
+  - Note: 9
+    Clip: {fileID: 8300000, guid: 7e1232e36daf3dc478f680cab538437c, type: 3}
+  - Note: 10
+    Clip: {fileID: 8300000, guid: 532faed53078e634699de0afa9084353, type: 3}
+  - Note: 11
+    Clip: {fileID: 8300000, guid: dbe014b7f7c09c54db478340f339deb8, type: 3}
+  - Note: 12
+    Clip: {fileID: 8300000, guid: dc1b0df0fb0b59f4bbd541da14698b12, type: 3}
+  - Note: 13
+    Clip: {fileID: 8300000, guid: e9f9b7feb0ea6d84284de06d495f152a, type: 3}
+  - Note: 14
+    Clip: {fileID: 8300000, guid: 402739f39b79f7b4d8a27da11077c426, type: 3}
+  - Note: 15
+    Clip: {fileID: 8300000, guid: 7a0547f15dfef4748980454f3ed5a9ba, type: 3}
+  - Note: 16
+    Clip: {fileID: 8300000, guid: 12bf9dc4d7ab2a9478a7bb94ffbdd1f0, type: 3}
+  - Note: 17
+    Clip: {fileID: 8300000, guid: 5483d75bf8f206d489fa4aa59972025e, type: 3}
+  - Note: 18
+    Clip: {fileID: 8300000, guid: f646315c5f4c80e4086ae49a22f198c7, type: 3}
+  - Note: 19
+    Clip: {fileID: 8300000, guid: 221b468413520d24a8326f42b565db53, type: 3}
+  - Note: 20
+    Clip: {fileID: 8300000, guid: a142c7a42c8ab9a4db9f9aaff4a43c41, type: 3}
+  - Note: 21
+    Clip: {fileID: 8300000, guid: 7241fb93e9d822c44b92bffa45d0855b, type: 3}
+  - Note: 22
+    Clip: {fileID: 8300000, guid: 43f781df9923807439d620be16785ca9, type: 3}
+  - Note: 23
+    Clip: {fileID: 8300000, guid: 532bd7e393e653044b6a9376018dc69a, type: 3}
+  - Note: 24
+    Clip: {fileID: 8300000, guid: 8de323275733f8f4c8be10ccb4e73bdd, type: 3}
+  - Note: 25
+    Clip: {fileID: 8300000, guid: 37a628ef7518f114aaa890e651ff43c2, type: 3}
+  - Note: 26
+    Clip: {fileID: 8300000, guid: 51f4ef06196aa0f49b2150a447b4f74c, type: 3}
+  - Note: 27
+    Clip: {fileID: 8300000, guid: 042ec6601eb0fc044bddf7811d181b14, type: 3}
+  - Note: 28
+    Clip: {fileID: 8300000, guid: d33612d8486fc9c40b020255d1c6da84, type: 3}
+  - Note: 29
+    Clip: {fileID: 8300000, guid: a349a6f2e64e5a44e8ee86b1f54a27ef, type: 3}
+  - Note: 30
+    Clip: {fileID: 8300000, guid: cd8627c1575445f43a0398d57b5161f8, type: 3}
+  - Note: 31
+    Clip: {fileID: 8300000, guid: b69f61fbf1635484a8da1759b393f26f, type: 3}
+  - Note: 32
+    Clip: {fileID: 8300000, guid: bd71211d3defd6447be7c8e9d29950ae, type: 3}
+  - Note: 33
+    Clip: {fileID: 8300000, guid: f561873cade5bad44a3d96777e3a6046, type: 3}
+  - Note: 34
+    Clip: {fileID: 8300000, guid: e4f30c08a4bd9f34bafa61e72cb67985, type: 3}
+  - Note: 35
+    Clip: {fileID: 8300000, guid: f196c28b112ac3b4ab30e898ae732792, type: 3}
+  - Note: 36
+    Clip: {fileID: 8300000, guid: 624ca95c35d2a07479fad4bcb8d84095, type: 3}
+  - Note: 37
+    Clip: {fileID: 8300000, guid: 0ba4bb93db5a4d847a4221a703274309, type: 3}
+  - Note: 38
+    Clip: {fileID: 8300000, guid: 851981af8c72d304b970c4e89f337fa3, type: 3}
+  - Note: 39
+    Clip: {fileID: 8300000, guid: 600c1129a08aab142a371972cca5f9d0, type: 3}
+  - Note: 40
+    Clip: {fileID: 8300000, guid: 0ea072a6eae957e498ad32331af9ef9a, type: 3}
+  - Note: 41
+    Clip: {fileID: 8300000, guid: 4e0902255ac24e54ead612959896c6ae, type: 3}
+  - Note: 42
+    Clip: {fileID: 8300000, guid: 24516d51f84c5f1439be11df1bfbf210, type: 3}
+  - Note: 43
+    Clip: {fileID: 8300000, guid: 35a1fddf25ea9b8438b306880b67e5dd, type: 3}
+  - Note: 44
+    Clip: {fileID: 8300000, guid: 7c4d78b8091e0fc438057975a15468cc, type: 3}
+  - Note: 45
+    Clip: {fileID: 8300000, guid: 337a16215c27c1b4db60c4d357771ffa, type: 3}
+  - Note: 46
+    Clip: {fileID: 8300000, guid: af808e26968e901478d9c40315251f76, type: 3}
+  - Note: 47
+    Clip: {fileID: 8300000, guid: 031f606590e307147868740beac0e2dd, type: 3}
+  - Note: 48
+    Clip: {fileID: 8300000, guid: 4b7853bfc05410c4882f214a85803871, type: 3}
+  - Note: 49
+    Clip: {fileID: 8300000, guid: 4dda05a8f0037ca4782b438ecb910c95, type: 3}
+  - Note: 50
+    Clip: {fileID: 8300000, guid: 70b0a5a76c69f6143890229ac234fb77, type: 3}
+  - Note: 51
+    Clip: {fileID: 8300000, guid: 40b8b65cf8faed145bd81efa9426d9e8, type: 3}
+  - Note: 52
+    Clip: {fileID: 8300000, guid: aa73c7d235f1e5449a595d32f49140ba, type: 3}
+  - Note: 53
+    Clip: {fileID: 8300000, guid: 332fbb34a7bcdb94a96ddaf360a4fc2d, type: 3}
+  - Note: 54
+    Clip: {fileID: 8300000, guid: c18121ccd33fc2e4da5a3f2320a975dd, type: 3}
+  - Note: 55
+    Clip: {fileID: 8300000, guid: 39424a51f27a26845a9a3aa8b9be768b, type: 3}
+  - Note: 56
+    Clip: {fileID: 8300000, guid: 334d6d79e2495cb46807f8f6f006767f, type: 3}
+  - Note: 57
+    Clip: {fileID: 8300000, guid: dc41c539a81da934a828a38a8b1400a6, type: 3}
+  - Note: 58
+    Clip: {fileID: 8300000, guid: b7fdf6fc016e92647b5a100516a13f9b, type: 3}
+  - Note: 59
+    Clip: {fileID: 8300000, guid: 90cd0e16ca46ed84e8084c65265dd0c4, type: 3}
+  _volumeMultiplier: 1

@@ -86,10 +86,5 @@ crashlytics-build.properties
 # Third-party SDKs
 /[Aa]ssets/Photon/
 
-*.asset
-# ProjectSettings配下はプロジェクト全体の設定なのでバージョン管理する
-!ProjectSettings/**/*.asset
-*.ttf
-*.otf
-*.bytes
+# 日本語フォントの SDF は1ファイル約130MBで、GitHub の上限（100MB）を超えるため管理外にする
 Assets/TextMesh Pro/Fonts/
